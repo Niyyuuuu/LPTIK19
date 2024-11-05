@@ -1,0 +1,88 @@
+/* Global Dark Mode Settings */
+body {
+    background-color: #121212;
+    color: #fff;
+}
+
+.card, .table, .dataTables_wrapper .dataTables_paginate .paginate_button {
+    background-color: #1e1e1e;
+    color: #fff;
+}
+
+.card-header {
+    background-color: #2c2c2c;
+    border-bottom: none;
+}
+
+/* Table Striping */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #2b2b2b;
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: #1e1e1e;
+}
+
+.table thead th {
+    background-color: #3a3a3a;
+    color: #fff;
+    border-bottom: 1px solid #444;
+}
+
+/* Button Styles */
+.btn-primary, .btn-danger {
+    color: #fff;
+    border: none;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+}
+
+.btn-primary:hover, .btn-danger:hover {
+    opacity: 0.85;
+}
+
+/* DataTables Custom Styling */
+.dataTables_wrapper .dataTables_info,
+.dataTables_wrapper .dataTables_length label,
+.dataTables_wrapper .dataTables_filter label,
+.dataTables_wrapper .dataTables_paginate {
+    color: #fff;
+}
+
+.dataTables_length select, .dataTables_filter input {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+.dataTables_paginate .paginate_button:hover {
+    background-color: #4a4a4a;
+}
+
+/* Headings */
+h1, h3 {
+    font-weight: bold;
+}
+
+/* Specific Styles for Ticket List Page (ticket-list.blade.php) */
+#ticketTable_wrapper .dataTables_length select, 
+#ticketTable_wrapper .dataTables_filter input {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #444;
+}
+
+/* Specific Styles for Users List Page (users-list.blade.php) */
+#userTable_wrapper .dataTables_length select, 
+#userTable_wrapper .dataTables_filter input {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #444;
+}

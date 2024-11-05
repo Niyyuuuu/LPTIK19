@@ -1,0 +1,98 @@
+/* Font import untuk konsistensi */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Reset dasar untuk margin dan padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212; /* Tema Gelap */
+    color: #e0e0e0;
+    margin: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+h2, h1 {
+    margin-bottom: 10px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    position: fixed;
+}
+
+.sidebar h2 {
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #333;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar li {
+    padding: 10px;
+}
+
+.sidebar a {
+    display: flex;
+    align-items: center;
+    color: white;
+    transition: color 0.3s ease;
+}
+
+.sidebar a:hover {
+    color: #bbb;
+}
+
+/* Konten dan Header */
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+
+/* Tabel */
+table {
+    width: 100%;
+}
+
+thead tr {
+    background-color: #333;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #555;
+    text-align: left;
+}
+
+tbody tr {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+}
+
+/* Pesan Sukses dan Error */
+.message-success {
+    color: green;
+    margin-top: 10px;
+}
+
+.message-error {
+    color: red;
+    margin-top: 10px;
+}
