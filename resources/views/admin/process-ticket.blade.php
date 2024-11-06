@@ -16,7 +16,7 @@
             </select>
         </div>
         
-        <button type="submit" class="btn btn-primary">Proses Tiket</button>
+        <button type="submit" class="btn btn-primary mt-3">Proses Tiket</button>
     </form>
 </div>
 @endsection
