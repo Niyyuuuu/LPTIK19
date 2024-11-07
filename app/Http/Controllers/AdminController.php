@@ -378,8 +378,6 @@ class AdminController extends Controller
             return redirect()->route('help.category.edit', $help->category_id)->with('success', 'Help entry deleted successfully');
         }
 
-
-
         public function processTicket($id)
         {
             $ticket = Tiket::findOrFail($id);
