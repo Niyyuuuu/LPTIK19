@@ -56,6 +56,9 @@
             <a href="{{ route($routePrefix . '.entry.create', $category->id) }}" class="btn btn-success mt-3">
                 Add New Entry
             </a>
+            <a href="{{ route('home-settings') }}" class="btn btn-danger mt-3">
+                Back
+            </a>
         </div>
     </div>
 @endsection

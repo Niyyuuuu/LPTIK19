@@ -13,10 +13,10 @@
 
         <div class="card mt-4">
             <div class="card-header bg-primary">
-                <h5 class="text-white mb-0">Editing Help for Category: {{ $category->name }}</h5>
+                <h5 class="text-white mb-0">Editing Help Entry for Category: {{ $category->name }}</h5>
             </div>
             <div class="card-body">
-                <form action="{{ route('help.entry.update', [$category->id, $help->id]) }}" method="POST">
+                <form action="{{ route('help.entry.update', $help->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="mb-3">

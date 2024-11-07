@@ -6,22 +6,17 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Tambah Satker</h3>
-                    </div>
-                    <div class="card-body">
+                <h1 class="fw-bold text-white">Tambah Satker</h1>
                         <form action="{{ route('store-satker') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <label for="nama_satker">Nama Satker</label>
+                                <label class="text-white" for="nama_satker">Nama Satker</label>
                                 <input type="text" name="nama_satker" id="nama_satker" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-success mt-3">Simpan</button>
+                            <button type="submit" class="btn btn-success mt-3">Save</button>
+                            <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Back</button>
                         </form>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 @endsection

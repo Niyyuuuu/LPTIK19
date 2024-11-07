@@ -14,8 +14,8 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body {
+            background-color: #161616;
             font-family: 'Poppins', sans-serif;
-            background-color: #f3f2f1;
         }
         #wrapper {
             display: flex;

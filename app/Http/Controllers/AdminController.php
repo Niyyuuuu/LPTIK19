@@ -295,7 +295,8 @@ class AdminController extends Controller
         public function editFaqEntry($id)
         {
             $faq = Faq::findOrFail($id);
-            return view('admin.edit-faq-entry', compact('faq'));
+            $category = Category::findOrFail($faq->category_id);
+            return view('admin.edit-faq-entry', compact('faq', 'category'));
         }
     
         public function updateFaqEntry(Request $request, $id)
@@ -312,7 +313,7 @@ class AdminController extends Controller
                 'answer' => $request->answer,
             ]);
     
-            return redirect()->route('faq.category.edit', $faq->category_id)->with('success', 'FAQ entry updated successfully');
+            return redirect()->route('faq.category.detail', $faq->category_id)->with('success', 'FAQ entry updated successfully');
         }
     
         public function deleteFaqEntry($id)
@@ -320,7 +321,7 @@ class AdminController extends Controller
             $faq = Faq::findOrFail($id);
             $faq->delete();
     
-            return redirect()->route('faq.category.edit', $faq->category_id)->with('success', 'FAQ entry deleted successfully');
+            return redirect()->route('faq.category.detail', $faq->category_id)->with('success', 'FAQ entry deleted successfully');
         }
     
         public function createHelpEntry($categoryId)
@@ -348,7 +349,8 @@ class AdminController extends Controller
         public function editHelpEntry($id)
         {
             $help = Help::findOrFail($id);
-            return view('admin.edit-help-entry', compact('help'));
+            $category = Category::findOrFail($help->category_id);
+            return view('admin.edit-help-entry', compact('help', 'category'));
         }
     
         public function updateHelpEntry(Request $request, $id)
@@ -365,7 +367,7 @@ class AdminController extends Controller
                 'answer' => $request->answer,
             ]);
     
-            return redirect()->route('help.category.edit', $help->category_id)->with('success', 'Help entry updated successfully');
+            return redirect()->route('help.category.detail', $help->category_id)->with('success', 'Help entry updated successfully');
         }
     
         public function deleteHelpEntry($id)

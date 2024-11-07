@@ -46,7 +46,7 @@
 </head>
 <body>
 
-    @include('components.sidebar-tech')
+    @include('components.sidebar-piket')
 
     <div class="content">
         <div class="header">

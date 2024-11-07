@@ -11,7 +11,7 @@
     <h1 class="mb-4">List Satker</h1>
 
     <div>
-        <a href="{{ route('create-satker') }}" class="btn btn-success mb-4">Tambah Satker</a>
+        <a href="{{ route('create-satker') }}" class="btn btn-success mb-4">Add New Satker</a>
     </div>
 
     <div class="card">

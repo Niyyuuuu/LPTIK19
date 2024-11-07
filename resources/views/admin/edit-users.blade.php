@@ -10,7 +10,12 @@
     </div>
     @endif
     <div class="container">
-        <h1>User Edit</h1>
+        <style>
+            .container {
+                color: white;
+            }
+        </style>
+        <h1 class="mb-4 text-white fw-bold">User Edit</h1>
 
         <form action="{{ route('admin.users.update', $user->id) }}" method="POST">
             @csrf
@@ -47,6 +52,7 @@
                 </select>
             </div>
             <button type="submit" class="btn btn-primary mt-3">Update</button>
+            <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Back</button>
         </form>
     </div>
 @endsection

@@ -11,7 +11,7 @@
     <h1 class="mb-4">List Ticket</h1>
 
     <div>
-        <a href="{{ route('buat-pengaduan') }}" class="btn btn-success mb-4">Buat Pengaduan</a>
+        <a href="{{ route('buat-pengaduan') }}" class="btn btn-success mb-4">Add New Ticket</a>
     </div>
 
     @php
@@ -56,7 +56,7 @@
                         <td>{{ $item->status }}</td>
                         <td>{{ $item->user->name }}</td>
                         <td class="gap-2-xl justify-content-end text-end">
-                            <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Proses</a>
+                            <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a>
                             @if ($item->status !== 'Ditutup' && $item->status !== 'Selesai')
                                 <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
                                     @csrf

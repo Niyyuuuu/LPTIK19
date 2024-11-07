@@ -7,7 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\PiketController;
 use Illuminate\Support\Facades\Route;
-    
+
 Route::get('/', function () {
     return view('home');})->name('home');
 Route::get('/home', function () {
@@ -112,5 +112,10 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
     Route::view('/technician', 'technisi')->name('technician');
     Route::get('/tasks', [TechnicianController::class, 'task'])->name('tasks');
+});
+
+Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
+    Route::view('/piket', 'piket')->name('piket');
+    Route::get('/tickets', [PiketController::class, 'tickets'])->name('tickets');
 });
 
