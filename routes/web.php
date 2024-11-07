@@ -115,7 +115,6 @@ Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
-    Route::view('/piket', 'piket')->name('piket');
-    Route::get('/tickets', [PiketController::class, 'tickets'])->name('tickets');
+    Route::get('/piket', [PiketController::class, 'tickets'])->name('piket');
+    Route::get('piket/tickets', [PiketController::class, 'tickets'])->name('tickets');
 });
-

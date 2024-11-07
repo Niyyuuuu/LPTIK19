@@ -50,7 +50,7 @@
 
     <div class="content">
         <div class="header">
-            <h1 class="text-start fw-bold mb-5">@yield('header')</h1>
+            <h1 class="fw-bold mb-5">@yield('header')</h1>
         </div>
 
         <div>

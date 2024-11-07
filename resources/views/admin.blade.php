@@ -52,7 +52,7 @@
 @section('content')
     <div class="container">
         
-        <h1 class="mb-4">Dashboard</h1>
+        <h1 class="mb-4">Dashboard Admin</h1>
         
 <!-- Filter Tahun -->
 <div class="row mb-4">
@@ -81,7 +81,7 @@
             </div>
         </div>                
 
-        <h3 class="mb-4">Status</h3>
+        <h3 class="mb-4">Status Tiket</h3>
         <div class="d-flex gap-4 mb-4">
             @foreach (['Diproses', 'Selesai', 'Ditutup'] as $status)
                 <div class="col d-flex">
