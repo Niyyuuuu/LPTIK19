@@ -13,14 +13,11 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');})->name('home');
 
-// FAQ routes
 Route::get('/faq', [HomeController::class, 'index'])->name('faq');
 Route::get('/faq/{slug}', [HomeController::class, 'showCategory'])->name('faq.category');
 
-// Help routes
 Route::get('/help', [HomeController::class, 'indexHelp'])->name('help');
 Route::get('/help/{slug}', [HomeController::class, 'showCategoryHelp'])->name('help.showCategoryHelp');
-
 
 
 Route::get('auth/login', function () {
