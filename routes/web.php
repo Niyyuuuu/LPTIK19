@@ -94,7 +94,6 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::put('admin/help/entry/{id}', [AdminController::class, 'updateHelpEntry'])->name('help.entry.update');
     Route::delete('admin/help/entry/{id}', [AdminController::class, 'deleteHelpEntry'])->name('help.entry.delete');
 
-    
     Route::get('/satker-list', [AdminController::class, 'satkerList'])->name('satker-list');
     Route::get('/create-satker', [AdminController::class, 'createSatker'])->name('create-satker');
     Route::post('/store-satker', [AdminController::class, 'storeSatker'])->name('store-satker');
