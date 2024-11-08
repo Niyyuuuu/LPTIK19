@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class PiketController extends Controller
 {
-    public function tickets(Request $request)
+    public function piket(Request $request)
     {
         $user = Auth::user();
         $year = $request->input('year', now()->year);
@@ -41,6 +41,12 @@ class PiketController extends Controller
         $totalTickets = $tickets->count();
 
         return view('piket', compact('tickets', 'counts', 'year', 'totalTickets'));
+    }
+
+    public function tickets()
+    {
+        $tiket = Tiket::with('user')->get();
+        return view('piket.tickets', compact('tiket'));
     }
 
     public function processTicket($id)
