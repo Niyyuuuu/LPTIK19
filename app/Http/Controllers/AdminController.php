@@ -395,7 +395,7 @@ class AdminController extends Controller
 
             $ticket = Tiket::findOrFail($id);
             $ticket->technician_id = $request->input('technician_id');
-            $ticket->status = 'Diproses'; // Update status ticket
+            $ticket->status = 'Diproses';
             $ticket->save();
 
             return redirect()->route('ticket-list')->with('success', 'Technician assigned successfully!');

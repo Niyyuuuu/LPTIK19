@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tiket;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PiketController extends Controller
@@ -42,4 +43,26 @@ class PiketController extends Controller
         return view('piket', compact('tickets', 'counts', 'year', 'totalTickets'));
     }
 
+    public function processTicket($id)
+        {
+            $ticket = Tiket::findOrFail($id);
+            $technicians = User::where('role', 'Technician')->get();
+
+            return view('piket.process-ticket', compact('ticket', 'technicians'));
+
+        }
+
+        public function assignTechnician(Request $request, $id)
+        {
+            $request->validate([
+                'technician_id' => 'required|exists:users,id',
+            ]);
+
+            $ticket = Tiket::findOrFail($id);
+            $ticket->technician_id = $request->input('technician_id');
+            $ticket->status = 'Diproses'; // Update status ticket
+            $ticket->save();
+
+            return redirect()->route('tickets')->with('success', 'Technician assigned successfully!');
+        }
 }
