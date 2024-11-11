@@ -3,7 +3,8 @@
     // Array menu untuk mengurangi repetisi
     $menuItems = [
         ['icon' => 'bx-home', 'label' => 'Dashboard', 'route' => 'technician'],
-        ['icon' => 'bx-wrench', 'label' => 'Tasks', 'route' => 'tasks']
+        ['icon' => 'bx-wrench', 'label' => 'Tasks', 'route' => 'tasks'],
+        ['icon' => 'bx-list-ul', 'label' => 'Ticket List', 'route' => 'ticket-list'],
     ];
 @endphp
 

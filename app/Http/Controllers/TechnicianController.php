@@ -19,4 +19,10 @@ class TechnicianController extends Controller
 
         return view('technisian.tasks', compact('tickets'));
     }
+
+    public function ticketList()
+    {
+        $tickets = Tiket::with('user')->get();
+        return view('technisian.ticket-list', compact('tickets'));
+    }
 }
