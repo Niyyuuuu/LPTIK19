@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tiket;
 use App\Models\Satker;
+use App\Models\ChatMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -251,4 +252,45 @@ class TiketController extends Controller
             'monthNames'
         ));
     }
+
+
+
+
+
+
+
+
+
+    public function sendMessage(Request $request)
+{
+    $validated = $request->validate([
+        'tiket_id' => 'required|exists:tiket,id',
+        'content' => 'required|string',
+    ]);
+
+    $chatMessage = new ChatMessage();
+    $chatMessage->tiket_id = $validated['tiket_id'];
+    $chatMessage->user_id = Auth::user()->id;
+    $chatMessage->content = $validated['content'];
+    $chatMessage->save();
+
+    return response()->json(['status' => 'Message sent successfully']);
+}
+
+public function getChatMessages($id)
+{
+    $messages = ChatMessage::where('tiket_id', $id)
+        ->with('user:id,name')
+        ->get()
+        ->map(function ($message) {
+            return [
+                'content' => $message->content,
+                'user_name' => $message->user->name,
+                'created_at' => $message->created_at->diffForHumans(),
+            ];
+        });
+
+    return response()->json(['messages' => $messages]);
+}
+
 }

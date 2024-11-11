@@ -43,6 +43,10 @@ Route::get('/detail-tiket/{id}', [TiketController::class, 'show'])->name('detail
 Route::get('/buat-pengaduan', [TiketController::class, 'create'])->name('buat-pengaduan');
 
 
+Route::post('/tiket/send-message', [TiketController::class, 'sendMessage'])->name('send-message')->middleware('auth');
+Route::get('/tiket/chat-messages/{id}', [TiketController::class, 'getChatMessages'])->name('chat-messages')->middleware('auth');
+
+
 Route::post('/buat-pengaduan', [ TiketController::class, 'buat_pengaduan' ])->name('daftar-pengaduan');
 Route::get('/daftar-pengaduan', [TiketController::class, 'daftar_pengaduan'])->name('daftar-pengaduan')->middleware('auth');
 Route::get('/history-pengaduan', [TiketController::class, 'history_pengaduan'])->name('history-pengaduan')->middleware('auth');

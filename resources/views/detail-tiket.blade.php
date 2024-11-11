@@ -101,8 +101,66 @@
                 <h5 class="mb-0">Diskusi</h5>
             </div>
             <div class="card-body">
-                
-            </div>
+                <div id="chat-messages" style="max-height: 300px; overflow-y: auto;">
+                    <!-- Pesan-pesan akan dimuat di sini secara dinamis -->
+                </div>
+                <form id="chat-form" class="mt-3">
+                    <div class="input-group">
+                        <input type="text" id="chat-input" class="form-control" placeholder="Ketik pesan..." required>
+                        <button type="submit" class="btn btn-primary">Kirim</button>
+                    </div>
+                </form>
+            </div>            
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Fungsi untuk memuat pesan chat
+            function loadChatMessages() {
+                fetch("/tiket/chat-messages/{{ $tiket->id }}")
+                    .then(response => response.json())
+                    .then(data => {
+                        const chatMessages = document.getElementById("chat-messages");
+                        chatMessages.innerHTML = "";
+                        data.messages.forEach(message => {
+                            const messageElement = document.createElement("div");
+                            messageElement.classList.add("mb-2", "p-2", "rounded");
+                            messageElement.style.backgroundColor = "#f1f1f1";
+                            messageElement.innerHTML = `
+                                <strong>${message.user_name}:</strong> ${message.content}
+                                <div class="text-muted" style="font-size: 0.9em; margin-top: 4px;">${message.created_at}</div>
+                            `;
+                            chatMessages.appendChild(messageElement);
+                        });
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    });
+            }
+        
+            // Panggil loadChatMessages pertama kali dan setiap 5 detik
+            loadChatMessages();
+            setInterval(loadChatMessages, 5000);
+        
+            // Fungsi untuk mengirim pesan
+            document.getElementById("chat-form").addEventListener("submit", function(e) {
+                e.preventDefault();
+                const chatInput = document.getElementById("chat-input");
+        
+                fetch("/tiket/send-message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: JSON.stringify({
+                        tiket_id: {{ $tiket->id }},
+                        content: chatInput.value
+                    })
+                }).then(() => {
+                    chatInput.value = "";
+                    loadChatMessages();
+                });
+            });
+        });
+        </script>
+        
 </body>
 </html>
