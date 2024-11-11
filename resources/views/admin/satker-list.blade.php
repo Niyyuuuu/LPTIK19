@@ -8,7 +8,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="mb-4">List Satker</h1>
+    <h1 class="mb-4">Satker List</h1>
 
     <div>
         <a href="{{ route('create-satker') }}" class="btn btn-success mb-4">Add New Satker</a>

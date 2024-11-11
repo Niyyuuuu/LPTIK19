@@ -1,8 +1,8 @@
 <!-- resources/views/partials/sidebar.blade.php -->
 <nav class="sidebar">
     <div class="sidebar-header">
-        <h3 class="fw-bold">Admin Panel</h3>
-        <h6 class="fw-light fs-6">Layanan Pengaduan TIK Kemhan</h6>
+        <h3 >Admin Panel</h3>
+        <h6 >Layanan Pengaduan TIK Kemhan</h6>
     </div>
     <ul class="components">
         @php
@@ -10,8 +10,8 @@
                 ['route' => 'admin', 'icon' => 'bx-grid', 'label' => 'Dashboard'],
                 ['route' => 'ticket-list', 'icon' => 'bx-list-ul', 'label' => 'Ticket List'],
                 ['route' => 'users-list', 'icon' => 'bx-user', 'label' => 'Users List'],
-                ['route' => 'home-settings', 'icon' => 'bx-cog', 'label' => 'Home Settings'],
                 ['route' => 'satker-list', 'icon' => 'bx-spreadsheet', 'label' => 'Satker Settings'],
+                ['route' => 'home-settings', 'icon' => 'bx-cog', 'label' => 'Home Settings'],
                 ['route' => 'home', 'icon' => 'bx-home-alt', 'label' => 'Home'],
 
             ];

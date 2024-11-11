@@ -40,7 +40,8 @@
     <div class="message-error">{{ session('error') }}</div>
 @endif
 <div class="container">
-    <h2>Selamat Datang di Dashboard Piket</h2>
+    <h2>Selamat Datang di Dashboard, {{ Auth::user()->name }}</h2>
+    <br>
     <div class="row mb-4">
         <div class="col-md-4">
             <form method="GET" action="{{ route('piket') }}">

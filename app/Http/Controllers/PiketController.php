@@ -54,7 +54,7 @@ class PiketController extends Controller
             $ticket = Tiket::findOrFail($id);
             $technicians = User::where('role', 'Technician')->get();
 
-            return view('piket.process-ticket', compact('ticket', 'technicians'));
+            return view('process-ticket', compact('ticket', 'technicians'));
 
         }
 
