@@ -14,9 +14,7 @@ class TechnicianController extends Controller
 
     public function task()
     {
-        // Ambil tiket yang sesuai dengan technician_id yang sedang login
         $tickets = Tiket::where('technician_id', Auth::id())->get();
-
         return view('technisian.tasks', compact('tickets'));
     }
 

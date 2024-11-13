@@ -102,7 +102,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('/update-satker/{id}', [AdminController::class, 'updateSatker'])->name('update-satker');
     Route::delete('/delete-satker/{id}', [AdminController::class, 'deleteSatker'])->name('delete-satker');
     
-    Route::get('/ticket-list', [AdminController::class, 'listTiketSemuaUser'])->name('ticket-list');
+    Route::get('/admin/ticket-list', [AdminController::class, 'listTiketSemuaUser'])->name('admin.ticket-list');
     Route::get('/users-list', [AdminController::class, 'usersList'])->name('users-list');
 
     Route::get('/admin/{id}/process', [AdminController::class, 'processTicket'])->name('ticket.process');
@@ -112,12 +112,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
     Route::view('/technician', 'technisi')->name('technician');
     Route::get('/tasks', [TechnicianController::class, 'task'])->name('tasks');
-    Route::get('/ticket-list', [TechnicianController::class, 'ticketList'])->name('ticket-list');
+    Route::get('/ticket-list', [TechnicianController::class, 'ticketList'])->name('technisian.ticket-list');
 });
 
 Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
     Route::get('/piket', [PiketController::class, 'piket'])->name('piket');
     Route::get('piket/tickets', [PiketController::class, 'tickets'])->name('tickets');
+    Route::get('/piket/{id}/edit-tickets', [PiketController::class, 'edit'])->name('edit-tickets');
     Route::get('/piket/{id}/process', [PiketController::class, 'processTicket'])->name('process-ticket');
-    Route::post('/piket/{id}/assign-technician', [PiketController::class, 'assignTechnician'])->name('ticket.assign-technician');
+    Route::post('/piket/{id}/assign-technician', [PiketController::class, 'assignTechnician'])->name('piket.assign-technician');
 });

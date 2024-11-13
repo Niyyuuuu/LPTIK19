@@ -8,12 +8,11 @@
         @php
             $menuItems = [
                 ['route' => 'admin', 'icon' => 'bx-grid', 'label' => 'Dashboard'],
-                ['route' => 'ticket-list', 'icon' => 'bx-list-ul', 'label' => 'Ticket List'],
+                ['route' => 'admin.ticket-list', 'icon' => 'bx-list-ul', 'label' => 'Ticket List'],
                 ['route' => 'users-list', 'icon' => 'bx-user', 'label' => 'Users List'],
                 ['route' => 'satker-list', 'icon' => 'bx-spreadsheet', 'label' => 'Satker Settings'],
                 ['route' => 'home-settings', 'icon' => 'bx-cog', 'label' => 'Home Settings'],
                 ['route' => 'home', 'icon' => 'bx-home-alt', 'label' => 'Home'],
-
             ];
         @endphp
 

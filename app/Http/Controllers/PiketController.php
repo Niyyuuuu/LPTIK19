@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tiket;
 use App\Models\User;
+use App\Models\Satker;
 use Illuminate\Http\Request;
 
 class PiketController extends Controller
@@ -16,7 +17,7 @@ class PiketController extends Controller
 
         $ticketsQuery = Tiket::query();
         if ($user->role === 'Piket') {
-            $ticketsQuery->where('user_id', $user->id);
+            $ticketsQuery->with('user');;
         }
 
         $tickets = $ticketsQuery->whereYear('created_at', $year)->get();
@@ -54,7 +55,7 @@ class PiketController extends Controller
             $ticket = Tiket::findOrFail($id);
             $technicians = User::where('role', 'Technician')->get();
 
-            return view('process-ticket', compact('ticket', 'technicians'));
+            return view('piket.process-ticket', compact('ticket', 'technicians'));
 
         }
 
@@ -66,9 +67,16 @@ class PiketController extends Controller
 
             $ticket = Tiket::findOrFail($id);
             $ticket->technician_id = $request->input('technician_id');
-            $ticket->status = 'Diproses'; // Update status ticket
+            $ticket->status = 'Diproses';
             $ticket->save();
 
             return redirect()->route('tickets')->with('success', 'Technician assigned successfully!');
+        }
+
+        public function edit($id)
+        {
+            $tiket = Tiket::findOrFail($id);
+            $satkers = Satker::all();
+            return view('piket.edit-tickets', compact('tiket', 'satkers'));
         }
 }

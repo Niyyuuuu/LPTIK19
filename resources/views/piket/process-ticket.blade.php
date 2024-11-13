@@ -1,10 +1,10 @@
-@extends('layouts.admin-app')
+@extends('layouts.piket-app')
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4 text-white fw-bold">Proses Tiket: {{ $ticket->title }}</h2>
+    <h2 class="mb-2 text-white fw-bold">Proses Tiket: {{ $ticket->title }}</h2>
 
-    <form action="{{ route('ticket.assign-technician', $ticket->id) }}" method="POST">
+    <form action="{{ route('piket.assign-technician', $ticket->id) }}" method="POST">
         @csrf
         <div class="form-group">
             <label class="text-white mb-2" for="technician_id">Pilih Teknisi:</label>
