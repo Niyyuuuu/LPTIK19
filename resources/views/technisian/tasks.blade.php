@@ -2,7 +2,7 @@
 
 @section('title', 'Tasks')
 
-@section('header', 'Daftar Tasks')
+@section('header', 'Daftar Tugas')
 
 @section('content')
 
@@ -21,7 +21,10 @@
 @if($tickets->isEmpty())
     <p class="no-tickets-message">Tidak ada tiket yang tersedia.</p>
 @else
-    <table id="tech-table">
+<div class="card">
+    <div class="card-header bg-primary bx bxs-file"></div>
+    <div class="card-body">
+    <table id="tech-table" class="table">
         <thead>
             <tr>
                 <th>No. Tiket</th>

@@ -17,12 +17,12 @@
         @endphp
 
         @foreach ($menuItems as $item)
-            <li class="{{ Request::is($item['route']) ? 'active' : '' }}">
-                <a href="{{ route($item['route']) }}">
-                    <i class='bx {{ $item['icon'] }}'></i>
-                    <span>{{ $item['label'] }}</span>
-                </a>
-            </li>
+        <li class="{{ Request::routeIs($item['route']) ? 'active' : '' }}">
+            <a href="{{ route($item['route']) }}">
+                <i class='bx {{ $item['icon'] }}'></i>
+                <span>{{ $item['label'] }}</span>
+            </a>
+        </li>
         @endforeach
     </ul>
 

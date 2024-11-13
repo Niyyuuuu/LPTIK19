@@ -42,6 +42,23 @@
             margin-left: 250px;
             padding: 20px;
         }
+
+        .card {
+            background-color: #1e1e1e;
+            color: #fff;
+            border: none;
+            min-height: 150px;
+            border-radius: 10px;
+        }
+        
+        .card-header {
+            background-color: #2c2c2c;
+            border-bottom: none;
+        }
+        
+        .card-body {
+            background-color: #1e1e1e;
+        }
     </style>
 </head>
 <body>

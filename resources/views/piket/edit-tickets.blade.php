@@ -1,7 +1,6 @@
 @extends('layouts.piket-app')
 
-@section('header', 'Ticket List' )
-
+@section('header', 'Update Ticket' )
 
 @push('styles')
 <style>
@@ -41,3 +40,4 @@
 @if(session('error'))
     <div class="message-error">{{ session('error') }}</div>
 @endif
+

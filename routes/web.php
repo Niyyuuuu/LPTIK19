@@ -118,7 +118,7 @@ Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
 Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
     Route::get('/piket', [PiketController::class, 'piket'])->name('piket');
     Route::get('piket/tickets', [PiketController::class, 'tickets'])->name('tickets');
-    Route::get('/piket/{id}/edit-tickets', [PiketController::class, 'edit'])->name('edit-tickets');
+    Route::post ('/piket/{id}/edit-tickets', [PiketController::class, 'edit'])->name('edit-tickets');
     Route::get('/piket/{id}/process', [PiketController::class, 'processTicket'])->name('process-ticket');
     Route::post('/piket/{id}/assign-technician', [PiketController::class, 'assignTechnician'])->name('piket.assign-technician');
 });

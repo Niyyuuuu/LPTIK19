@@ -2,7 +2,6 @@
 
 @section('header', 'Ticket List' )
 
-
 @push('styles')
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
@@ -60,7 +59,7 @@
 <div class="card">
     <div class="card-header bg-primary bx bxs-file"></div>
     <div class="card-body">
-        <table id="admin-table" class="table">
+        <table id="piket-table" class="table">
             <thead>
                 <tr>
                     <th>No. Tiket</th>
@@ -76,7 +75,7 @@
             <tbody>
                 @foreach($tiket as $item)
                 <tr>
-                    <td>
+                    <td class="text-warning">
                         <a href="{{ route('detail-tiket', $item->id) }}">
                             {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                         </a>
@@ -92,7 +91,7 @@
                         @if ($item->status !== 'Ditutup' && $item->status !== 'Selesai')
                             <form action="{{ route('edit-tickets', $item->id) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                <button type="submit" class="btn btn-warning">Edit</button>
+                                <button type="submit" class="btn btn-warning">Update</button>
                             </form>
                             <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
                                 @csrf
@@ -105,6 +104,5 @@
             </tbody>
         </table>
     </div>
-</div>
 </div>
 @endsection
