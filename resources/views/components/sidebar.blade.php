@@ -20,14 +20,14 @@
             <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
                 data-bs-target="#user" aria-expanded="false" aria-controls="user">
                 <i class="bx bx-user"></i>
-                <span>Profile</span>
+                <span>Profil</span>
             </a>
             <ul id="user" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                 <li class="sidebar-item">
-                    <a href="{{ route('profil-saya') }}" class="sidebar-link">My Profil</a>
+                    <a href="{{ route('profil-saya') }}" class="sidebar-link">Profil Saya</a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('edit-profil') }}" class="sidebar-link">Edit Profile</a>
+                    <a href="{{ route('edit-profil') }}" class="sidebar-link">Edit Profil</a>
                 </li>
             </ul>
         </li>

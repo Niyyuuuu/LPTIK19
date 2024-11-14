@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Detail Tiket</title>
     <link rel="icon" href="{{ asset('img/logo-kemhan.png') }}" type="image/png">  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,14 +10,39 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa; /* Light background for better contrast */
+            background-color: #f8f9fa;
         }
         .card-header {
-            background-color: #007bff; /* Primary color for header */
+            background-color: #007bff;
             color: white;
         }
-        .table th {
-            background-color: #e9ecef; /* Light gray background for table headers */
+        /* Styling message bubbles */
+        .message-left, .message-right {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            max-width: 70%;
+            word-wrap: break-word;
+            clear: both;
+        }
+        .message-left {
+            background-color: #f1f1f1;
+            text-align: left;
+            float: left;
+        }
+        .message-right {
+            background-color: #d1ecf1;
+            text-align: right;
+            float: right;
+        }
+        .chat-container {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background-color: #ffffff;
         }
     </style>
 </head>
@@ -70,7 +94,6 @@
                                     $isImage = in_array($extension, ['jpg', 'jpeg', 'png']);
                                     $isPDF = $extension === 'pdf';
                                 @endphp
-                                
                                 <!-- Show Image or PDF Preview -->
                                 @if ($isImage)
                                     <a href="{{ asset('storage/' . $filePath) }}" target="_blank">
@@ -83,38 +106,56 @@
                                 <!-- Always show the download button -->
                                 <br>
                                 <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Download {{ $filename }}</a>
-                    
                             @else
                                 <span class="text-muted">Tidak ada lampiran</span>
                             @endif
                         </td>
                     </tr>
-                    
-                    
                 </table>
             </div>
         </div>
     </div>
+
     <div class="container mt-5">
         <div class="card mb-5">
             <div class="card-header">
                 <h5 class="mb-0">Diskusi</h5>
             </div>
             <div class="card-body">
-                <div id="chat-messages" style="max-height: 300px; overflow-y: auto;">
-                    <!-- Pesan-pesan akan dimuat di sini secara dinamis -->
+                <div id="chat-messages" class="chat-container">
+                    <!-- Messages will be loaded dynamically -->
                 </div>
-                <form id="chat-form" class="mt-3">
+                <form id="chat-form" class="mt-3" enctype="multipart/form-data">
                     <div class="input-group">
+                        <!-- Tombol untuk Attachment dengan Ikon -->
+                        <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('chat-lampiran').click();">
+                            <i class="fas fa-paperclip"></i> <!-- Ikon attachment -->
+                        </button>
+                        
+                        <!-- Input Tersembunyi untuk File -->
+                        <input type="file" id="chat-lampiran" class="d-none">
+                        
+                        <!-- Input untuk Pesan Chat -->
                         <input type="text" id="chat-input" class="form-control" placeholder="Ketik pesan..." required>
+                        
+                        <!-- Tombol Kirim Pesan -->
                         <button type="submit" class="btn btn-primary">Kirim</button>
                     </div>
                 </form>
-            </div>            
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tambahkan link Font Awesome di <head> atau pada halaman ini jika belum tersedia -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        const loggedInUserId = {{ auth()->id() }};
+    </script>
+    <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Fungsi untuk memuat pesan chat
             function loadChatMessages() {
                 fetch("/tiket/chat-messages/{{ $tiket->id }}")
                     .then(response => response.json())
@@ -123,44 +164,54 @@
                         chatMessages.innerHTML = "";
                         data.messages.forEach(message => {
                             const messageElement = document.createElement("div");
-                            messageElement.classList.add("mb-2", "p-2", "rounded");
-                            messageElement.style.backgroundColor = "#f1f1f1";
-                            messageElement.innerHTML = `
-                                <strong>${message.user_name}:</strong> ${message.content}
-                                <div class="text-muted" style="font-size: 0.9em; margin-top: 4px;">${message.created_at}</div>
-                            `;
+
+                            if (message.user_id === loggedInUserId) {
+                                messageElement.classList.add("message-right");
+                            } else {
+                                messageElement.classList.add("message-left");
+                                messageElement.innerHTML = `<strong>${message.user_name}</strong><br>`;
+                            }
+                            
+                            messageElement.innerHTML += `${message.content}`;
+                            if (message.lampiran) {
+                                messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Download Attachment</a>`;
+                            }
+                            messageElement.innerHTML += `<div class="text-muted" style="font-size: 0.8em; margin-top: 4px;">${message.created_at}</div>`;
+                            
                             chatMessages.appendChild(messageElement);
                         });
                         chatMessages.scrollTop = chatMessages.scrollHeight;
-                    });
+                    }); 
             }
-        
-            // Panggil loadChatMessages pertama kali dan setiap 5 detik
+
             loadChatMessages();
-            setInterval(loadChatMessages, 5000);
-        
-            // Fungsi untuk mengirim pesan
+
             document.getElementById("chat-form").addEventListener("submit", function(e) {
-                e.preventDefault();
-                const chatInput = document.getElementById("chat-input");
-        
-                fetch("/tiket/send-message", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
-                    },
-                    body: JSON.stringify({
-                        tiket_id: {{ $tiket->id }},
-                        content: chatInput.value
-                    })
-                }).then(() => {
-                    chatInput.value = "";
-                    loadChatMessages();
-                });
+            e.preventDefault();
+            const chatInput = document.getElementById("chat-input");
+            const chatLampiran = document.getElementById("chat-lampiran");
+
+            // Create FormData to include text and file data
+            const formData = new FormData();
+            formData.append("tiket_id", {{ $tiket->id }});
+            formData.append("content", chatInput.value);
+            if (chatLampiran.files[0]) {
+                formData.append("lampiran", chatLampiran.files[0]);
+            }
+
+            fetch("/tiket/send-message", {
+                method: "POST",
+                headers: {
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: formData
+            }).then(() => {
+                chatInput.value = "";
+                chatLampiran.value = "";
+                loadChatMessages();
             });
         });
-        </script>
-        
+        });
+    </script>
 </body>
 </html>

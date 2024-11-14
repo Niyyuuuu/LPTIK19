@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tiket_id');
             $table->unsignedBigInteger('user_id');
             $table->text('content');
+            $table->string('lampiran')->nullable();
             $table->timestamps();
         
             $table->foreign('tiket_id')->references('id')->on('tiket')->onDelete('cascade');

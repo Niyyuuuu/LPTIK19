@@ -262,35 +262,46 @@ class TiketController extends Controller
 
 
     public function sendMessage(Request $request)
-{
-    $validated = $request->validate([
-        'tiket_id' => 'required|exists:tiket,id',
-        'content' => 'required|string',
-    ]);
+    {
+        $validated = $request->validate([
+            'tiket_id' => 'required|exists:tiket,id',
+            'content' => 'required|string',
+            'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
+        ]);
 
-    $chatMessage = new ChatMessage();
-    $chatMessage->tiket_id = $validated['tiket_id'];
-    $chatMessage->user_id = Auth::user()->id;
-    $chatMessage->content = $validated['content'];
-    $chatMessage->save();
+        $chatMessage = new ChatMessage();
+        $chatMessage->tiket_id = $validated['tiket_id'];
+        $chatMessage->user_id = Auth::user()->id;
+        $chatMessage->content = $validated['content'];
 
-    return response()->json(['status' => 'Message sent successfully']);
-}
+        if ($request->hasFile('lampiran')) {
+            $chatMessage['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
+        }
 
-public function getChatMessages($id)
-{
-    $messages = ChatMessage::where('tiket_id', $id)
-        ->with('user:id,name')
-        ->get()
-        ->map(function ($message) {
-            return [
-                'content' => $message->content,
-                'user_name' => $message->user->name,
-                'created_at' => $message->created_at->diffForHumans(),
-            ];
-        });
+        $chatMessage->save();
 
-    return response()->json(['messages' => $messages]);
-}
+        return response()->json(['success' => true]);
+    }
+
+
+    public function getChatMessages($id)
+    {
+        $messages = ChatMessage::where('tiket_id', $id)
+            ->with('user:id,name')
+            ->get()
+            ->map(function ($message) {
+                return [
+                    'content' => $message->content,
+                    'user_id' => $message->user_id,
+                    'user_name' => $message->user->name,
+                    'created_at' => $message->created_at->format('H:i'),
+                    'lampiran' => $message->lampiran ? asset('storage/' . str_replace('public/', '', $message->lampiran)) : null,
+                ];
+            });
+
+        return response()->json(['messages' => $messages]);
+    }
+
+
 
 }

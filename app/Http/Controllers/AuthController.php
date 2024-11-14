@@ -45,6 +45,8 @@ class AuthController extends Controller
             return redirect()->route('technician')->with('success', 'Berhasil! Anda telah login sebagai Teknisi.');
         case 'User': // Pastikan menambahkan bagian ini untuk user
             return redirect()->route('buat-pengaduan')->with('success', 'Berhasil! Anda telah login dengan sukses.');
+        case 'Piket':
+            return redirect()->route('piket')->with('success', 'Berhasil! Anda telah login sebagai Piket.');
     }
 }
 
