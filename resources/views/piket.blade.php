@@ -43,16 +43,29 @@
     <h2>Selamat Datang di Dashboard, {{ Auth::user()->name }}</h2>
     <br>
     <div class="row mb-4">
-        <div class="col-md-4">
+        <div>
             <form method="GET" action="{{ route('piket') }}">
-                <div class="input-group">
+                <div class="input-group mb-2">
                     <label class="input-group-text bg-dark text-light border-primary" for="filterYear">Tahun</label>
-                    <select class="form-select bg-dark text-light border-primary" id="filterYear" name="year"></select>
-                    <button type="submit" class="btn btn-primary">Filter</button>
+                    <select class="form-select bg-dark text-light border-primary" id="filterYear" name="year">
+                        <!-- Year options will be populated by JavaScript -->
+                    </select>
                 </div>
+    
+                <div class="input-group mb-2">
+                    <label class="input-group-text bg-dark text-light border-primary" for="startDate">Start Date</label>
+                    <input type="date" class="form-control bg-dark text-light border-primary" name="start_date" id="startDate">
+                </div>
+    
+                <div class="input-group mb-2">
+                    <label class="input-group-text bg-dark text-light border-primary" for="endDate">End Date</label>
+                    <input type="date" class="form-control bg-dark text-light border-primary" name="end_date" id="endDate">
+                </div>
+    
+                <button type="submit" class="btn btn-primary">Filter</button>
             </form>
         </div>
-    </div>
+    </div>    
 
     <h3 class="mb-4">Total Tiket</h3>
     <div class="d-flex justify-content-start w-25">
@@ -89,14 +102,14 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const yearSelect = document.getElementById('filterYear');
-        const currentYear = new Date().getFullYear();
-        for (let year = currentYear; year >= currentYear - 5; year--) {
-            const option = document.createElement('option');
-            option.value = year;
-            option.textContent = year;
-            yearSelect.appendChild(option);
-        }
-    });
+    const yearSelect = document.getElementById('filterYear');
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= currentYear - 5; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+});
 </script>
 @endpush
