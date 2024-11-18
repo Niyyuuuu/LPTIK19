@@ -5,9 +5,9 @@
 
 @section('content')
     @if (session('success'))
-    <div id="success-alert" class="alert alert-success position-absolute z-3">
-        {{ session('success') }}
-    </div>
+        <div id="success-alert" class="alert alert-success position-absolute z-3">
+            {{ session('success') }}
+        </div>
     @endif
     <div class="container">
         <style>
@@ -41,7 +41,7 @@
                     <option value="Admin" {{ $user->role === 'Admin' ? 'selected' : '' }}>Admin</option>
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
                 <label for="satker">Satker</label>
                 <select name="satker" class="form-select" required>
                     @foreach($satkers as $satker)
@@ -51,8 +51,19 @@
                     @endforeach
                 </select>
             </div>
+
             <button type="submit" class="btn btn-primary mt-3">Update</button>
             <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back()">Back</button>
         </form>
+
+        <!-- Form Reset Password -->
+        <div class="form-group mt-4">
+            <label for="password">Password</label> <br>
+            <form action="{{ route('admin.reset-password', $user->id) }}" method="POST">
+                @csrf
+                @method('PUT')
+                <button type="submit" class="btn btn-danger">Reset Password</button>
+            </form>
+        </div>   
     </div>
 @endsection

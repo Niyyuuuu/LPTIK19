@@ -71,6 +71,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin/users/{id}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
+    Route::put('/admin/reset-password/{id}', [AdminController::class, 'resetUserPassword'])->name('admin.reset-password')->middleware('auth', 'role:Admin');
 
     Route::get('/home-settings', [AdminController::class, 'homeSettings'])->name('home-settings');
     Route::post('/faq/category/store', [AdminController::class, 'storeFaqCategory'])->name('faq.category.store');

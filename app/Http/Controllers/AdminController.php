@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Faq;
 use App\Models\Help;
 use App\Models\Satker;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -92,6 +93,19 @@ class AdminController extends Controller
         $user = User::with('satkerData')->findOrFail($id);
         $satkers = Satker::all(); // Pastikan model Satker diimpor dan tersedia
         return view('admin.edit-users', compact('user', 'satkers'));
+    }
+
+
+    public function resetUserPassword($id)
+    {
+        // Cari pengguna berdasarkan ID
+        $user = User::findOrFail($id);
+
+        // Reset password menjadi default "password123"
+        $user->password = Hash::make('password123');
+        $user->save();
+
+        return redirect()->back()->with('success', 'Password berhasil direset ke default.');
     }
 
 

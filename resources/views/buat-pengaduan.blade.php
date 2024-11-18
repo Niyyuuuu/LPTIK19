@@ -190,9 +190,8 @@
         if (file && file.size > maxSize) {
             // Tampilkan pesan error jika ukuran file melebihi 5MB
             errorMsg.style.display = 'block';
-            fileInput.value = ''; // Reset input file
+            fileInput.value = '';
         } else {
-            // Sembunyikan pesan error jika ukuran file valid
             errorMsg.style.display = 'none';
         }
     });
