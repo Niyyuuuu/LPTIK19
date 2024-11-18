@@ -8,7 +8,7 @@
 @endphp
 
 <div class="sidebar">
-    <h2>Piket Panel</h2>
+    <h2>Help Desk</h2>
     <ul>
         @foreach ($menuItems as $item)
             <li>

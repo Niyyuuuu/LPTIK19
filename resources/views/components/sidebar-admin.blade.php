@@ -1,7 +1,7 @@
 <!-- resources/views/partials/sidebar.blade.php -->
 <nav class="sidebar">
     <div class="sidebar-header">
-        <h3 >Admin Panel</h3>
+        <h3 >Help Desk</h3>
         <h6 >Layanan Pengaduan TIK Kemhan</h6>
     </div>
     <ul class="components">

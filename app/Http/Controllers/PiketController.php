@@ -78,7 +78,7 @@ class PiketController extends Controller
 
         }
 
-        public function assignTechnician(Request $request, $id)
+    public function assignTechnician(Request $request, $id)
         {
             $request->validate([
                 'technician_id' => 'required|exists:users,id',
@@ -94,8 +94,21 @@ class PiketController extends Controller
 
         public function edit($id)
         {
-            $tiket = Tiket::findOrFail($id);
-            $satkers = Satker::all();
-            return view('piket.edit-tickets', compact('tiket', 'satkers'));
+            $ticket = Tiket::findOrFail($id);
+            $prioritas = ['Tinggi', 'Sedang', 'Rendah']; // Sesuaikan dengan pilihan yang diinginkan
+            return view('piket.edit-tickets', compact('ticket', 'prioritas'));
+        }
+
+        public function update(Request $request, $id)
+        {
+            $request->validate([
+                'prioritas' => 'required|in:Tinggi,Sedang,Rendah',
+            ]);
+
+            $ticket = Tiket::findOrFail($id);
+            $ticket->prioritas = $request->input('prioritas');
+            $ticket->save();
+
+            return redirect()->route('tickets')->with('success', 'Prioritas berhasil diperbarui!');
         }
 }

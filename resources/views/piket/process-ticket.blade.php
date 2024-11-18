@@ -1,8 +1,9 @@
 @extends('layouts.piket-app')
 
+@section('header', 'Process Ticket' )
+
 @section('content')
 <div class="container">
-    <h2 class="mb-2 text-white fw-bold">Proses Tiket: {{ $ticket->title }}</h2>
 
     <form action="{{ route('piket.assign-technician', $ticket->id) }}" method="POST">
         @csrf
