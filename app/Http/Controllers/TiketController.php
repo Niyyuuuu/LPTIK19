@@ -25,7 +25,7 @@ class TiketController extends Controller
             "satker" => 'required|exists:table_satker,id',
             "prioritas" => 'required|string|max:255',
             "area" => 'required|string|max:255',
-            "pesan" => 'required|string|max:255',
+            "pesan" => 'required|string|max:5000',
             "lampiran" => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:5120',
         ];
     }

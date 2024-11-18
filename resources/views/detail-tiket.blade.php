@@ -81,8 +81,8 @@
                     </tr>
                     <tr>
                         <th>Pesan</th>
-                        <td>{{ $tiket->pesan }}</td>
-                    </tr>
+                        <td>{!! $tiket->pesan !!}</td>
+                    </tr>                    
                     <tr>
                         <th>Lampiran</th>
                         <td>
@@ -105,7 +105,7 @@
                     
                                 <!-- Always show the download button -->
                                 <br>
-                                <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Download {{ $filename }}</a>
+                                <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Unduh {{ $filename }}</a>
                             @else
                                 <span class="text-muted">Tidak ada lampiran</span>
                             @endif
@@ -174,7 +174,7 @@
                             
                             messageElement.innerHTML += `${message.content}`;
                             if (message.lampiran) {
-                                messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Download Attachment</a>`;
+                                messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh</a>`;
                             }
                             messageElement.innerHTML += `<div class="text-muted" style="font-size: 0.8em; margin-top: 4px;">${message.created_at}</div>`;
                             
