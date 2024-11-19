@@ -48,7 +48,6 @@
                 <div class="input-group mb-2">
                     <label class="input-group-text bg-dark text-light border-primary" for="filterYear">Tahun</label>
                     <select class="form-select bg-dark text-light border-primary" id="filterYear" name="year">
-                        <!-- Year options will be populated by JavaScript -->
                     </select>
                 </div>
     
@@ -94,12 +93,132 @@
     @endforeach
 </div>
 
+<div id="statusChart" style="width: 100%; height: 400px;"></div>
+<div id="priorityChart" style="width: 100%; height: 400px;"></div>
+<div id="areaChart" style="width: 100%; height: 400px;"></div>
+
+
+
 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
     @csrf
 </form>
 @endsection
 
 @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Status Chart
+    Highcharts.chart('statusChart', {
+        chart: {
+            type: 'column',
+            backgroundColor: '#161616',
+            borderRadius: 10
+        },
+        title: {
+            text: 'Status Tiket',
+            color: '#fff',
+            style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+        },
+        xAxis: {
+            categories: ['Diproses', 'Selesai', 'Ditutup'],
+            labels: {
+                style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Jumlah Tiket',
+                style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+            }
+        },
+        series: [{
+            name: 'Tiket',
+            data: [
+                {{ $counts['status']['diproses'] }},
+                {{ $counts['status']['selesai'] }},
+                {{ $counts['status']['ditutup'] }}
+            ]
+        }],
+        colors: ['#536493', '#FFF1DB', '#EF5A6F'],
+        credits: { enabled: false }
+    });
+
+    // Priority Chart
+    Highcharts.chart('priorityChart', {
+        chart: {
+            type: 'pie',
+            backgroundColor: '#161616',
+            borderRadius: 10
+        },
+        title: {
+            text: 'Prioritas Tiket',
+            style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.y}'
+                }
+            }
+        },
+        series: [{
+        name: 'Prioritas',
+        colorByPoint: true,
+        data: [
+            { name: 'Tinggi', y: {{ $counts['prioritas']['tinggi'] }} },
+            { name: 'Sedang', y: {{ $counts['prioritas']['sedang'] }} },
+            { name: 'Rendah', y: {{ $counts['prioritas']['rendah'] }} }
+        ]
+    }],
+    colors: ['#536493', '#FFF1DB', '#EF5A6F'],
+    credits: { enabled: false }
+
+    });
+
+    // Area Chart
+    Highcharts.chart('areaChart', {
+        chart: {
+            type: 'bar',
+            backgroundColor: '#161616',
+            borderRadius: 10
+        },
+        title: {
+            text: 'Area Tiket',
+            style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+        },
+        xAxis: {
+            categories: ['Kemhan', 'Luar Kemhan'],
+            labels: {
+                style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Jumlah Tiket',
+                style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
+            }
+        },
+        series: [{
+            name: 'Tiket',
+            data: [
+                {{ $counts['area']['Kemhan'] }},
+                {{ $counts['area']['Luar Kemhan'] }}
+            ]
+        }],
+        colors: ['#536493', '#EF5A6F'],
+        credits: { enabled: false }
+    });
+});
+
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     const yearSelect = document.getElementById('filterYear');

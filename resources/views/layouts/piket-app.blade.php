@@ -22,6 +22,7 @@
 
     <link rel="icon" href="{{ asset('img/logo-kemhan.png') }}" type="image/icon type">
 
+    <script src="https://code.highcharts.com/highcharts.js"></script>
 
     @stack('styles')
 
