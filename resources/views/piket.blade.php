@@ -27,6 +27,7 @@
 
         .card-body {
             background-color: #1e1e1e;
+            border-radius: 10px;
         }
     </style>
 @endpush
@@ -39,8 +40,7 @@
 @if(session('error'))
     <div class="message-error">{{ session('error') }}</div>
 @endif
-<div class="container">
-    <h2>Selamat Datang di Dashboard, {{ Auth::user()->name }}</h2>
+<h2>Selamat Datang di Dashboard, {{ Auth::user()->name }}</h2>
     <br>
     <div class="row mb-4">
         <div>
@@ -91,11 +91,10 @@
             @endforeach
         </div>
     @endforeach
-</div>
 
-<div id="statusChart" style="width: 100%; height: 400px;"></div>
-<div id="priorityChart" style="width: 100%; height: 400px;"></div>
-<div id="areaChart" style="width: 100%; height: 400px;"></div>
+<div id="statusChart" style="width: 100%; height: 400px;margin-bottom: 2rem;"></div>
+<div id="priorityChart" style="width: 100%; height: 400px;margin-bottom: 2rem;"></div>
+<div id="areaChart" style="width: 100%; height: 400px;margin-bottom: 2rem;"></div>
 
 
 
