@@ -111,4 +111,9 @@ class PiketController extends Controller
 
             return redirect()->route('tickets')->with('success', 'Prioritas berhasil diperbarui!');
         }
+
+        public function feedback()
+        {
+            return view('piket.feedback');
+        }
 }
