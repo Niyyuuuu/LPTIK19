@@ -46,7 +46,7 @@
         <h3 class="mb-4">Total Users</h3>
         <div class="d-flex justify-content-start w-25">
             <div class="card mb-4 flex-fill">
-                <a href="Route('users-list')">
+                <a href="users-list">
                 <div class="card-header text-center">Total Users</div>
                 <div class="card-body">
                     <h5 class="text-center mt-2 fs-1">{{ $total_users }}</h5>
