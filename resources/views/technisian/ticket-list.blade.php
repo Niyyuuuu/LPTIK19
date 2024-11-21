@@ -22,6 +22,7 @@
 <table id="tech-table" class="table">
     <thead>
         <tr>
+            <th>No.</th>
             <th>No. Tiket</th>
             <th>Subjek</th>
             <th>Pelapor</th>
@@ -32,6 +33,7 @@
     <tbody>
         @foreach($tickets as $ticket)
             <tr>
+                <td>{{ $loop->iteration }}</td>
                 <td class="text-warning">
                     <a href="{{ route('detail-tiket', $ticket->id) }}">
                         {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}

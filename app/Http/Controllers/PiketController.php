@@ -114,6 +114,7 @@ class PiketController extends Controller
 
         public function feedback()
         {
-            return view('piket.feedback');
+            $ratingticket = Tiket::whereNotNull('rating')->get();
+            return view('piket.feedback', compact('ratingticket'));
         }
 }

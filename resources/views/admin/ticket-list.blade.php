@@ -31,6 +31,7 @@
             <table id="admin-table" class="table">
                 <thead>
                     <tr>
+                        <th>No.</th>
                         <th>No. Tiket</th>
                         <th>Subjek</th>
                         <th>Permasalahan</th>
@@ -44,6 +45,7 @@
                 <tbody>
                     @foreach($tiket as $item)
                     <tr>
+                        <td>{{ $loop->iteration }}</td>
                         <td>
                             <a href="{{ route('detail-tiket', $item->id) }}">
                                 {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
@@ -63,7 +65,6 @@
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button>
                                 </form>
                             @endif
-
                         </td>
                     </tr>
                     @endforeach

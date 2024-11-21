@@ -95,7 +95,7 @@
                     <th>Satker</th>
                     <th>Prioritas</th>
                     <th>Status</th>
-                    <th>Dibuat Oleh</th>
+                    <th>Pelapor</th>
                     <th>Actions</th>
                 </tr>
             </thead>
