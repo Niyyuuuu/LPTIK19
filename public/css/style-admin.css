@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 /* Global Dark Mode Settings */
 body {
     background-color: #121212;
     color: #fff;
+    font-family: 'Poppins', sans-serif;
 }
 
 .card, .table, .dataTables_wrapper .dataTables_paginate .paginate_button {

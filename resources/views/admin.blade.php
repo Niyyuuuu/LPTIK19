@@ -15,7 +15,7 @@
     } 
     .card:hover { 
         transform: scale(1.01);
-        box-shadow: 0 4px 8px rgb(0, 145, 255);
+        box-shadow: 0 0 .6rem rgb(0, 145, 255);
         cursor: pointer;
     }
     </style>  
@@ -26,22 +26,22 @@
         
         <h1 class="mb-4">Dashboard Admin</h1>
         
-<!-- Filter Tahun -->
-<div class="row mb-4">
-    <div class="col-md-4">
-        <form method="GET" action="{{ route('admin') }}">
-            <div class="input-group">
-                <label class="input-group-text bg-dark text-light border-primary" for="filterYear">Tahun</label>
-                <select class="form-select bg-dark text-light border-primary" id="filterYear" name="year">
-                    @foreach (range(2022, date('Y') + 2) as $year)
-                        <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
-                    @endforeach
-                </select>
-                <button type="submit" class="btn btn-primary">Filter</button>
+        <!-- Filter Tahun -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <form method="GET" action="{{ route('admin') }}">
+                    <div class="input-group">
+                        <label class="input-group-text bg-dark text-light border-primary" for="filterYear">Tahun</label>
+                        <select class="form-select bg-dark text-light border-primary" id="filterYear" name="year">  
+                            @foreach (range(2022, date('Y') + 2) as $year)
+                                <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>{{ $year }}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
         <h3 class="mb-4">Total Users</h3>
         <div class="d-flex justify-content-start w-25">
@@ -57,17 +57,21 @@
 
         <h3 class="mb-4">Status Tiket</h3>
         <div class="d-flex gap-4 mb-4">
-            @foreach (['Diproses', 'Selesai', 'Ditutup'] as $status)
+            @foreach (['Diproses', 'Selesai'] as $status)
                 <div class="col d-flex">
-                    <div class="card flex-fill">
-                        <div class="card-header">{{ $status }}</div>
-                        <div class="card-body">
-                            <h5 class="text-center mt-2 fs-1">{{ $counts['status'][strtolower($status)] }}</h5>
+                    <a href="{{ route('card-tickets', ['status' => strtolower($status)]) }}" class="text-decoration-none w-100">
+                        <div class="card flex-fill">
+                            <div class="card-header text-center">{{ $status }}</div>
+                            <div class="card-body">
+                                <h5 class="text-center mt-2 fs-1">{{ $counts['status'][strtolower($status)] }}</h5>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @endforeach
         </div>
+
+
         <h3 class="mb-4">Prioritas</h3>
         <div class="row mb-4">
             @foreach (['Tinggi', 'Sedang', 'Rendah'] as $prioritas)
@@ -96,7 +100,6 @@
             @endforeach
         </div>
 
-        {{-- **New: Complaints Per Year Chart** --}}
         <h3 class="mb-4">Jumlah Pengaduan Per Tahun</h3>
         <div class="row mb-4">
             <div class="col d-flex">
@@ -121,7 +124,6 @@
                 </div>
             @endforeach
 
-            <!-- Satker Chart with Full Width -->
             <div class="col-12 d-flex">
                 <div class="card mb-4 flex-fill">
                     <div class="card-header">Chart Satker</div>
@@ -188,11 +190,6 @@
                 name: 'Selesai',
                 data: [{{ implode(',', $complaintsPerMonth['selesai']) }}],
                 color: '#FFF1DB'
-            },
-            {
-                name: 'Ditutup',
-                data: [{{ implode(',', $complaintsPerMonth['ditutup']) }}],
-                color: '#EF5A6F'
             }
         ],
         showDataLabels: false

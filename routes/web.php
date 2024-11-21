@@ -125,3 +125,7 @@ Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
     Route::get('/piket/{id}/process', [PiketController::class, 'processTicket'])->name('process-ticket');
     Route::post('/piket/{id}/assign-technician', [PiketController::class, 'assignTechnician'])->name('piket.assign-technician');
 });
+
+Route::middleware(['auth', 'role:Admin,Technician,Piket'])->group(function () { 
+    Route::get('/card-tickets/{status}', [TiketController::class, 'cardTickets'])->name('card-tickets');
+});

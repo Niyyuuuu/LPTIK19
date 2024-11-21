@@ -302,6 +302,14 @@ class TiketController extends Controller
         return response()->json(['messages' => $messages]);
     }
 
+    public function cardTickets($status)
+    {
+        // Ambil tiket berdasarkan status yang diberikan
+        $tickets = Tiket::where('status', strtolower($status))->get();
+
+        // Tampilkan tampilan dengan data tiket yang diambil
+        return view('card-tickets', compact('tickets', 'status'));
+    }
 
 
 }

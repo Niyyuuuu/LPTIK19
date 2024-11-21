@@ -38,7 +38,7 @@
                         <th>Satker</th>
                         <th>Prioritas</th>
                         <th>Status</th>
-                        <th>Dibuat Oleh</th>
+                        <th>Pelapor</th>
                         <th class="text-end">Actions</th>
                     </tr>
                 </thead>

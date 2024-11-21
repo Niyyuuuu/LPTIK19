@@ -20,7 +20,7 @@ class AdminController extends Controller
 
         // Define the attributes we want to count
         $attributes = [
-            'status' => ['selesai', 'diproses', 'ditutup'],
+            'status' => ['selesai', 'diproses'],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
             'permasalahan' => ['jaringan', 'software', 'hardware'],
             'rating' => [1, 2, 3, 4, 5],
@@ -54,7 +54,7 @@ class AdminController extends Controller
 
         // Complaints Per Month by Status for the Selected Year
         $months = range(1, 12);
-        $statuses = ['diproses', 'selesai', 'ditutup'];
+        $statuses = ['diproses', 'selesai'];
         $complaintsPerMonth = [];
 
         foreach ($statuses as $status) {
@@ -81,7 +81,7 @@ class AdminController extends Controller
             'total_tiket',
             'complaintsPerMonth',
             'selectedYear',
-            'years' // Pass the years to the view
+            'years'
         ));
     }
 
