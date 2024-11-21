@@ -5,6 +5,20 @@
 
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
+    <style> 
+    .card a { 
+        text-decoration: none; 
+        color: inherit; } 
+    .card { 
+        transition: transform 0.3s ease,
+        box-shadow 0.3s ease;
+    } 
+    .card:hover { 
+        transform: scale(1.01);
+        box-shadow: 0 4px 8px rgb(0, 145, 255);
+        cursor: pointer;
+    }
+    </style>  
 @endpush
 
 @section('content')
@@ -32,12 +46,14 @@
         <h3 class="mb-4">Total Users</h3>
         <div class="d-flex justify-content-start w-25">
             <div class="card mb-4 flex-fill">
+                <a href="Route('users-list')">
                 <div class="card-header text-center">Total Users</div>
                 <div class="card-body">
                     <h5 class="text-center mt-2 fs-1">{{ $total_users }}</h5>
                 </div>
+            </a>
             </div>
-        </div>                
+        </div>
 
         <h3 class="mb-4">Status Tiket</h3>
         <div class="d-flex gap-4 mb-4">
