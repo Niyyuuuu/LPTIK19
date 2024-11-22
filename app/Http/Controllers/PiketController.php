@@ -43,8 +43,7 @@ class PiketController extends Controller
         $counts = [
             'status' => [
                 'diproses' => $tickets->where('status', 'Diproses')->count(),
-                'selesai' => $tickets->where('status', 'Selesai')->count(),
-                'ditutup' => $tickets->where('status', 'Ditutup')->count(),
+                'selesai' => $tickets->where('status', 'Selesai')->count()
             ],
             'prioritas' => [
                 'tinggi' => $tickets->where('prioritas', 'Tinggi')->count(),

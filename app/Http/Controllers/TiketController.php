@@ -302,14 +302,17 @@ class TiketController extends Controller
         return response()->json(['messages' => $messages]);
     }
 
-    public function cardTickets($status)
+    public function cardTickets($category, $value)
     {
-        // Ambil tiket berdasarkan status yang diberikan
-        $tickets = Tiket::where('status', strtolower($status))->get();
-
+        if (in_array($category, ['status', 'prioritas', 'area'])) {
+            $tickets = Tiket::where($category, strtolower($value))->get();
+        } else {
+            $tickets = collect(); // Collection kosong jika kategori tidak sesuai
+        }
+    
         // Tampilkan tampilan dengan data tiket yang diambil
-        return view('card-tickets', compact('tickets', 'status'));
+        return view('card-tickets', compact('tickets', 'category', 'value'));
     }
-
+    
 
 }

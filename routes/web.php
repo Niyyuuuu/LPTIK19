@@ -127,5 +127,5 @@ Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:Admin,Technician,Piket'])->group(function () { 
-    Route::get('/card-tickets/{status}', [TiketController::class, 'cardTickets'])->name('card-tickets');
+    Route::get('/card-tickets/{category}/{value}', [TiketController::class, 'cardTickets'])->name('card-tickets');
 });

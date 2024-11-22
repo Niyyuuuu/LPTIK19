@@ -18,6 +18,8 @@
             border: none;
             min-height: 150px;
             border-radius: 10px;
+            transition: transform 0.3s ease,
+            box-shadow 0.3s ease;
         }
 
         .card-header {
@@ -28,6 +30,15 @@
         .card-body {
             background-color: #1e1e1e;
             border-radius: 10px;
+        }
+        .card a { 
+            text-decoration: none; 
+            color: inherit;
+        }
+        .card:hover { 
+            transform: scale(1.01);
+            box-shadow: 0 0 .6rem rgb(0, 145, 255);
+            cursor: pointer;
         }
     </style>
 @endpush
@@ -69,28 +80,51 @@
     <h3 class="mb-4">Total Tiket</h3>
     <div class="d-flex justify-content-start w-25">
         <div class="card mb-4 flex-fill">
+            <a href="{{ route('tickets') }}">
             <div class="card-header text-center">Total Tiket</div>
             <div class="card-body">
                 <h5 class="text-center mt-2 fs-1">{{ $totalTickets }}</h5>
             </div>
+            </a>
         </div>
     </div>
 
-    @foreach (['status' => 'Status Tiket', 'prioritas' => 'Prioritas', 'area' => 'Area'] as $key => $label)
-        <h3 class="mb-4">{{ $label }}</h3>
-        <div class="row mb-4">
-            @foreach ($counts[$key] as $type => $count)
-                <div class="col d-flex">
+    <!-- Pisahkan Status Tiket menjadi card tersendiri -->
+    <h3 class="mb-4">Status Tiket</h3>
+    <div class="row mb-4">
+        @foreach ($counts['status'] as $type => $count)
+            <div class="col d-flex">
+                <a href="{{ route('card-tickets', ['category' => 'status', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
                     <div class="card flex-fill">
                         <div class="card-header">{{ ucfirst($type) }}</div>
                         <div class="card-body">
                             <h5 class="text-center mt-2 fs-1">{{ $count }}</h5>
                         </div>
                     </div>
+                </a>
+            </div>
+        @endforeach
+    </div>
+    
+    @foreach (['prioritas' => 'Prioritas', 'area' => 'Area'] as $key => $label)
+        <h3 class="mb-4">{{ $label }}</h3>
+        <div class="row mb-4">
+            @foreach ($counts[$key] as $type => $count)
+                <div class="col d-flex">
+                    <a href="{{ route('card-tickets', ['category' => $key, 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
+                        <div class="card flex-fill">
+                            <div class="card-header">{{ ucfirst($type) }}</div>
+                            <div class="card-body">
+                                <h5 class="text-center mt-2 fs-1">{{ $count }}</h5>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             @endforeach
         </div>
     @endforeach
+    
+
 
 <div id="statusChart" style="width: 100%; height: 400px;margin-bottom: 2rem;"></div>
 <div id="priorityChart" style="width: 100%; height: 400px;margin-bottom: 2rem;"></div>
@@ -135,11 +169,10 @@
             name: 'Tiket',
             data: [
                 {{ $counts['status']['diproses'] }},
-                {{ $counts['status']['selesai'] }},
-                {{ $counts['status']['ditutup'] }}
+                {{ $counts['status']['selesai'] }}
             ]
         }],
-        colors: ['#536493', '#FFF1DB', '#EF5A6F'],
+        colors: ['#536493', '#FFF1DB'],
         credits: { enabled: false }
     });
 
