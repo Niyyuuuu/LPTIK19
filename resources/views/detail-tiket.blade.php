@@ -58,7 +58,21 @@
                 <h5 class="mb-0">Detail Tiket</h5>
             </div>
             <div class="card-body">
+                @php
+                    function toRoman($month) {
+                        $romanMonths = [
+                            1 => 'I', 2 => 'II', 3 => 'III', 4 => 'IV', 5 => 'V',
+                            6 => 'VI', 7 => 'VII', 8 => 'VIII', 9 => 'IX', 10 => 'X',
+                            11 => 'XI', 12 => 'XII'
+                        ];
+                        return $romanMonths[$month] ?? '';
+                    }
+                @endphp
                 <table class="table table-striped table-bordered table-hover mt-3">
+                    <tr>
+                        <th style="width: 20%;">No. Tiket</th>
+                        <td>{{ str_pad($tiket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}</td>
+                    </tr>
                     <tr>
                         <th style="width: 20%;">Subjek</th>
                         <td>{{ $tiket->subjek }}</td>
@@ -187,9 +201,9 @@
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }); 
             }
-
+            
             loadChatMessages();
-
+            
             document.getElementById("chat-form").addEventListener("submit", function(e) {
             e.preventDefault();
             const chatInput = document.getElementById("chat-input");
@@ -215,6 +229,17 @@
                 loadChatMessages();
             });
         });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const ticketStatus = "{{ $tiket->status }}";
+            const chatForm = document.getElementById("chat-form");
+            
+            if (ticketStatus === "Selesai") {
+                chatForm.innerHTML = '<div class="alert alert-warning">Tiket ini telah selesai. Pesan baru tidak dapat dikirim.</div>';
+                return;
+            }
         });
     </script>
 </body>

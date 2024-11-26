@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Tiket;
 use App\Models\Satker;
 use App\Models\ChatMessage;
@@ -67,6 +68,7 @@ class TiketController extends Controller
         $data = $validator->validated();
         $data['tanggal'] = today();
         $data['created_by'] = Auth::id();
+        $data['status_id'] = 'Menunggu';
 
         if ($request->hasFile('lampiran')) {
             $data['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
@@ -266,13 +268,22 @@ class TiketController extends Controller
             'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
 
+        $tiket = Tiket::find($validated['tiket_id']);  // Corrected this line
+        if (!$tiket) {
+            return response()->json(['error' => 'Tiket tidak ditemukan'], 404);
+        }
+
+        if ($tiket->status === 'Selesai') {
+            return response()->json(['error' => 'Tidak dapat mengirim pesan pada tiket yang sudah selesai'], 403);
+        }
+
         $chatMessage = new ChatMessage();
         $chatMessage->tiket_id = $validated['tiket_id'];
         $chatMessage->user_id = Auth::user()->id;
         $chatMessage->content = $validated['content'];
 
         if ($request->hasFile('lampiran')) {
-            $chatMessage['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
+            $chatMessage->lampiran = $request->file('lampiran')->store('lampiran', 'public');
         }
 
         $chatMessage->save();
@@ -281,17 +292,23 @@ class TiketController extends Controller
     }
 
 
+
+
     public function getChatMessages($id)
     {
         $messages = ChatMessage::where('tiket_id', $id)
             ->with('user:id,name')
             ->get()
             ->map(function ($message) {
+                $created_at = $message->created_at;
+                $timeDisplay = $created_at->isToday() ? $created_at->format('H:i') :
+                            $created_at->diffForHumans() . ' ' . $created_at->format('H:i');
+
                 return [
                     'content' => $message->content,
                     'user_id' => $message->user_id,
                     'user_name' => $message->user->name,
-                    'created_at' => $message->created_at->format('H:i'),
+                    'created_at' => $timeDisplay,
                     'lampiran' => $message->lampiran ? asset('storage/' . str_replace('public/', '', $message->lampiran)) : null,
                 ];
             });
