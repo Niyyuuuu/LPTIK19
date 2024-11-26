@@ -71,6 +71,7 @@
                     <th>Pelapor</th>
                     <th>Tanggal Dibuat</th>
                     <th class="text-center">Rating</th>
+                    <th>Komentar</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,6 +88,7 @@
                         <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
                         <td>{{ $ticket->created_at->format('d M Y') }}</td>
                         <td class="text-center">@if ($ticket->rating) @for ($i = 0; $i < $ticket->rating; $i++) <i class='bx bxs-star text-warning'></i> @endfor @else Rating tidak tersedia. @endif</td>
+                        <td>{{ $ticket->rating_comment ?? 'Komentar tidak tersedia.' }}</td>
                     </tr>
                 @endforeach
             </tbody>

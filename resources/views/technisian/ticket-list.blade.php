@@ -42,7 +42,7 @@
                 <td>{{ $ticket->subjek ?? 'Tanpa Judul' }}</td>
                 <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
                 <td>{{ $ticket->status ?? 'Deskripsi tidak tersedia.' }}</td>
-                <td>{{ $ticket->created_at->format('d-m-Y') }}</td>
+                <td>{{ $ticket->created_at->format('d F Y') }}</td>
             </tr>
         @endforeach
     </tbody>

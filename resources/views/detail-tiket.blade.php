@@ -82,7 +82,11 @@
                     <tr>
                         <th>Pesan</th>
                         <td>{!! $tiket->pesan !!}</td>
-                    </tr>                    
+                    </tr>
+                    <tr>
+                        <th>Tanggal Dibuat</th>
+                        <td>{{ $tiket->created_at->format('d F Y') }}</td>
+                    </tr>
                     <tr>
                         <th>Lampiran</th>
                         <td>

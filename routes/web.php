@@ -111,7 +111,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
-    Route::view('/technician', 'technisi')->name('technician');
+    Route::get('/technician', [TechnicianController::class, 'index'])->name('technician');
     Route::get('/tasks', [TechnicianController::class, 'task'])->name('tasks');
     Route::get('/ticket-list', [TechnicianController::class, 'ticketList'])->name('technisian.ticket-list');
 });

@@ -39,7 +39,7 @@
                         <th>Prioritas</th>
                         <th>Status</th>
                         <th>Pelapor</th>
-                        <th class="text-end">Actions</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -57,14 +57,8 @@
                         <td>{{ $item->prioritas }}</td>
                         <td>{{ $item->status }}</td>
                         <td>{{ $item->user->name }}</td>
-                        <td class="gap-2-xl justify-content-end text-end">
-                            <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a>
-                            @if ($item->status !== 'Ditutup' && $item->status !== 'Selesai')
-                                <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button>
-                                </form>
-                            @endif
+                        <td class="gap-2-xl justify-content-end text-center">
+                            @if ($item->status !== 'Selesai') <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a> <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;"> @csrf <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button> </form> @else <span>Tiket sudah selesai</span> @endif
                         </td>
                     </tr>
                     @endforeach

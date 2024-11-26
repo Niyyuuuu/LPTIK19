@@ -19,17 +19,14 @@ class PiketController extends Controller
 
         $ticketsQuery = Tiket::query();
 
-        // Filter by user role
         if ($user->role === 'Piket') {
             $ticketsQuery->with('user');
         }
 
-        // Filter by year if no date range is provided
         if (!$startDate && !$endDate) {
             $ticketsQuery->whereYear('created_at', $year);
         }
 
-        // Filter by date range if provided
         if ($startDate) {
             $ticketsQuery->whereDate('created_at', '>=', $startDate);
         }
@@ -39,7 +36,6 @@ class PiketController extends Controller
 
         $tickets = $ticketsQuery->get();
 
-        // Same counts and totalTickets logic as before
         $counts = [
             'status' => [
                 'diproses' => $tickets->where('status', 'Diproses')->count(),
@@ -64,7 +60,7 @@ class PiketController extends Controller
 
     public function tickets()
     {
-        $tiket = Tiket::with('user')->get();
+        $tiket = Tiket::with('user')->where('status', 'Diproses')->get();
         return view('piket.tickets', compact('tiket'));
     }
 

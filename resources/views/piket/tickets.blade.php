@@ -117,7 +117,7 @@
                         <a href="{{ route('process-ticket', $item->id) }}" class="btn btn-primary" title="Process">
                             <i class="bx bx-cog"></i>
                         </a>
-                        @if ($item->status !== 'Ditutup' && $item->status !== 'Selesai')
+                        @if ($item->status !== 'Selesai')
                             <form action="{{ route('edit-tickets', $item->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-warning" title="Update">

@@ -44,7 +44,7 @@
                                 <td>{{ $user->nip }}</td>
                                 <td>{{ $user->satkerData ? $user->satkerData->nama_satker : 'Tidak ada satker' }}</td>
                                 <td>{{ $user->contact }}</td>
-                                <td>{{ $user->created_at->format('d M Y') }}</td>
+                                <td>{{ $user->created_at->format('d F Y') }}</td>
                                 <td class="gap-2-xl justify-content-end text-end">
                                     <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-primary">Edit</a>
                                     <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline">

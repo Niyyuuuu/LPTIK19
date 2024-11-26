@@ -51,7 +51,7 @@ class TiketController extends Controller
     public function history_pengaduan()
     {
         $tiket = Tiket::where('created_by', Auth::id())
-                      ->whereIn('status', ['Selesai', 'Ditutup'])
+                      ->whereIn('status', ['Selesai'])
                       ->get();
         return view('history-pengaduan', compact('tiket'));
     }
@@ -79,7 +79,7 @@ class TiketController extends Controller
 
     public function tutup($id)
     {
-        Tiket::where('id', $id)->update(['status' => 'Ditutup']);
+        Tiket::where('id', $id)->update(['status' => 'Selesai']);
         return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil ditutup');
     }
 
@@ -136,8 +136,8 @@ class TiketController extends Controller
     {
         $tiket = Tiket::findOrFail($id);
 
-        if (!in_array($tiket->status, ['Ditutup', 'Selesai'])) {
-            return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang ditutup atau selesai.');
+        if (!in_array($tiket->status, ['Selesai'])) {
+            return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang selesai.');
         }
 
         if (!is_null($tiket->rating)) {
@@ -164,8 +164,8 @@ class TiketController extends Controller
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk memberikan rating pada tiket ini.');
         }
 
-        if (!in_array($tiket->status, ['Ditutup', 'Selesai'])) {
-            return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang ditutup atau selesai.');
+        if (!in_array($tiket->status, ['Selesai'])) {
+            return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang selesai.');
         }
 
         if (!is_null($tiket->rating)) {
@@ -186,11 +186,10 @@ class TiketController extends Controller
         $userId = Auth::id();
 
         // Ubah status menjadi sesuai dengan yang ada di database (misalnya, dengan huruf kapital)
-        $statuses = ['Selesai', 'Ditutup', 'Diproses'];
+        $statuses = ['Selesai', 'Diproses'];
         $statusLabels = [
-            'Selesai' => 'Pengaduan Selesai',
-            'Ditutup' => 'Pengaduan Ditutup',
-            'Diproses' => 'Pengaduan Diproses'
+            'Diproses' => 'Pengaduan Diproses',
+            'Selesai' => 'Pengaduan Selesai'
         ];
 
         // Mengambil data pengaduan per bulan berdasarkan status
@@ -223,7 +222,6 @@ class TiketController extends Controller
                 'data' => array_map(fn($m) => $pengaduanData[$status][$m] ?? 0, $months),
                 'color' => match($status) {
                     'Selesai' => '#4BC0C0',
-                    'Ditutup' => '#FFCE56',
                     'Diproses' => '#9966FF',
                     default => '#FF6384',
                 },
@@ -235,7 +233,6 @@ class TiketController extends Controller
             'Total Pengaduan' => array_sum($totalPengaduanPerMonth),
             'Pengaduan Diproses' => array_sum($pengaduanData['Diproses'] ?? []),
             'Pengaduan Selesai' => array_sum($pengaduanData['Selesai'] ?? []),
-            'Pengaduan Ditutup' => array_sum($pengaduanData['Ditutup'] ?? []),
         ];
 
         $years = Tiket::where('created_by', $userId)
