@@ -34,6 +34,7 @@ class TiketController extends Controller
     public function show($id)
     { 
         $tiket = Tiket::with('satkerData')->findOrFail($id);
+        $tiket = Tiket::with('statusData')->findOrFail($id);
         return view('detail-tiket', compact('tiket'));
     }
 
@@ -68,7 +69,7 @@ class TiketController extends Controller
         $data = $validator->validated();
         $data['tanggal'] = today();
         $data['created_by'] = Auth::id();
-        $data['status_id'] = 'Menunggu';
+        $data['status_id'] = 1;
 
         if ($request->hasFile('lampiran')) {
             $data['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
@@ -76,7 +77,7 @@ class TiketController extends Controller
 
         Tiket::create($data);
 
-        return $this->redirectBasedOnRole()->with('success', 'Pengaduan anda sedang diproses. Terima kasih');
+        return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil dibuat');
     }
 
     public function tutup($id)
@@ -112,7 +113,7 @@ class TiketController extends Controller
 
         $tiket->update($data);
 
-        return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil diperbarui');
+        return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil diperbarui');
     }
 
     private function redirectBasedOnRole()
@@ -127,7 +128,6 @@ class TiketController extends Controller
             case 'Piket':
                 return redirect()->route('piket');
             case 'User':
-            default:
                 return redirect()->route('daftar-pengaduan');
         }
     }
@@ -163,11 +163,11 @@ class TiketController extends Controller
         $tiket = Tiket::findOrFail($id);
 
         if ($tiket->created_by !== Auth::id()) {
-            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk memberikan rating pada tiket ini.');
+            return redirect()->back()->with('error');
         }
 
         if (!in_array($tiket->status_id, [3])) {
-            return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang selesai.');
+            return redirect()->back()->with('error');
         }
 
         if (!is_null($tiket->rating)) {
@@ -187,7 +187,6 @@ class TiketController extends Controller
         $tahun = $request->input('tahun', date('Y'));
         $userId = Auth::id();
 
-        // Ubah status menjadi sesuai dengan yang ada di database (misalnya, dengan huruf kapital)
         $statuses = [1, 2, 3];
         $statusLabels = [
             1 => 'Pengaduan Menunggu',
@@ -195,7 +194,6 @@ class TiketController extends Controller
             3 => 'Pengaduan Selesai'
         ];
 
-        // Mengambil data pengaduan per bulan berdasarkan status
         $pengaduanData = Tiket::selectRaw('MONTH(created_at) as month, status_id, COUNT(*) as count')
             ->whereYear('created_at', $tahun)
             ->where('created_by', $userId)
@@ -217,25 +215,23 @@ class TiketController extends Controller
         $months = range(1, 12);
         $monthNames = collect($months)->map(fn($m) => \Carbon\Carbon::create()->month($m)->format('F'))->toArray();
 
-        // Menyiapkan data untuk setiap status
         $dataPerStatus = [];
         foreach ($statuses as $status_id) {
             $dataPerStatus[] = [
                 'name' => $statusLabels[$status_id],
                 'data' => array_map(fn($m) => $pengaduanData[$status_id][$m] ?? 0, $months),
                 'color' => match($status_id) {
-                    1 => '#FF6384', // Menunggu
-                    2 => '#9966FF', // Diproses
-                    3 => '#4BC0C0'  // Selesai
+                    1 => '#FF6384', 
+                    2 => '#9966FF', 
+                    3 => '#4BC0C0' 
                 },
             ];
         }
 
 
-        // Menyiapkan kartu statistik
         $cardData = [
             'Total Pengaduan' => array_sum($totalPengaduanPerMonth),
-            'Pengaduan Belum Diproses' => array_sum($pengaduanData['1'] ?? []),
+            'Pengaduan Menunggu' => array_sum($pengaduanData['1'] ?? []),
             'Pengaduan Diproses' => array_sum($pengaduanData['2'] ?? []),
             'Pengaduan Selesai' => array_sum($pengaduanData['3'] ?? []),
         ];
@@ -271,13 +267,13 @@ class TiketController extends Controller
             'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ]);
 
-        $tiket = Tiket::find($validated['tiket_id']);  // Corrected this line
+        $tiket = Tiket::find($validated['tiket_id']);
         if (!$tiket) {
             return response()->json(['error' => 'Tiket tidak ditemukan'], 404);
         }
 
-        if ($tiket->status === 'Selesai') {
-            return response()->json(['error' => 'Tidak dapat mengirim pesan pada tiket yang sudah selesai'], 403);
+        if ($tiket->status_id !== 2 ) {
+            return response()->json(['error' => 'Tidak dapat mengirim pesan pada tiket'], 403);
         }
 
         $chatMessage = new ChatMessage();
@@ -304,14 +300,21 @@ class TiketController extends Controller
             ->get()
             ->map(function ($message) {
                 $created_at = $message->created_at;
-                $timeDisplay = $created_at->isToday() ? $created_at->format('H:i') :
-                            $created_at->diffForHumans() . ' ' . $created_at->format('H:i');
-
+                if ($created_at->isToday()) {
+                    $time = $created_at = 'Today ' . $created_at->format('H:i');
+                }
+                else if ($created_at->isYesterday()) {
+                    $time = $created_at = 'Yesterday ' . $created_at->format('H:i');
+                }
+                else {
+                    $time = $created_at = $created_at->toFormattedDateString() . ' - ' . $created_at->format('H:i');
+                }
+                
                 return [
                     'content' => $message->content,
                     'user_id' => $message->user_id,
                     'user_name' => $message->user->name,
-                    'created_at' => $timeDisplay,
+                    'created_at' => $time,
                     'lampiran' => $message->lampiran ? asset('storage/' . str_replace('public/', '', $message->lampiran)) : null,
                 ];
             });
@@ -324,10 +327,9 @@ class TiketController extends Controller
         if (in_array($category, ['status_id', 'prioritas', 'area'])) {
             $tickets = Tiket::where($category, strtolower($value))->get();
         } else {
-            $tickets = collect(); // Collection kosong jika kategori tidak sesuai
+            $tickets = collect();
         }
-    
-        // Tampilkan tampilan dengan data tiket yang diambil
+
         return view('card-tickets', compact('tickets', 'category', 'value'));
     }
     

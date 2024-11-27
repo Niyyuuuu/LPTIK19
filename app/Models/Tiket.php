@@ -23,7 +23,7 @@ class Tiket extends Model
         'pesan',
         'lampiran',
         'created_by',
-        'status',
+        'status_id',
         'rating',
         'rating_comment',
         'technician_id',
@@ -37,7 +37,7 @@ class Tiket extends Model
 
     public function statusData()
     {
-        return $this->belongsTo(Status::class, 'status', 'id');
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
     public function user()

@@ -20,7 +20,7 @@ class AdminController extends Controller
 
         // Define the attributes we want to count
         $attributes = [
-            'status' => ['selesai', 'diproses'],
+            'status_id' => [1, 2, 3],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
             'permasalahan' => ['jaringan', 'software', 'hardware'],
             'rating' => [1, 2, 3, 4, 5],
@@ -54,7 +54,7 @@ class AdminController extends Controller
 
         // Complaints Per Month by Status for the Selected Year
         $months = range(1, 12);
-        $statuses = ['diproses', 'selesai'];
+        $statuses = [1, 2, 3];
         $complaintsPerMonth = [];
 
         foreach ($statuses as $status) {
@@ -62,7 +62,7 @@ class AdminController extends Controller
             foreach ($months as $month) {
                 $count = Tiket::whereYear('created_at', $selectedYear)
                     ->whereMonth('created_at', $month)
-                    ->where('status', $status)
+                    ->where('status_id', $status)
                     ->count();
                 $complaintsPerMonth[$status][] = $count;
             }
@@ -409,7 +409,7 @@ class AdminController extends Controller
 
             $ticket = Tiket::findOrFail($id);
             $ticket->technician_id = $request->input('technician_id');
-            $ticket->status = 'Diproses';
+            $ticket->status = 2;
             $ticket->save();
 
             return redirect()->route('ticket-list')->with('success', 'Technician assigned successfully!');
