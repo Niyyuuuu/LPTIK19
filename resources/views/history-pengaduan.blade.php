@@ -46,7 +46,7 @@
                 @php $i = 1; @endphp
                 @foreach ($tiket as $t)
                     <tr>
-                        <td>{{ $i }}</td>
+                        <td>{{ $loop->iteration }}</td>
                         <td>
                             <a href="{{ route('detail-tiket', $t->id) }}">
                                 {{ str_pad($t->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n', strtotime($t->tanggal))) . '/' . date('Y', strtotime($t->tanggal)) }}
@@ -55,20 +55,17 @@
                         <td>{{ $t->tanggal }}</td>
                         <td>{{ $t->subjek }}</td>
                         <td>{{ $t->prioritas }}</td>
-                        <td>{{ $t->status }}</td>
+                        <td>{{ 'Selesai' }}</td> <!-- Langsung tampilkan selesai -->
                         <td class="text-center">
-                            @if (in_array($t->status, ['Ditutup', 'Selesai']))
-                                @if (is_null($t->rating))
-                                    <button type="button" class="btn btn-info rating-btn" data-id="{{ $t->id }}" data-subjek="{{ $t->subjek }}">
-                                        Rating
-                                    </button>
-                                @else
-                                    <span class="badge bg-success">Rated: {{ $t->rating }}/5</span>
-                                @endif
+                            @if (is_null($t->rating))
+                                <button type="button" class="btn btn-info rating-btn" data-id="{{ $t->id }}" data-subjek="{{ $t->subjek }}">
+                                    Rating
+                                </button>
+                            @else
+                                <span class="badge bg-success">Rated: {{ $t->rating }}/5</span>
                             @endif
                         </td>
                     </tr>
-                    @php $i++; @endphp
                 @endforeach
             </tbody>
         </table>

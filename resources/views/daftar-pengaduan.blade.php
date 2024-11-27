@@ -43,7 +43,7 @@
                 $i = 1;
             @endphp
             @foreach ($tiket as $t)
-                @if ($t->status != 'Ditutup' && $t->status != 'Selesai')
+                @if ($t->status_id != 3)
                     <tr>
                         <td>{{ $i }}</td>
                         <td>
@@ -54,7 +54,7 @@
                         <td>{{ $t->tanggal }}</td>
                         <td style="width: 30%;">{{ $t->subjek }}</td>
                         <td>{{ $t->prioritas }}</td>
-                        <td>{{ $t->status }}</td>
+                        <td>{{ $t->status_id == 1 ? 'Menunggu' : ($t->status_id == 2 ? 'Diproses' : 'Belum Selesai') }}</td>
                         <td class="text-center">
                             <a href="{{ route('edit-pengaduan', $t->id) }}" class="btn btn-warning">Edit</a>
                             <form action="{{ route('tutup-tiket', $t->id) }}" method="POST" style="display: inline;">

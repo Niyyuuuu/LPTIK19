@@ -52,7 +52,7 @@ class TiketController extends Controller
     public function history_pengaduan()
     {
         $tiket = Tiket::where('created_by', Auth::id())
-                      ->whereIn('status', ['Selesai'])
+                      ->where('status_id', 3)
                       ->get();
         return view('history-pengaduan', compact('tiket'));
     }
@@ -81,7 +81,7 @@ class TiketController extends Controller
 
     public function tutup($id)
     {
-        Tiket::where('id', $id)->update(['status' => 'Selesai']);
+        Tiket::where('id', $id)->update(['status_id' => 3]);
         return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil ditutup');
     }
 
@@ -138,7 +138,7 @@ class TiketController extends Controller
     {
         $tiket = Tiket::findOrFail($id);
 
-        if (!in_array($tiket->status, ['Selesai'])) {
+        if (!in_array($tiket->status_id, [3])) {
             return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang selesai.');
         }
 
@@ -166,7 +166,7 @@ class TiketController extends Controller
             return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk memberikan rating pada tiket ini.');
         }
 
-        if (!in_array($tiket->status, ['Selesai'])) {
+        if (!in_array($tiket->status_id, [3])) {
             return redirect()->back()->with('error', 'Rating hanya dapat diberikan untuk tiket yang selesai.');
         }
 
@@ -188,22 +188,23 @@ class TiketController extends Controller
         $userId = Auth::id();
 
         // Ubah status menjadi sesuai dengan yang ada di database (misalnya, dengan huruf kapital)
-        $statuses = ['Selesai', 'Diproses'];
+        $statuses = [1, 2, 3];
         $statusLabels = [
-            'Diproses' => 'Pengaduan Diproses',
-            'Selesai' => 'Pengaduan Selesai'
+            1 => 'Pengaduan Menunggu',
+            2 => 'Pengaduan Diproses',
+            3 => 'Pengaduan Selesai'
         ];
 
         // Mengambil data pengaduan per bulan berdasarkan status
-        $pengaduanData = Tiket::selectRaw('MONTH(created_at) as month, status, COUNT(*) as count')
+        $pengaduanData = Tiket::selectRaw('MONTH(created_at) as month, status_id, COUNT(*) as count')
             ->whereYear('created_at', $tahun)
             ->where('created_by', $userId)
-            ->whereIn('status', $statuses)
-            ->groupBy('month', 'status')
+            ->whereIn('status_id', $statuses)
+            ->groupBy('month', 'status_id')
             ->get()
-            ->groupBy('status')
-            ->mapWithKeys(function ($items, $status) {
-                return [$status => $items->pluck('count', 'month')->all()];
+            ->groupBy('status_id')
+            ->mapWithKeys(function ($items, $status_id) {
+                return [$status_id => $items->pluck('count', 'month')->all()];
             });
 
         $totalPengaduanPerMonth = Tiket::whereYear('created_at', $tahun)
@@ -218,23 +219,25 @@ class TiketController extends Controller
 
         // Menyiapkan data untuk setiap status
         $dataPerStatus = [];
-        foreach ($statuses as $status) {
+        foreach ($statuses as $status_id) {
             $dataPerStatus[] = [
-                'name' => $statusLabels[$status],
-                'data' => array_map(fn($m) => $pengaduanData[$status][$m] ?? 0, $months),
-                'color' => match($status) {
-                    'Selesai' => '#4BC0C0',
-                    'Diproses' => '#9966FF',
-                    default => '#FF6384',
+                'name' => $statusLabels[$status_id],
+                'data' => array_map(fn($m) => $pengaduanData[$status_id][$m] ?? 0, $months),
+                'color' => match($status_id) {
+                    1 => '#FF6384', // Menunggu
+                    2 => '#9966FF', // Diproses
+                    3 => '#4BC0C0'  // Selesai
                 },
             ];
         }
 
+
         // Menyiapkan kartu statistik
         $cardData = [
             'Total Pengaduan' => array_sum($totalPengaduanPerMonth),
-            'Pengaduan Diproses' => array_sum($pengaduanData['Diproses'] ?? []),
-            'Pengaduan Selesai' => array_sum($pengaduanData['Selesai'] ?? []),
+            'Pengaduan Belum Diproses' => array_sum($pengaduanData['1'] ?? []),
+            'Pengaduan Diproses' => array_sum($pengaduanData['2'] ?? []),
+            'Pengaduan Selesai' => array_sum($pengaduanData['3'] ?? []),
         ];
 
         $years = Tiket::where('created_by', $userId)
@@ -318,7 +321,7 @@ class TiketController extends Controller
 
     public function cardTickets($category, $value)
     {
-        if (in_array($category, ['status', 'prioritas', 'area'])) {
+        if (in_array($category, ['status_id', 'prioritas', 'area'])) {
             $tickets = Tiket::where($category, strtolower($value))->get();
         } else {
             $tickets = collect(); // Collection kosong jika kategori tidak sesuai
