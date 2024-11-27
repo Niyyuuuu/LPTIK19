@@ -53,6 +53,13 @@
             </a>
         </li>
     </ul>
+    <div class="sidebar-footer">
+        <a href="{{ route('profil-saya') }}" class="sidebar-link">
+            <i class="bx bx-user"></i>
+            <span>{{ Auth::user()->name }}</span>
+            <span> | {{ Auth::user()->email }}</span>
+        </a>
+    </div>
     <div class="sidebar-footer mb-4">
         <form id="logout-form" action="{{ route('logout') }}" style="display: none;">
             @csrf
@@ -61,7 +68,7 @@
             <a href="#" class="sidebar-link" onclick="event.preventDefault(); 
                 if (confirm('Yakin ingin Logout?')) {
                     document.getElementById('logout-form').submit();
-                }">
+                    }">
                 <i class="bx bx-log-out"></i>
                 <span>Logout</span>
             </a>
