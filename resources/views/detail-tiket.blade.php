@@ -16,7 +16,6 @@
             background-color: #007bff;
             color: white;
         }
-        /* Styling message bubbles */
         .message-left, .message-right {
             display: inline-block;
             padding: 10px;
@@ -102,6 +101,18 @@
                         <td>{{ $tiket->created_at->format('d F Y') }}</td>
                     </tr>
                     <tr>
+                        <th>Status</th>
+                        <td>{{ $tiket->statusData->status }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rating</th>
+                        <td>{{ $tiket->rating ?? 'Rating belum tersedia.' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Komentar Rating</th>
+                        <td>{{ $tiket->rating_comment ?? 'Komentar belum tersedia.' }}</td>
+                    </tr>
+                    <tr>
                         <th>Lampiran</th>
                         <td>
                             @if ($tiket->lampiran)
@@ -112,7 +123,6 @@
                                     $isImage = in_array($extension, ['jpg', 'jpeg', 'png']);
                                     $isPDF = $extension === 'pdf';
                                 @endphp
-                                <!-- Show Image or PDF Preview -->
                                 @if ($isImage)
                                     <a href="{{ asset('storage/' . $filePath) }}" target="_blank">
                                         <img src="{{ asset('storage/' . $filePath) }}" alt="Lampiran" style="max-width: 200px; max-height: 200px;">
@@ -120,8 +130,6 @@
                                 @elseif ($isPDF)
                                     <embed src="{{ asset('storage/' . $filePath) }}" type="application/pdf" width="100%" height="400px" />
                                 @endif
-                    
-                                <!-- Always show the download button -->
                                 <br>
                                 <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Unduh {{ $filename }}</a>
                             @else
@@ -141,33 +149,22 @@
             </div>
             <div class="card-body">
                 <div id="chat-messages" class="chat-container">
-                    <!-- Messages will be loaded dynamically -->
                 </div>
                 <form id="chat-form" class="mt-3" enctype="multipart/form-data">
                     <div class="input-group">
-                        <!-- Tombol untuk Attachment dengan Ikon -->
                         <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('chat-lampiran').click();">
-                            <i class="fas fa-paperclip"></i> <!-- Ikon attachment -->
+                            <i class="fas fa-paperclip"></i>
                         </button>
-                        
-                        <!-- Input Tersembunyi untuk File -->
                         <input type="file" id="chat-lampiran" class="d-none">
-                        
-                        <!-- Input untuk Pesan Chat -->
-                        <input type="text" id="chat-input" class="form-control" placeholder="Ketik pesan..." required>
-                        
-                        <!-- Tombol Kirim Pesan -->
+                        <input type="text" id="chat-input" class="form-control" placeholder="Ketik pesan...">
                         <button type="submit" class="btn btn-primary">Kirim</button>
                     </div>
+                    <div id="file-preview" class="mt-2"></div>
                 </form>
             </div>
         </div>
     </div>
-    
-    <!-- Tambahkan link Font Awesome di <head> atau pada halaman ini jika belum tersedia -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const loggedInUserId = {{ auth()->id() }};
@@ -189,10 +186,9 @@
                                 messageElement.classList.add("message-left");
                                 messageElement.innerHTML = `<strong>${message.user_name}</strong><br>`;
                             }
-                            
                             messageElement.innerHTML += `${message.content}`;
                             if (message.lampiran) {
-                                messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh</a>`;
+                                messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh Dokumen</a>`;
                             }
                             messageElement.innerHTML += `<div class="text-muted" style="font-size: 0.8em; margin-top: 4px;">${message.created_at}</div>`;
                             
@@ -201,22 +197,41 @@
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }); 
             }
-            
             loadChatMessages();
-            
+
+            document.getElementById("chat-lampiran").addEventListener("change", function() {
+                const file = this.files[0];
+                const previewContainer = document.getElementById('file-preview');
+                previewContainer.innerHTML = '';
+
+                if (file) {
+                    const fileName = document.createElement('span');
+                    fileName.textContent = `Lampiran: ${file.name}`;
+                    fileName.classList.add('badge', 'bg-primary', 'text-white', 'me-2');
+
+                    const cancelButton = document.createElement('button');
+                    cancelButton.textContent = 'Hapus';
+                    cancelButton.classList.add('btn', 'btn-sm', 'btn-danger');
+                    cancelButton.addEventListener('click', function() {
+                        document.getElementById('chat-lampiran').value = '';
+                        previewContainer.innerHTML = '';
+                    });
+
+                    previewContainer.appendChild(fileName);
+                    previewContainer.appendChild(cancelButton);
+                }
+            });
+
             document.getElementById("chat-form").addEventListener("submit", function(e) {
             e.preventDefault();
             const chatInput = document.getElementById("chat-input");
             const chatLampiran = document.getElementById("chat-lampiran");
-
-            // Create FormData to include text and file data
             const formData = new FormData();
             formData.append("tiket_id", {{ $tiket->id }});
             formData.append("content", chatInput.value);
             if (chatLampiran.files[0]) {
                 formData.append("lampiran", chatLampiran.files[0]);
             }
-
             fetch("/tiket/send-message", {
                 method: "POST",
                 headers: {
@@ -226,6 +241,7 @@
             }).then(() => {
                 chatInput.value = "";
                 chatLampiran.value = "";
+                document.getElementById("file-preview").innerHTML = "";
                 loadChatMessages();
             });
         });
@@ -233,11 +249,11 @@
     </script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            const ticketStatus = "{{ $tiket->status }}";
+            const ticketStatus = "{{ $tiket->status_id }}";
             const chatForm = document.getElementById("chat-form");
             
-            if (ticketStatus === "Selesai") {
-                chatForm.innerHTML = '<div class="alert alert-warning">Tiket ini telah selesai. Pesan baru tidak dapat dikirim.</div>';
+            if (ticketStatus !== "2") {
+                chatForm.innerHTML = '<div class="alert alert-warning">Tidak dapat mengirim pesan.</div>';
                 return;
             }
         });
