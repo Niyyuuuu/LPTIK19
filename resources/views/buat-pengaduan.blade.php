@@ -205,7 +205,7 @@
             ],
             height: 300
         });
-    </script>    
+    </script>
 </section>
 </body>
 </html>

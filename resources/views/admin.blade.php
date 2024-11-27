@@ -58,9 +58,9 @@
 
         <h3 class="mb-4">Status Tiket</h3>
         <div class="d-flex gap-4 mb-4">
-            @foreach ($counts['status'] as $type => $count)
+            @foreach ($counts['status_id'] as $type => $count)
                 <div class="col d-flex">
-                    <a href="{{ route('card-tickets', ['category' => 'status', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
+                    <a href="{{ route('card-tickets', ['category' => 'status_id', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
                         <div class="card flex-fill">
                             <div class="card-header">{{ ucfirst($type) }}</div>
                             <div class="card-body">
@@ -173,13 +173,18 @@
         categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
         series: [
             {
+                name: 'Belum Diproses',
+                data: [{{ implode(',', $complaintsPerMonth[1]) }}],
+                color: '#EF5A6F'
+            },
+            {
                 name: 'Diproses',
-                data: [{{ implode(',', $complaintsPerMonth['diproses']) }}],
+                data: [{{ implode(',', $complaintsPerMonth[2]) }}],
                 color: '#536493'
             },
             {
                 name: 'Selesai',
-                data: [{{ implode(',', $complaintsPerMonth['selesai']) }}],
+                data: [{{ implode(',', $complaintsPerMonth[3]) }}],
                 color: '#FFF1DB'
             }
         ],

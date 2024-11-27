@@ -1,4 +1,3 @@
-<!-- resources/views/history-pengaduan.blade.php -->
 @extends('layouts.app')
 
 @section('title', 'Riwayat Pengaduan')
@@ -33,13 +32,13 @@
         <table id="tiket-table" class="table table-bordered mt-3 mb-5">
             <thead>
                 <tr>
-                    <th style="width: 2%; text-align: center">No.</th>
-                    <th style="width: 10%;">No. Tiket</th>
-                    <th style="width: 10%;">Tanggal</th>
-                    <th style="width: 30%;">Subjek</th>
-                    <th style="width: 10%;">Prioritas</th>
-                    <th style="width: 10%;">Status</th>
-                    <th class="text-center" style="width: 15%;">Aksi</th>
+                    <th>No.</th>
+                    <th>No. Tiket</th>
+                    <th>Tanggal</th>
+                    <th>Subjek</th>
+                    <th>Prioritas</th>
+                    <th>Status</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,10 +51,10 @@
                                 {{ str_pad($t->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n', strtotime($t->tanggal))) . '/' . date('Y', strtotime($t->tanggal)) }}
                             </a>
                         </td>
-                        <td>{{ $t->tanggal }}</td>
+                        <td>{{ date('d F Y', strtotime($t->created_at)) }}</td>
                         <td>{{ $t->subjek }}</td>
                         <td>{{ $t->prioritas }}</td>
-                        <td>{{ 'Selesai' }}</td> <!-- Langsung tampilkan selesai -->
+                        <td>{{ 'Selesai' }}</td>
                         <td class="text-center">
                             @if (is_null($t->rating))
                                 <button type="button" class="btn btn-info rating-btn" data-id="{{ $t->id }}" data-subjek="{{ $t->subjek }}">
@@ -181,7 +180,6 @@
             document.querySelector("#sidebar").classList.toggle("expand");
         });
 
-        // Handler untuk tombol Rating
         $('.rating-btn').on('click', function() {
             var tiketId = $(this).data('id');
             var subjek = $(this).data('subjek');

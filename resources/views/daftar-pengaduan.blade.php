@@ -29,13 +29,13 @@
     <table id="tiket-table" class="table table-bordered mt-3 mb-5">
         <thead>
             <tr>
-                <th style="width: 2%; text-align: center">No.</th>
-                <th style="width: 10%;">No. Tiket</th>
-                <th style="width: 10%;">Tanggal</th>
-                <th style="width: 30%;">Subjek</th>
-                <th style="width: 10%;">Prioritas</th>
-                <th style="width: 10%;">Status</th>
-                <th class="text-center" style="width: 15%;">Aksi</th>
+                <th>No.</th>
+                <th>No. Tiket</th>
+                <th>Tanggal</th>
+                <th>Subjek</th>
+                <th>Prioritas</th>
+                <th>Status</th>
+                <th class="text-center">Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -51,12 +51,14 @@
                                 {{ str_pad($t->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                             </a>
                         </td>
-                        <td>{{ $t->tanggal }}</td>
-                        <td style="width: 30%;">{{ $t->subjek }}</td>
+                        <td>{{ date('d F Y', strtotime($t->created_at)) }}</td>
+                        <td>{{ $t->subjek }}</td>
                         <td>{{ $t->prioritas }}</td>
                         <td>{{ $t->status_id == 1 ? 'Menunggu' : ($t->status_id == 2 ? 'Diproses' : 'Belum Selesai') }}</td>
                         <td class="text-center">
+                            @if ($t->status_id == 1)
                             <a href="{{ route('edit-pengaduan', $t->id) }}" class="btn btn-warning">Edit</a>
+                            @endif
                             <form action="{{ route('tutup-tiket', $t->id) }}" method="POST" style="display: inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button>
