@@ -59,11 +59,11 @@ class AuthController extends Controller
             'email' => 'required|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed'
         ], [
-            'password.min' => 'Password is too short.',
-            'password.confirmed' => 'Password confirmation does not match.',
-            'email.unique' => 'Email already exists',
-            'username.unique' => 'Username already exists',
-            'name.unique' => 'Name already exists'
+            'password.min' => 'Password terlalu pendek.',
+            'password.confirmed' => 'Password tidak cocok.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'username.unique' => 'Username sudah terdaftar.',
+            'name.unique' => 'Nama sudah terdaftar.'
         ]);
 
         if ($validator->fails()) {
