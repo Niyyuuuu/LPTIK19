@@ -332,6 +332,4 @@ class TiketController extends Controller
 
         return view('card-tickets', compact('tickets', 'category', 'value'));
     }
-    
-
 }

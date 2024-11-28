@@ -35,39 +35,61 @@
     @endphp
 
     <div class="container mt-5 p-5 bg-light rounded">
-        <h1 class="mb-4">{{ ucfirst($category) }} Tickets: {{ ucfirst($value) }}</h1>
+        <!-- Ubah nama kategori status_id menjadi "Status" -->
+        <h1 class="mb-4">{{ $category === 'status_id' ? 'Status' : ucfirst($category) }} Tiket: 
+            {{ $category === 'status_id' ? ($value == 1 ? 'Menunggu' : ($value == 2 ? 'Diproses' : ($value == 3 ? 'Selesai' : ucfirst($value)))) : ucfirst($value) }}
+        </h1>
 
         @if($tickets->isEmpty())
-            <p class="text-muted">Tidak ada tiket dengan status {{ ucfirst($value) }}.</p>
+            <!-- Perbarui teks untuk kategori status_id -->
+            <p class="text-muted">Tidak ada tiket dengan kategori {{ $category === 'status_id' ? 'Status' : ucfirst($category) }} 
+                {{ $category === 'status_id' ? ($value == 1 ? 'Menunggu' : ($value == 2 ? 'Diproses' : ($value == 3 ? 'Selesai' : ucfirst($value)))) : ucfirst($value) }}.
+            </p>
         @else
-        <table id="ticket-table" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>No.</th>
-                    <th>No. Tiket</th>
-                    <th>Subjek</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($tickets as $ticket)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>
-                        <a href="{{ route('detail-tiket', $ticket->id) }}">
-                            {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
-                        </a>
-                    </td>
-                    <td>{{ $ticket->subjek }}</td>
-                    <td>{{ $ticket->status }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+            <table id="ticket-table" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>No. Tiket</th>
+                        <th>Subjek</th>
+                        <th>Status</th> <!-- Ubah nama kolom menjadi Status -->
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($tickets as $ticket)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            <a href="{{ route('detail-tiket', $ticket->id) }}">
+                                {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
+                            </a>
+                        </td>
+                        <td>{{ $ticket->subjek }}</td>
+                        <td>
+                            <!-- Ubah status_id menjadi teks -->
+                            @switch($ticket->status_id)
+                                @case(1)
+                                    Menunggu
+                                    @break
+                                @case(2)
+                                    Diproses
+                                    @break
+                                @case(3)
+                                    Selesai
+                                    @break
+                                @default
+                                    Tidak Diketahui
+                            @endswitch
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         @endif
 
         <button onclick="history.back()" class="btn-back btn btn-primary">Kembali</button>
     </div>
+
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -58,11 +58,11 @@
 
         <h3 class="mb-4">Status Tiket</h3>
         <div class="d-flex gap-4 mb-4">
-            @foreach ($counts['status_id'] as $type => $count)
+            @foreach ($counts['status_id'] as $statusId => $count)
                 <div class="col d-flex">
-                    <a href="{{ route('card-tickets', ['category' => 'status_id', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
+                    <a href="{{ route('card-tickets', ['category' => 'status_id', 'value' => $statusId]) }}" class="text-decoration-none w-100">
                         <div class="card flex-fill">
-                            <div class="card-header">{{ ucfirst($type) }}</div>
+                            <div class="card-header">{{ $statusLabels[$statusId] }}</div> <!-- Menggunakan label status -->
                             <div class="card-body">
                                 <h5 class="text-center mt-2 fs-1">{{ $count }}</h5>
                             </div>
@@ -71,6 +71,8 @@
                 </div>
             @endforeach
         </div>
+
+
 
 
         @foreach (['prioritas' => 'Prioritas', 'area' => 'Area'] as $key => $label)
@@ -169,32 +171,31 @@
                 showDataLabels: false
             },
             complaintsYear: { 
-        type: 'column',
-        categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        series: [
-            {
-                name: 'Belum Diproses',
-                data: [{{ implode(',', $complaintsPerMonth[1]) }}],
-                color: '#EF5A6F'
-            },
-            {
-                name: 'Diproses',
-                data: [{{ implode(',', $complaintsPerMonth[2]) }}],
-                color: '#536493'
-            },
-            {
-                name: 'Selesai',
-                data: [{{ implode(',', $complaintsPerMonth[3]) }}],
-                color: '#FFF1DB'
-            }
-        ],
-        showDataLabels: false
-    }
+            type: 'column',
+            categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            series: [
+                {
+                    name: 'Belum Diproses',
+                    data: [{{ implode(',', $complaintsPerMonth[1]) }}],
+                    color: '#EF5A6F'
+                },
+                {
+                    name: 'Diproses',
+                    data: [{{ implode(',', $complaintsPerMonth[2]) }}],
+                    color: '#536493'
+                },
+                {
+                    name: 'Selesai',
+                    data: [{{ implode(',', $complaintsPerMonth[3]) }}],
+                    color: '#FFF1DB'
+                }
+            ],
+            showDataLabels: false
+        }
         };
     
         Object.keys(chartData).forEach(chartKey => {
             if(chartKey === 'complaintsYear') {
-                // **New: Render Complaints Per Year Chart**
                 Highcharts.chart('chart-complaints-year', {
     chart: { 
         type: chartData.complaintsYear.type, 
@@ -253,10 +254,9 @@
                     series: [{
                         name: 'Jumlah',
                         data: chartData[chartKey].data,
-                        // For pie charts, color is handled per data point
                         color: chartData[chartKey].type === 'pie' ? undefined : '#FFF1DB',
                         dataLabels: {
-                            enabled: chartData[chartKey].showDataLabels ?? true, // Disable data labels for certain charts
+                            enabled: chartData[chartKey].showDataLabels ?? true,
                             color: '#fff',
                             style: { fontFamily: 'Poppins, sans-serif' }
                         }

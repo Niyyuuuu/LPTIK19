@@ -67,9 +67,9 @@
                 <tr>
                     <th>No.</th>
                     <th>No. Tiket</th>
+                    <th>Tanggal Dibuat</th>
                     <th>Subjek</th>
                     <th>Pelapor</th>
-                    <th>Tanggal Dibuat</th>
                     <th class="text-center">Rating</th>
                     <th>Komentar</th>
                 </tr>
@@ -84,9 +84,9 @@
                                 {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                             </a>
                         </td>
+                        <td>{{ $ticket->created_at->format('d F Y') }}</td>
                         <td>{{ $ticket->subjek ?? 'Tanpa Judul' }}</td>
                         <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
-                        <td>{{ $ticket->created_at->format('d M Y') }}</td>
                         <td class="text-center">@if ($ticket->rating) @for ($i = 0; $i < $ticket->rating; $i++) <i class='bx bxs-star text-warning'></i> @endfor @else Rating tidak tersedia. @endif</td>
                         <td>{{ $ticket->rating_comment ?? 'Komentar tidak tersedia.' }}</td>
                     </tr>

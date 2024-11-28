@@ -16,7 +16,7 @@ class TechnicianController extends Controller
     
         // Define attributes to count
         $attributes = [
-            'status' => ['selesai', 'diproses'],
+            'status_id' => [1, 2, 3],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
             'permasalahan' => ['jaringan', 'software', 'hardware'],
             'rating' => [1, 2, 3, 4, 5],

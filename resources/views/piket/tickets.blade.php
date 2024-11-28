@@ -91,6 +91,7 @@
                 <tr>
                     <th>No.</th>
                     <th>No. Tiket</th>
+                    <th>Tanggal</th>
                     <th>Subjek</th>
                     <th>Satker</th>
                     <th>Prioritas</th>
@@ -108,16 +109,17 @@
                             {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                         </a>
                     </td>
+                    <td>{{ $item->created_at->format('d F Y') }}</td>
                     <td>{{ $item->subjek }}</td>
                     <td>{{ $item->satkerData->nama_satker }}</td>
                     <td>{{ $item->prioritas }}</td>
-                    <td>{{ $item->status }}</td>
+                    <td>{{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : 'Selesai') }}</td>
                     <td>{{ $item->user->name }}</td>
                     <td class="table-actions justify-content-center">
                         <a href="{{ route('process-ticket', $item->id) }}" class="btn btn-primary" title="Process">
                             <i class="bx bx-cog"></i>
                         </a>
-                        @if ($item->status !== 'Selesai')
+                        @if ($item->status_id !== 3)
                             <form action="{{ route('edit-tickets', $item->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 <button type="submit" class="btn btn-warning" title="Update">

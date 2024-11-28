@@ -10,14 +10,15 @@ return new class extends Migration
     {
         Schema::create('status', function (Blueprint $table) {
             $table->id();
-            $table->string('status')->default('Diproses');
+            $table->string('name')->default('Menunggu');
             $table->timestamps();
         });
 
         DB::table('status')->insert([
-            ['status' => 'Diproses'],
-            ['status' => 'Ditutup'],
-            ['status' => 'Selesai'],
+            ['name' => 'Menunggu'],
+            ['name' => 'Diproses'],
+            ['name' => 'Selesai'],
+            ['name' => 'Proses Selesai'],
         ]);
     }
 

@@ -6,8 +6,15 @@
     <link rel="stylesheet" href="{{ asset('css/style-admin.css') }}">
 @endpush
 
+
+
 @section('content')
 <div class="container-fluid">
+    @if (session('success'))
+        <div id="success-alert" class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <h1 class="mb-4">List Ticket</h1>
 
     <div>
@@ -33,8 +40,8 @@
                     <tr>
                         <th>No.</th>
                         <th>No. Tiket</th>
+                        <th>Tanggal</th>
                         <th>Subjek</th>
-                        <th>Permasalahan</th>
                         <th>Satker</th>
                         <th>Prioritas</th>
                         <th>Status</th>
@@ -51,14 +58,21 @@
                                 {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                             </a>
                         </td>
+                        <td>{{ $item->created_at->format('d F Y') }}</td>
                         <td>{{ $item->subjek }}</td>
-                        <td>{{ $item->permasalahan }}</td>
                         <td>{{ $item->satkerData->nama_satker }}</td>
                         <td>{{ $item->prioritas }}</td>
-                        <td>{{ $item->status }}</td>
+                        <td>
+                            {{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : 'Selesai') }}
+                        </td>                        
                         <td>{{ $item->user->name }}</td>
                         <td class="gap-2-xl justify-content-end text-center">
-                            @if ($item->status !== 'Selesai') <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a> <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;"> @csrf <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button> </form> @else <span>Tiket sudah selesai</span> @endif
+                            @if ($item->status_id == 1 )
+                            <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a>
+                            <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button>
+                            </form> @else <span>Tiket {{ $item->status_id == 2 ? 'Diproses' : 'Selesai' }}</span> @endif
                         </td>
                     </tr>
                     @endforeach

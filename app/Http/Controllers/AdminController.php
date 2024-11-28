@@ -74,6 +74,12 @@ class AdminController extends Controller
             ->orderBy('year', 'desc')
             ->pluck('year');
 
+            $statusLabels = [
+                1 => 'Menunggu',
+                2 => 'Diproses',
+                3 => 'Selesai',
+            ];
+
         return view('admin', compact(
             'counts',
             'total_users',
@@ -81,7 +87,8 @@ class AdminController extends Controller
             'total_tiket',
             'complaintsPerMonth',
             'selectedYear',
-            'years'
+            'years',
+            'statusLabels'
         ));
     }
 
@@ -409,9 +416,9 @@ class AdminController extends Controller
 
             $ticket = Tiket::findOrFail($id);
             $ticket->technician_id = $request->input('technician_id');
-            $ticket->status = 2;
+            $ticket->status_id = 2;
             $ticket->save();
 
-            return redirect()->route('ticket-list')->with('success', 'Technician assigned successfully!');
+            return redirect()->route('admin.ticket-list')->with('success', 'Technician assigned successfully!');
         }
 }

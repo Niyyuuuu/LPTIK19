@@ -102,11 +102,13 @@
                     </tr>
                     <tr>
                         <th>Status</th>
-                        <td>{{ $tiket->statusData->status }}</td>
+                        <td>{{ $tiket->statusData->name }}</td>
                     </tr>
                     <tr>
                         <th>Rating</th>
-                        <td>{{ $tiket->rating ?? 'Rating belum tersedia.' }}</td>
+                        <td>
+                            {{ $tiket->rating ? $tiket->rating . '/5' : 'Rating belum tersedia.' }}
+                        </td>                        
                     </tr>
                     <tr>
                         <th>Komentar Rating</th>

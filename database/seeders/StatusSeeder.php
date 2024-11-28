@@ -12,10 +12,13 @@ class StatusSeeder extends Seeder
      */
     public function run(): void
     {
+        if (DB::table('status')->count() == 0) {
         DB::table('status')->insert([
-            ['status' => 'Diproses'],
-            ['status' => 'Selesai'],
-            ['status' => 'Ditutup'],
+            ['name' => 'Menunggu'],
+            ['name' => 'Diproses'],
+            ['name' => 'Proses Selesai'],
+            ['name' => 'Selesai'],
         ]);
     }
+}
 }

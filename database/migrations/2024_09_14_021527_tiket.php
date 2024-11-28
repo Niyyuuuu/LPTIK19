@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('area');
             $table->text('pesan');
             $table->string('lampiran')->nullable();
-            $table->enum('status', ['Diproses', 'Selesai', 'Ditutup'])->default('Diproses'); // Enum untuk membatasi pilihan status
+            $table->enum('status_id', [1, 2, 3, 4]);
             $table->integer('rating')->nullable();
             $table->text('rating_comment')->nullable();
             $table->unsignedBigInteger('created_by'); // Foreign key to users table

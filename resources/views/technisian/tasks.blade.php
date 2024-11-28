@@ -29,10 +29,11 @@
             <tr>
                 <th>No.</th>
                 <th>No. Tiket</th>
+                <th>Tanggal Dibuat</th>
                 <th>Subjek</th>
                 <th>Pelapor</th>
                 <th>Status</th>
-                <th>Tanggal Dibuat</th>
+                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -44,10 +45,13 @@
                             {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                         </a>
                     </td>
+                    <td>{{ $ticket->created_at->format('d F Y') }}</td>
                     <td>{{ $ticket->subjek ?? 'Tanpa Judul' }}</td>
                     <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
-                    <td>{{ $ticket->status ?? 'Deskripsi tidak tersedia.' }}</td>
-                    <td>{{ $ticket->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $ticket->status_id == 1 ? 'Menunggu' : ($ticket->status_id == 2 ? 'Diproses' : 'Selesai') }}</td>
+                    <td>
+                        <a href="{{ route('detail-tiket', $ticket->id) }}" class="btn btn-primary btn-sm">Tutup</a>
+                    </td>
                 </tr>
             @endforeach
         </tbody>

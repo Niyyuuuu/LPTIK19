@@ -12,7 +12,7 @@
     <h2>Help Desk</h2>
     <ul>
         @foreach ($menuItems as $item)
-            <li>
+        <li>
                 <a href="{{ $item['route'] }}">
                     <i class='bx {{ $item['icon'] }}'></i> {{ $item['label'] }}
                 </a>
@@ -28,6 +28,10 @@
                 }">
                 <i class='bx bx-log-out'></i>
                 <span> | Logout</span>
+            </a>
+            <a href="{{ route('profil-saya') }}" class="sidebar-link mt-3">
+                <i class="bx bx-user"></i>
+                <span>{{ Auth::user()->name }}</span>
             </a>
         </li>
     </ul>

@@ -92,9 +92,9 @@
     <!-- Pisahkan Status Tiket menjadi card tersendiri -->
     <h3 class="mb-4">Status Tiket</h3>
     <div class="row mb-4">
-        @foreach ($counts['status'] as $type => $count)
+        @foreach ($counts['status_id'] as $type => $count)
             <div class="col d-flex">
-                <a href="{{ route('card-tickets', ['category' => 'status', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
+                <a href="{{ route('card-tickets', ['category' => 'status_id', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
                     <div class="card flex-fill">
                         <div class="card-header">{{ ucfirst($type) }}</div>
                         <div class="card-body">
@@ -168,8 +168,9 @@
         series: [{
             name: 'Tiket',
             data: [
-                {{ $counts['status']['diproses'] }},
-                {{ $counts['status']['selesai'] }}
+                {{ $counts['status_id']['Menunggu'] }},
+                {{ $counts['status_id']['Diproses'] }},
+                {{ $counts['status_id']['Selesai'] }}
             ]
         }],
         colors: ['#536493', '#FFF1DB'],

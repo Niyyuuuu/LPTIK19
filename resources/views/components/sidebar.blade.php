@@ -57,7 +57,6 @@
         <a href="{{ route('profil-saya') }}" class="sidebar-link">
             <i class="bx bx-user"></i>
             <span>{{ Auth::user()->name }}</span>
-            <span> | {{ Auth::user()->email }}</span>
         </a>
     </div>
     <div class="sidebar-footer mb-4">

@@ -56,5 +56,6 @@ class AdminAndTechnicianSeeder extends Seeder
                 'role' => 'Piket',
             ]);
         }
+        
     }
 }

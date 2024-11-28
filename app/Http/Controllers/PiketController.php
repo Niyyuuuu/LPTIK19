@@ -37,9 +37,10 @@ class PiketController extends Controller
         $tickets = $ticketsQuery->get();
 
         $counts = [
-            'status' => [
-                'diproses' => $tickets->where('status', 'Diproses')->count(),
-                'selesai' => $tickets->where('status', 'Selesai')->count()
+            'status_id' => [
+                "Menunggu" => $tickets->where('status_id', 1)->count() ?? 0,
+                "Diproses" => $tickets->where('status_id', 2)->count() ?? 0,
+                "Selesai" => $tickets->where('status_id', 3)->count() ?? 0,
             ],
             'prioritas' => [
                 'tinggi' => $tickets->where('prioritas', 'Tinggi')->count(),
@@ -60,7 +61,7 @@ class PiketController extends Controller
 
     public function tickets()
     {
-        $tiket = Tiket::with('user')->where('status', 'Diproses')->get();
+        $tiket = Tiket::with('user')->where('status_id', 1)->get();
         return view('piket.tickets', compact('tiket'));
     }
 
@@ -81,7 +82,7 @@ class PiketController extends Controller
 
             $ticket = Tiket::findOrFail($id);
             $ticket->technician_id = $request->input('technician_id');
-            $ticket->status = 'Diproses';
+            $ticket->status_id = 2;
             $ticket->save();
 
             return redirect()->route('tickets')->with('success', 'Technician assigned successfully!');

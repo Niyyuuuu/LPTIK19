@@ -58,10 +58,20 @@ h2, h1 {
     color: #bbb;
 }
 
+/* .sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #333;
+} */
 /* Konten dan Header */
 .content {
     margin-left: 250px;
     padding: 20px;
+
 }
 
 

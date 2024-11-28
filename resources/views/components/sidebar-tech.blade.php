@@ -29,6 +29,10 @@
                 <i class='bx bx-log-out'></i>
                 <span> | Logout</span>
             </a>
+                <a href="{{ route('profil-saya') }}" class="sidebar-link mt-3">
+                    <i class="bx bx-user"></i>
+                    <span>{{ Auth::user()->name }}</span>
+                </a>
         </li>
     </ul>
 </div>

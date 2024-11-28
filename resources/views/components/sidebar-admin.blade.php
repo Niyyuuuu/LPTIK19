@@ -4,9 +4,10 @@
         <h3 >Help Desk</h3>
         <h6 >Layanan Pengaduan TIK Kemhan</h6>
     </div>
-    <ul class="components">
+    <ul class="components" style="font-size: 14px">
         @php
             $menuItems = [
+                ['route' => 'profil-saya', 'icon' => 'bx-user', 'label' => Auth::user()->name . ' | ' . Auth::user()->email],
                 ['route' => 'admin', 'icon' => 'bx-grid', 'label' => 'Dashboard'],
                 ['route' => 'admin.ticket-list', 'icon' => 'bx-list-ul', 'label' => 'Ticket List'],
                 ['route' => 'users-list', 'icon' => 'bx-user', 'label' => 'Users List'],
@@ -25,7 +26,6 @@
         </li>
         @endforeach
     </ul>
-
     <div class="sidebar-footer">
         <form id="logout-form" action="{{ route('logout') }}" style="display: none;">
             @csrf
