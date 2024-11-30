@@ -17,7 +17,7 @@
 
     <div class="card mb-4">
         <div class="card-header bg-primary">
-            <i class="bx bx-category"></i> {{ $category->name }} ({{ $category->slug }})
+            <i class="bx bx-category"></i> {{ $category->name }}
         </div>
         <div class="card-body">
             <h3 class="text-white">Entries</h3>
@@ -39,7 +39,7 @@
                     @foreach ($entries as $entry)
                     <tr>
                         <td>{{ $entry->question }}</td>
-                        <td>{{ $entry->answer }}</td>
+                        <td>{!!( $entry->answer)!!}</td>
                         <td class="gap-2-xl justify-content-end">
                             <a href="{{ route($routePrefix . '.entry.edit', $entry->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route($routePrefix . '.entry.delete', $entry->id) }}" method="POST" class="d-inline">
