@@ -1,44 +1,64 @@
-<!-- resources/views/help/category.blade.php -->
-<x-navbar></x-navbar>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar Component -->
+    <x-navbar></x-navbar>
 
-<section id="help">
-    <div class="container mx-auto relative z-10 mb-20">
-        <h1 id="help-h1" class="font-bold text-gray-400">
-            <a href="{{ route('help') }}" class="text-gray-400">Help</a>
-            <span class="text-gray-100">/ {{ $category->name }}</span>
-        </h1>
-    </div>
-    <div class="accordion accordion-flush accordion-custom" id="accordionFlushExample">
-        @foreach($helps as $help)
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="flush-heading{{ $help->id }}">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ $help->id }}" aria-expanded="false" aria-controls="flush-collapse{{ $help->id }}">
-                        {{ $help->question }}
-                    </button>
-                </h2>
-                <div id="flush-collapse{{ $help->id }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ $help->id }}" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
-                        {!! nl2br(e($help->answer)) !!}
+    <!-- Main Content Section -->
+    <section id="help" class="flex-grow-1">
+        <div class="container mx-auto relative z-10 mb-20">
+            <h1 id="help-h1" class="font-bold text-gray-400">
+                <a href="{{ route('help') }}" class="text-gray-400 fw-bold">Helps</a>
+                <span class="text-gray-100 fw-bold">/ {{ $category->name }}</span>
+            </h1>
+        </div>
+        <div class="accordion accordion-flush accordion-custom" id="accordionFlushExample">
+            @foreach($helps as $help)
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-heading{{ $help->id }}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ $help->id }}" aria-expanded="false" aria-controls="flush-collapse{{ $help->id }}">
+                            {{ $help->question }}
+                        </button>
+                    </h2>
+                    <div id="flush-collapse{{ $help->id }}" class="accordion-collapse collapse" aria-labelledby="flush-heading{{ $help->id }}" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            {!!($help->answer)!!}
+                        </div>
                     </div>
                 </div>
-            </div>
-        @endforeach
-    </div>
-</section>
+            @endforeach
+        </div>
+    </section>
 
-<footer class="bg-gray-900 text-gray-100 py-4 mt-20">
-    <div class="container mx-auto text-center">
-        <p class="text-sm">© 2024 Layanan Pengaduan TIK Kemhan. All rights reserved.</p>
-        <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-gray-300">kemhan.go.id</a></p>
-    </div>
-</footer>
+    <!-- Footer -->
+    <footer class="bg-dark text-gray-100 py-4">
+        <div class="container mx-auto text-center">
+            <p class="text-sm">© 2024 Layanan Pengaduan TIK Kemhan. All rights reserved.</p>
+            <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-gray-300">kemhan.go.id</a></p>
+        </div>
+    </footer>
+</body>
+
 
 <style>
-    #help {  
-        padding-top: 120px;
-        position: relative;
-        overflow: hidden;
+    html, body {
+        height: 100%;             /* Ensure the full height is utilized */
+        margin: 0;                /* Remove default margin */
     }
+
+    body {
+        display: flex;
+        flex-direction: column;   /* Flex layout with a column direction */
+        min-height: 100vh;        /* Minimum height for full viewport */
+    }
+
+    #help {
+        flex-grow: 1;             /* Allow main content to grow and push the footer */
+        padding-top: 120px;
+    }
+
+    footer {
+        background-color: #2d3748;
+    }
+
     #help-h1 {
         margin-top: 2rem;
     }
@@ -50,12 +70,7 @@
         border-radius: 1rem;
         overflow: hidden;   
     }
-    footer {
-        position: relative;
-        bottom: 0;
-        width: 100%;
-        background-color: #2d3748;
-    }
+
     @media (max-width: 768px) {
         #help-h1 {
             margin-top: 4rem;
