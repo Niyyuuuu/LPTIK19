@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Carbon\Carbon;
+use App\Models\Tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,43 +14,53 @@ use Illuminate\Support\Facades\Password;
 class AuthController extends Controller
 {
     public function login(Request $request)
-{
-    // Validasi input
-    $validator = Validator::make($request->all(), [
-        'username' => 'required|string',
-        'password' => 'required|string',
-    ]);
+    {
+        // Validasi input
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ]);
 
-    if ($validator->fails()) {
-        return redirect()->route('login')
-            ->withErrors($validator)
-            ->withInput($request->except('password'));
+        if ($validator->fails()) {
+            return redirect()->route('login')
+                ->withErrors($validator)
+                ->withInput($request->except('password'));
+        }
+
+        $validate = $validator->validated();
+
+        // Mencari pengguna berdasarkan username
+        $user = User::where('username', $validate['username'])->first();
+
+        if (!$user || !Hash::check($validate['password'], $user->password)) {
+            return redirect()->route('login')
+                ->with('fails', 'Username atau password salah')
+                ->withInput($request->except('password'));
+        }
+
+        $ticketsToClose = Tiket::where('status_id', 4)
+        ->where('updated_at', '<=', Carbon::now()->subDays(2))  // Mengubah tiket yang sudah lebih dari 2 hari
+        ->get();
+
+    // Ubah status tiket yang sudah lebih dari 2 hari menjadi 'Selesai' (status_id = 3)
+        foreach ($ticketsToClose as $ticket) {
+            $ticket->status_id = 3;  // Set status menjadi 'Selesai'
+            $ticket->save();
+        }
+
+        Auth::login($user);
+        // Redirect berdasarkan peran
+        switch ($user->role) {
+            case 'Admin':
+                return redirect()->route('admin')->with('success', 'Berhasil! Anda telah login sebagai Admin.');
+            case 'Technician':
+                return redirect()->route('technician')->with('success', 'Berhasil! Anda telah login sebagai Teknisi.');
+            case 'User': // Pastikan menambahkan bagian ini untuk user
+                return redirect()->route('buat-pengaduan')->with('success', 'Berhasil! Anda telah login dengan sukses.');                    
+            case 'Piket':
+                return redirect()->route('piket')->with('success', 'Berhasil! Anda telah login sebagai Piket.');
+        }
     }
-
-    $validate = $validator->validated();
-
-    // Mencari pengguna berdasarkan username
-    $user = User::where('username', $validate['username'])->first();
-
-    if (!$user || !Hash::check($validate['password'], $user->password)) {
-        return redirect()->route('login')
-            ->with('fails', 'Username atau password salah')
-            ->withInput($request->except('password'));
-    }
-
-    Auth::login($user);
-    // Redirect berdasarkan peran
-    switch ($user->role) {
-        case 'Admin':
-            return redirect()->route('admin')->with('success', 'Berhasil! Anda telah login sebagai Admin.');
-        case 'Technician':
-            return redirect()->route('technician')->with('success', 'Berhasil! Anda telah login sebagai Teknisi.');
-        case 'User': // Pastikan menambahkan bagian ini untuk user
-            return redirect()->route('buat-pengaduan')->with('success', 'Berhasil! Anda telah login dengan sukses.');                    
-        case 'Piket':
-            return redirect()->route('piket')->with('success', 'Berhasil! Anda telah login sebagai Piket.');
-    }
-}
 
 
     public function register(Request $request)

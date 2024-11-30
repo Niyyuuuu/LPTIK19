@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tiket;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TechnicianController extends Controller
@@ -60,13 +61,39 @@ class TechnicianController extends Controller
 
     public function task()
     {
-        $tickets = Tiket::where('technician_id', Auth::id())->get();
+        $tickets = Tiket::where('technician_id', Auth::id())
+            ->where('status_id', 2) // Hanya tiket yang diproses
+            ->get();
+
+        // Periksa tiket yang memiliki status 'Proses Selesai' (status_id = 4) yang lebih dari 2 hari
+        $ticketsToClose = Tiket::where('status_id', 4)
+            ->where('updated_at', '<=', Carbon::now()->subDays(2))
+            ->get();
+
+        // Ubah status tiket yang sudah lebih dari 2 hari menjadi 'Selesai' (status_id = 3)
+        foreach ($ticketsToClose as $ticket) {
+            $ticket->status_id = 3;  // Set status menjadi 'Selesai'
+            $ticket->save();
+        }
+
         return view('technisian.tasks', compact('tickets'));
     }
+
 
     public function ticketList()
     {
         $tickets = Tiket::with('user')->get();
         return view('technisian.ticket-list', compact('tickets'));
     }
+    public function tutupTiket($id)
+    {
+        $ticket = Tiket::findOrFail($id);  // Ambil tiket berdasarkan ID
+        $ticket->status_id = 4;            // Set status menjadi 4 (ditutup)
+        $ticket->save();                   // Simpan perubahan
+
+        // Redirect kembali ke halaman tasks dengan pesan sukses
+        return redirect()->route('tasks')->with('success', 'Tiket berhasil ditutup.');
+    }
+
+
 }
