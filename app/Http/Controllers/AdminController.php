@@ -20,7 +20,7 @@ class AdminController extends Controller
 
         // Define the attributes we want to count
         $attributes = [
-            'status_id' => [1, 2, 3],
+            'status_id' => [1, 2, 3, 4],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
             'permasalahan' => ['jaringan', 'software', 'hardware'],
             'rating' => [1, 2, 3, 4, 5],
@@ -54,7 +54,7 @@ class AdminController extends Controller
 
         // Complaints Per Month by Status for the Selected Year
         $months = range(1, 12);
-        $statuses = [1, 2, 3];
+        $statuses = [1, 2, 3, 4];
         $complaintsPerMonth = [];
 
         foreach ($statuses as $status) {
@@ -78,6 +78,7 @@ class AdminController extends Controller
                 1 => 'Menunggu',
                 2 => 'Diproses',
                 3 => 'Selesai',
+                4 => 'Proses Selesai'
             ];
 
         return view('admin', compact(
