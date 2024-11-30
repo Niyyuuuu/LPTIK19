@@ -26,7 +26,7 @@
         });
     </script>
         <div class="container mx-auto p-6 relative z-10" >
-            <h1 class="text-4xl font-bold text-gray-100 mb-20 mt-20" data-aos="fade-right">Halo, Selamat Datang!</h1>
+            <h1 class="text-4xl font-bold text-gray-100 mb-20 fw-bold" id="home-h1" data-aos="fade-right">Halo, Selamat Datang!</h1>
             <p class="text-lg text-gray-100 fw-medium" data-aos="fade-right" data-aos-duration="1000">Layanan pengaduan yang memberikan jawaban atau solusi 
                 secara cepat dan tepat serta terpusat karena dilengkapi dengan sistem yang 
                 saling terintegrasi sehingga memudahkan pelapor melakukan tracking tiket laporan 
@@ -34,22 +34,38 @@
                 <div class="mt-20 mb-40">
                     @guest
                         <a href="{{ route('login') }}" 
-                        class="btn btn-secondary py-2" data-aos="fade-right" data-aos-duration="1500">
+                           class="btn btn-secondary py-2" data-aos="fade-right" data-aos-duration="1500">
                             Pengaduan
                         </a>
                     @endguest
-                    @auth
-                        <a href="/buat-pengaduan" 
-                        class="btn btn-secondary py-2 " data-aos="fade-right" data-aos-duration="1500">
-                            Pengaduan
-                        </a>
-                    @endauth
-
-                </div>
                 
+                    @auth
+                        @if (Auth::user()->role === 'Admin')
+                            <a href="{{ route('admin') }}" 
+                               class="btn btn-secondary py-2" data-aos="fade-right" data-aos-duration="1500">
+                                Admin Dashboard
+                            </a>
+                        @elseif (Auth::user()->role === 'Technician')
+                            <a href="{{ route('technician') }}" 
+                               class="btn btn-secondary py-2" data-aos="fade-right" data-aos-duration="1500">
+                                Technician Dashboard
+                            </a>
+                        @elseif (Auth::user()->role === 'Piket')
+                            <a href="{{ route('piket') }}" 
+                               class="btn btn-secondary py-2" data-aos="fade-right" data-aos-duration="1500">
+                                Piket Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('buat-pengaduan') }}" 
+                               class="btn btn-secondary py-2" data-aos="fade-right" data-aos-duration="1500">
+                                Pengaduan
+                            </a>
+                        @endif
+                    @endauth
+                </div>                
         </div> 
         <div class="container mx-auto relative z-10">
-            <h1 class="text-4xl font-bold text-gray-100 mb-5" style="margin-top: 6rem;" data-aos="fade-right">Layanan</h1>
+            <h1 class="text-4xl font-bold text-gray-100 mb-5 fw-bold" id="layanan-h1" data-aos="fade-right">Layanan</h1>
         </div>
         
         <div class="card-container" >
@@ -84,7 +100,7 @@
         </div>
 
         <div class="container mx-auto relative z-10">
-            <h1 class="text-4xl font-bold text-gray-100 mb-5 mt-60" data-aos="fade-right">Pertanyaan Yang Sering Diajukan</h1>
+            <h1 class="text-4xl font-bold text-gray-100 mb-5 fw-bold" id="faq-h1" data-aos="fade-right">Pertanyaan Yang Sering Diajukan</h1>
         </div>
 
         <div class="accordion accordion-flush accordion-custom" id="accordionFlushExample" data-aos="fade-right">
@@ -155,6 +171,18 @@
             position: relative;
             overflow: hidden;
         }
+
+        #home-h1 {
+            margin-top: 10rem;
+        }
+
+        #layanan-h1 {
+            margin-top: 20rem;
+        }
+
+        #faq-h1 {
+            margin-top: 16rem;
+        }
         
         .card-container {
             display: grid;
@@ -194,7 +222,7 @@
         position: relative;
         bottom: 0;
         width: 100%;
-        background-color: #2d3748;
+        background-color: #1b1b1b;
         }
 
         #success-alert,
