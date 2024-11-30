@@ -94,7 +94,7 @@
     <header>
         <nav class="navbar navbar-dark bg-dark fixed-top" id="navbar">
             <div class="container-fluid">
-                <button onclick="window.location.href='/dashboard-pengaduan'" class="btn btn-outline-light d-flex align-items-center">
+                <button onclick="history.back()" class="btn btn-outline-light d-flex align-items-center">
                     <i class='bx bx-arrow-back me-2'></i> Back
                 </button>
             </div>

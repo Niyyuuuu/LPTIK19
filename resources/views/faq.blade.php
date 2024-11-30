@@ -3,7 +3,7 @@
 
 <section id="faq">
     <div class="container mx-auto relative z-10 mb-20">
-        <h1 id="faq-h1" class="font-bold text-gray-100">FAQs</h1>
+        <h1 id="faq-h1" class="fw-bold text-gray-100" data-aos="fade-right">FAQs</h1>
     </div>
     <div class="row" id="card">
         @foreach($categories as $category)
@@ -32,7 +32,7 @@
     </div>
 </section>
 
-<footer class="bg-gray-900 text-gray-100 py-4 mt-20">
+<footer class="bg-dark text-gray-100 py-4 mt-20">
     <div class="container mx-auto text-center">
         <p class="text-sm">© 2024 Layanan Pengaduan TIK Kemhan. All rights reserved.</p>
         <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-gray-300">kemhan.go.id</a></p>
@@ -61,7 +61,7 @@
         background-color: #eaeaea;
     }
     footer {
-        position: relative;
+        position: fixed;
         bottom: 0;
         width: 100%;
         background-color: #2d3748;
