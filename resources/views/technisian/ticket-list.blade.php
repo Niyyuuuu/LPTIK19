@@ -43,7 +43,7 @@
                 <td>{{ $ticket->created_at->format('d F Y') }}</td>
                 <td>{{ $ticket->subjek ?? 'Tanpa Judul' }}</td>
                 <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
-                <td>{{ $ticket->status_id == 1 ? 'Menunggu' : ($ticket->status_id == 2 ? 'Diproses' : 'Selesai') }}</td>
+                <td>{{ $ticket->status_id == 1 ? 'Menunggu' : ($ticket->status_id == 2 ? 'Diproses' : ($ticket->status_id == 4 ? 'Proses Selesai' : 'Selesai')) }}</td>
                 <td>
                     <a href="{{ route('detail-tiket', $ticket->id) }}" class="btn btn-primary btn-sm">Detail</a>
                 </td>   
