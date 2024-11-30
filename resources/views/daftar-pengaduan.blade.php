@@ -54,7 +54,13 @@
                         <td>{{ date('d F Y', strtotime($t->created_at)) }}</td>
                         <td>{{ $t->subjek }}</td>
                         <td>{{ $t->prioritas }}</td>
-                        <td>{{ $t->status_id == 1 ? 'Menunggu' : ($t->status_id == 2 ? 'Diproses' : 'Belum Selesai') }}</td>
+                        <td>
+                            {{ 
+                                $t->status_id == 1 ? 'Menunggu' : 
+                                ($t->status_id == 2 ? 'Diproses' : 
+                                ($t->status_id == 4 ? 'Proses Selesai' : 'Belum Selesai'))
+                            }}
+                        </td>                        
                         <td class="text-center">
                             @if ($t->status_id == 1)
                             <a href="{{ route('edit-pengaduan', $t->id) }}" class="btn btn-warning">Edit</a>

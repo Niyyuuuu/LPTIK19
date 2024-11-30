@@ -63,16 +63,23 @@
                         <td>{{ $item->satkerData->nama_satker }}</td>
                         <td>{{ $item->prioritas }}</td>
                         <td>
-                            {{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : 'Selesai') }}
+                            {{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : ($item->status_id == 4 ? 'Proses Selesai' : 'Selesai')) }}
                         </td>                        
                         <td>{{ $item->user->name }}</td>
                         <td class="gap-2-xl justify-content-end text-center">
-                            @if ($item->status_id == 1 )
-                            <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a>
-                            <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
-                                @csrf
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button>
-                            </form> @else <span>Tiket {{ $item->status_id == 2 ? 'Diproses' : 'Selesai' }}</span> @endif
+                            @if ($item->status_id == 1)
+    <a href="{{ route('ticket.process', $item->id) }}" class="btn btn-primary">Process</a>
+@elseif ($item->status_id == 2)
+    <span class="badge bg-warning">Diproses</span>
+@elseif ($item->status_id == 4)
+    <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
+        @csrf
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')">Tutup</button>
+    </form>
+@else
+    <span class="badge bg-success">Selesai</span>
+@endif
+
                         </td>
                     </tr>
                     @endforeach

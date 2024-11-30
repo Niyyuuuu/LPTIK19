@@ -21,7 +21,7 @@
     <!-- Kartu Statistik Pengaduan -->
 <div class="row g-4 mb-5 justify-content-center">
     @foreach ($cardData as $title => $count)
-    <div class="col-md-6 col-lg-3">
+    <div class="col-md-6 col-sm-12">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-body text-center">
                 <h5 class="card-title fw-bold mt-2 mb-2">{{ $title }}</h5>

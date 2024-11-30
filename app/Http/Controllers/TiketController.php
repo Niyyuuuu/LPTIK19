@@ -83,7 +83,7 @@ class TiketController extends Controller
     public function tutup($id)
     {
         Tiket::where('id', $id)->update(['status_id' => 3]);
-        return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil ditutup');
+        return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil ditutup');
     }
 
     public function edit($id)
@@ -187,11 +187,12 @@ class TiketController extends Controller
         $tahun = $request->input('tahun', date('Y'));
         $userId = Auth::id();
 
-        $statuses = [1, 2, 3];
+        $statuses = [1, 2, 3, 4];
         $statusLabels = [
             1 => 'Pengaduan Menunggu',
             2 => 'Pengaduan Diproses',
-            3 => 'Pengaduan Selesai'
+            3 => 'Pengaduan Selesai',
+            4 => 'Pengaduan Proses Selesai'
         ];
 
         $pengaduanData = Tiket::selectRaw('MONTH(created_at) as month, status_id, COUNT(*) as count')
@@ -223,7 +224,8 @@ class TiketController extends Controller
                 'color' => match($status_id) {
                     1 => '#FF6384', 
                     2 => '#9966FF', 
-                    3 => '#4BC0C0' 
+                    3 => '#4BC0C0',
+                    4 => '#FFCE56'
                 },
             ];
         }
@@ -233,6 +235,7 @@ class TiketController extends Controller
             'Total Pengaduan' => array_sum($totalPengaduanPerMonth),
             'Pengaduan Menunggu' => array_sum($pengaduanData['1'] ?? []),
             'Pengaduan Diproses' => array_sum($pengaduanData['2'] ?? []),
+            'Pengaduan Proses Selesai' => array_sum($pengaduanData['4'] ?? []),
             'Pengaduan Selesai' => array_sum($pengaduanData['3'] ?? []),
         ];
 
