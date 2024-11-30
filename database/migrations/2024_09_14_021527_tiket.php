@@ -8,12 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tiket', function (Blueprint $table) { // Ubah menjadi 'tikets' sesuai standar penamaan tabel plural
+        Schema::create('tiket', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
             $table->string('subjek');
             $table->string('permasalahan');
-            $table->string('satker'); // Bisa diganti dengan unsignedBigInteger jika ini foreign key
+            $table->string('satker');
             $table->string('prioritas');
             $table->string('area');
             $table->text('pesan');
@@ -21,8 +21,8 @@ return new class extends Migration
             $table->enum('status_id', [1, 2, 3, 4]);
             $table->integer('rating')->nullable();
             $table->text('rating_comment')->nullable();
-            $table->unsignedBigInteger('created_by'); // Foreign key to users table
-            $table->unsignedBigInteger('technician_id')->nullable(); // Foreign key untuk teknisi
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('technician_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
