@@ -114,6 +114,7 @@ Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
     Route::get('/technician', [TechnicianController::class, 'index'])->name('technician');
     Route::get('/tasks', [TechnicianController::class, 'task'])->name('tasks');
     Route::get('/ticket-list', [TechnicianController::class, 'ticketList'])->name('technisian.ticket-list');
+    Route::get('/tutup-tiket-teknisi/{id}', [TechnicianController::class, 'tutupTiket'])->name('tutup-tiket-teknisi');
 });
 
 Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
@@ -128,4 +129,5 @@ Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
 
 Route::middleware(['auth', 'role:Admin,Technician,Piket'])->group(function () { 
     Route::get('/card-tickets/{category}/{value}', [TiketController::class, 'cardTickets'])->name('card-tickets');
+
 });
