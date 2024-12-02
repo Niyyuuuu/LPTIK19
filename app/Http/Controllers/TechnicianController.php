@@ -14,40 +14,56 @@ class TechnicianController extends Controller
         $selectedYear = $request->input('year', date('Y'));
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-    
+        
         // Define attributes to count
         $attributes = [
-            'status_id' => [1, 2, 3],
+            'status_id' => [1, 2, 3, 4],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
             'permasalahan' => ['jaringan', 'software', 'hardware'],
             'rating' => [1, 2, 3, 4, 5],
             'area' => ['Kemhan', 'Luar Kemhan'],
         ];
-    
+
+        // Mapping status_id to descriptive labels
+        $statusLabels = [
+            1 => 'Menunggu',
+            2 => 'Proses',
+            3 => 'Selesai',
+            4 => 'Ditutup',
+        ];
+        
         // Initialize counts
         $counts = [];
-    
+        
         // Base query with year filter
         $query = Tiket::query()->whereYear('created_at', $selectedYear);
-    
+        
         // Apply date range filter if both dates are provided
         if ($startDate && $endDate) {
             $query->whereBetween('created_at', [$startDate, $endDate]);
         }
-    
+        
         // Count tickets based on defined attributes and filters
         foreach ($attributes as $key => $values) {
             foreach ($values as $value) {
-                $counts[$key][$value] = (clone $query)->where($key, $value)->count();
+                // Special case for status_id to display the status text
+                if ($key == 'status_id') {
+                    foreach ($values as $statusValue) {
+                        $statusText = isset($statusLabels[$statusValue]) ? $statusLabels[$statusValue] : 'Unknown';
+                        $counts[$key][$statusText] = (clone $query)->where($key, $statusValue)->count();
+                    }
+                } else {
+                    $counts[$key][$value] = (clone $query)->where($key, $value)->count();
+                }
             }
         }
-    
+        
         // Get total users
         $total_users = User::count();
-    
+        
         // Get total tickets with filters applied
         $total_tiket = $query->count();
-    
+        
         // Pass data to the view
         return view('technisi', compact(
             'counts',
@@ -56,6 +72,7 @@ class TechnicianController extends Controller
             'selectedYear'
         ));
     }
+
     
 
 

@@ -170,6 +170,7 @@
             data: [
                 {{ $counts['status_id']['Menunggu'] }},
                 {{ $counts['status_id']['Diproses'] }},
+                {{ $counts['status_id']['Proses Selesai'] }},
                 {{ $counts['status_id']['Selesai'] }}
             ]
         }],
