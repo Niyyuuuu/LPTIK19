@@ -61,26 +61,53 @@ class TiketController extends Controller
     }
 
     public function buat_pengaduan(Request $request)
-    {
-        $validator = Validator::make($request->all(), $this->validationRules());
+{
+    $validator = Validator::make($request->all(), $this->validationRules());
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
 
-        $data = $validator->validated();
-        $data['tanggal'] = today();
-        $data['created_by'] = Auth::id();
-        $data['status_id'] = 1;
+    $data = $validator->validated();
+    $data['tanggal'] = today();
+    $data['created_by'] = Auth::id();
+    $data['status_id'] = 1;
 
-        if ($request->hasFile('lampiran')) {
-            $data['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
-        }
+    if ($request->hasFile('lampiran')) {
+        $data['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
+    }
 
-        Tiket::create($data);
+    $tiket = Tiket::create($data);
+
+    // Kirim notifikasi ke Telegram
+    $token = '7633250290:AAGVwFBqmNeQiHCl3K13hsoIBJsRnt38YXo'; // Ganti dengan token bot Telegram Anda
+    $chat_id = '1164538381'; // Ganti dengan chat ID tujuan Anda
+
+    // Format pesan notifikasi
+    $createdAt = !empty($data['created_at']) ? \Carbon\Carbon::parse($data['created_at'])->format('d M Y, H:i') : now()->format('d M Y, H:i');
+
+    $ticketNumber = str_pad($tiket->id, 6, '0', STR_PAD_LEFT);
+    $cleanSubjek = strip_tags($data['subjek']);
+    $cleanPesan = strip_tags($data['pesan']);
+
+    $pesan = "📢 *Pengaduan Baru Diterima*\n\n";
+    $pesan .= "*No. Tiket:* {$ticketNumber}\n";
+    $pesan .= "🔖 *Subjek:* {$cleanSubjek}\n";
+    $pesan .= "📝 *Pesan:* {$cleanPesan}\n\n";
+    $pesan .= "📅 *Tanggal Pengaduan:* {$createdAt}\n";
+    $pesan .= "⏳ *Status:* Belum Diproses\n";
+
+    // Mengirim permintaan ke API Telegram
+    $url = "https://api.telegram.org/bot{$token}/sendMessage";
+    $url .= "?chat_id={$chat_id}&text=" . urlencode($pesan) . "&parse_mode=Markdown";
+
+    file_get_contents($url);
+
+
 
         return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil dibuat');
-    }
+    }   
+
 
     public function tutup($id)
     {
@@ -291,68 +318,69 @@ class TiketController extends Controller
 
 
 
-    public function sendMessage(Request $request)
-    {
-        $validated = $request->validate([
-            'tiket_id' => 'required|exists:tiket,id',
-            'content' => 'required|string',
-            'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048'
-        ]);
+public function sendMessage(Request $request)
+{
+    $validated = $request->validate([
+        'tiket_id' => 'required|exists:tiket,id',
+        'content' => 'required|string',
+        'lampiran' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    ]);
 
-        $tiket = Tiket::find($validated['tiket_id']);
-        if (!$tiket) {
-            return response()->json(['error' => 'Tiket tidak ditemukan'], 404);
-        }
-
-        if ($tiket->status_id !== 2 ) {
-            return response()->json(['error' => 'Tidak dapat mengirim pesan pada tiket'], 403);
-        }
-
-        $chatMessage = new ChatMessage();
-        $chatMessage->tiket_id = $validated['tiket_id'];
-        $chatMessage->user_id = Auth::user()->id;
-        $chatMessage->content = $validated['content'];
-
-        if ($request->hasFile('lampiran')) {
-            $chatMessage->lampiran = $request->file('lampiran')->store('lampiran', 'public');
-        }
-
-        $chatMessage->save();
-
-        return response()->json(['success' => true]);
+    $tiket = Tiket::find($validated['tiket_id']);
+    if (!$tiket) {
+        return response()->json(['error' => 'Tiket tidak ditemukan'], 404);
     }
 
-
-
-
-    public function getChatMessages($id)
-    {
-        $messages = ChatMessage::where('tiket_id', $id)
-            ->with('user:id,name')
-            ->get()
-            ->map(function ($message) {
-                $created_at = $message->created_at;
-                if ($created_at->isToday()) {
-                    $time = $created_at = 'Today ' . $created_at->format('H:i');
-                }
-                else if ($created_at->isYesterday()) {
-                    $time = $created_at = 'Yesterday ' . $created_at->format('H:i');
-                }
-                else {
-                    $time = $created_at = $created_at->toFormattedDateString() . ' - ' . $created_at->format('H:i');
-                }
-                
-                return [
-                    'content' => $message->content,
-                    'user_id' => $message->user_id,
-                    'user_name' => $message->user->name,
-                    'created_at' => $time,
-                    'lampiran' => $message->lampiran ? asset('storage/' . str_replace('public/', '', $message->lampiran)) : null,
-                ];
-            });
-
-        return response()->json(['messages' => $messages]);
+    if ((int) $tiket->status_id !== 2) {
+        return response()->json(['error' => 'Tidak dapat mengirim pesan pada tiket ini'], 403);
     }
+
+    $chatMessage = new ChatMessage();
+    $chatMessage->tiket_id = $validated['tiket_id'];
+    $chatMessage->user_id = Auth::id();
+    $chatMessage->content = $validated['content'];
+
+    if ($request->hasFile('lampiran')) {
+        $chatMessage->lampiran = $request->file('lampiran')->store('lampiran', 'public');
+    }
+
+    $chatMessage->save();
+
+    return response()->json(['success' => true, 'message' => 'Pesan berhasil dikirim']);
+}
+
+
+
+
+
+public function getChatMessages($id)
+{
+    $messages = ChatMessage::where('tiket_id', $id)
+        ->with('user') // Memastikan relasi 'user' dipanggil
+        ->get()
+        ->map(function ($message) {
+            $created_at = $message->created_at;
+            if ($created_at->isToday()) {
+                $time = 'Today ' . $created_at->format('H:i');
+            } elseif ($created_at->isYesterday()) {
+                $time = 'Yesterday ' . $created_at->format('H:i');
+            } else {
+                $time = $created_at->toFormattedDateString() . ' - ' . $created_at->format('H:i');
+            }
+
+            return [
+                'content' => $message->content,
+                'user_id' => $message->user_id,
+                'user_name' => $message->user->name,
+                'created_at' => $time,
+                'lampiran' => $message->lampiran ? asset('storage/' . $message->lampiran) : null,
+            ];
+        });
+
+    return response()->json(['messages' => $messages]);
+}
+
+
 
     public function cardTickets($category, $value)
     {
