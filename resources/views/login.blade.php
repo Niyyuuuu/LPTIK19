@@ -67,16 +67,26 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                
-                    <!-- Tautan Lupa Password dan Register -->
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ route('password.request') }}" class="text-decoration-none text-light">Forgot Password?</a>
-                        <a href="{{ route('register') }}" class="text-decoration-none text-light">Don't have an account?</a>
+                    
+
+                    <!-- CAPTCHA -->
+                    <div class="mb-3">
+                        <label for="captcha" class="form-label text-light">
+                            Berapa hasil dari {{ session('captcha_a') }} + {{ session('captcha_b') }}?
+                        </label>
+                        <input type="text" class="form-control" id="captcha" name="captcha" placeholder="Enter CAPTCHA">
+                        @error('captcha')
+                            <span class="text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
 
                 
                     <!-- Tombol Login -->
                     <button type="submit" class="btn btn-primary w-100 mt-3">Login</button>
+                    <div class="d-flex justify-content-between mt-3">
+                        <a href="{{ route('password.request') }}" class="text-decoration-none text-light">Forgot Password?</a>
+                        <a href="{{ route('register') }}" class="text-decoration-none text-light">Don't have an account?</a>
+                    </div>
                 </form>
                 
             </div>

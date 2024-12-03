@@ -20,8 +20,15 @@ Route::get('/help', [HomeController::class, 'indexHelp'])->name('help');
 Route::get('/help/{slug}', [HomeController::class, 'showCategoryHelp'])->name('help.showCategoryHelp');
 
 
-Route::get('auth/login', function () {
-    return view('login');})->name('login');
+Route::get('auth/login', function() {
+    // Generate CAPTCHA
+    session(['captcha_a' => rand(1, 9), 'captcha_b' => rand(1, 9)]);
+    return view('login');
+})->name('login');
+
+Route::post('auth/login', [AuthController::class, 'login'])->name('login-proses');
+
+
 Route::get('auth/register', function() {
     return view('register'); })->name('register');
 Route::post('auth/login', [ AuthController::class, 'login' ])->name('login-proses');
