@@ -101,6 +101,10 @@
                         <td>{{ $tiket->created_at->format('d F Y') }}</td>
                     </tr>
                     <tr>
+                        <th>Teknisi</th>
+                        <td>{{ $tiket->technician ? $tiket->technician->name : 'Belum diproses' }}</td>
+                    </tr>
+                    <tr>
                         <th>Status</th>
                         <td>{{ $tiket->statusData->name }}</td>
                     </tr>

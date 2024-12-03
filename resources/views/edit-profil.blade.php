@@ -122,7 +122,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="nip" class="form-label">NRP/NIP</label>
-                        <input type="number" class="form-control" id="nip" name="nip" value="{{ $user->nip }}" required>
+                        <input type="number" class="form-control" id="nip" name="nip" value="{{ $user->nip }}" >
                     </div>
                     <div class="col-md-6">
                         <label for="email" class="form-label">Email</label>
@@ -132,7 +132,7 @@
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="satker" class="form-label">Satker</label>
-                        <select class="form-select" name="satker" id="satker" required>
+                        <select class="form-select" name="satker" id="satker" >
                             @foreach($satkers as $satker)
                                 <option value="{{ $satker->id }}" {{ $user->satker == $satker->id ? 'selected' : '' }}>
                                     {{ $satker->nama_satker }}
@@ -142,7 +142,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="contact" class="form-label">Kontak</label>
-                        <input type="number" class="form-control" id="contact" name="contact" value="{{ $user->contact }}" required>
+                        <input type="number" class="form-control" id="contact" name="contact" value="{{ $user->contact }}" >
                     </div>
                 </div>
                 <div class="d-flex gap-3 justify-content-center mt-4">

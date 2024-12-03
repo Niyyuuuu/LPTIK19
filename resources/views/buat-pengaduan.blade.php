@@ -95,7 +95,7 @@
     <section id="pengaduan" class="bg-gray-400">
     <nav class="bg-dark p-4 fixed-top z-10" id="navbar">
         <form class="container-fluid justify-content-left mt-1 ms-2">
-          <button onclick="window.location.href='/dashboard-pengaduan'" class="btn btn-outline-danger mb-2" type="button">Dashboard Pengaduan</button>
+          <button onclick="window.location.href='{{url('dashboard-pengaduan') }}'" class="btn btn-outline-danger mb-2" type="button">Dashboard Pengaduan</button>
         </form>
     </nav>
     @if (session('success'))
@@ -173,7 +173,7 @@
     </div>
     <div class="button-container">
         <button type="submit" class="btn btn-primary">Kirim</button>
-        <button onclick="window.location.href='/daftar-pengaduan'" type="button" class="btn btn-outline-danger">Batal</button>
+        <button type="button" class="btn btn-outline-danger" onclick="window.location.href='{{ url('/daftar-pengaduan') }}'">Batal</button>
     </div>
 </form>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
