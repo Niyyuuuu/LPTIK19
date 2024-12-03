@@ -45,4 +45,9 @@ class Tiket extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function technician()
+    {
+        return $this->belongsTo(User::class, 'technician_id');
+    }
+
 }
