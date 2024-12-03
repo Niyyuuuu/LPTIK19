@@ -126,22 +126,12 @@
                                     $filePath = str_replace('public/', '', $tiket->lampiran);
                                     $extension = pathinfo($filePath, PATHINFO_EXTENSION);
                                     $filename = 'Lampiran.' . $extension;
-                                    $isImage = in_array($extension, ['jpg', 'jpeg', 'png']);
-                                    $isPDF = $extension === 'pdf';
                                 @endphp
-                                @if ($isImage)
-                                    <a href="{{ asset('storage/' . $filePath) }}" target="_blank">
-                                        <img src="{{ asset('storage/' . $filePath) }}" alt="Lampiran" style="max-width: 200px; max-height: 200px;">
-                                    </a>
-                                @elseif ($isPDF)
-                                    <embed src="{{ asset('storage/' . $filePath) }}" type="application/pdf" width="100%" height="400px" />
-                                @endif
-                                <br>
                                 <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Unduh {{ $filename }}</a>
                             @else
                                 <span class="text-muted">Tidak ada lampiran</span>
                             @endif
-                        </td>
+                        </td>         
                     </tr>
                 </table>
             </div>
@@ -176,93 +166,114 @@
         const loggedInUserId = {{ auth()->id() }};
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            function loadChatMessages() {
-                fetch("/tiket/chat-messages/{{ $tiket->id }}")
-                    .then(response => response.json())
-                    .then(data => {
-                        const chatMessages = document.getElementById("chat-messages");
-                        chatMessages.innerHTML = "";
-                        data.messages.forEach(message => {
-                            const messageElement = document.createElement("div");
+        document.addEventListener("DOMContentLoaded", function () {
+        const chatMessages = document.getElementById("chat-messages");
+        const chatForm = document.getElementById("chat-form");
+        const chatInput = document.getElementById("chat-input");
+        const chatLampiran = document.getElementById("chat-lampiran");
+        const filePreview = document.getElementById("file-preview");
+        const ticketStatus = parseInt("{{ $tiket->status_id }}");
 
-                            if (message.user_id === loggedInUserId) {
-                                messageElement.classList.add("message-right");
-                            } else {
-                                messageElement.classList.add("message-left");
-                                messageElement.innerHTML = `<strong>${message.user_name}</strong><br>`;
-                            }
-                            messageElement.innerHTML += `${message.content}`;
-                            if (message.lampiran) {
-                                messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh Dokumen</a>`;
-                            }
-                            messageElement.innerHTML += `<div class="text-muted" style="font-size: 0.8em; margin-top: 4px;">${message.created_at}</div>`;
-                            
-                            chatMessages.appendChild(messageElement);
-                        });
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }); 
-            }
-            loadChatMessages();
+        // Load messages
+        function loadChatMessages() {
+            fetch(`{{url('tiket/chat-messages') }}/{{ $tiket->id }}`)
+                .then(response => response.json())
+                .then(data => {
+                    chatMessages.innerHTML = "";
+                    data.messages.forEach(message => {
+                        const messageElement = document.createElement("div");
+                        messageElement.classList.add(message.user_id === loggedInUserId ? "message-right" : "message-left");
 
-            document.getElementById("chat-lampiran").addEventListener("change", function() {
-                const file = this.files[0];
-                const previewContainer = document.getElementById('file-preview');
-                previewContainer.innerHTML = '';
+                        if (message.user_id !== loggedInUserId) {
+                            messageElement.innerHTML = `<strong>${message.user_name}</strong><br>`;
+                        }
 
-                if (file) {
-                    const fileName = document.createElement('span');
-                    fileName.textContent = `Lampiran: ${file.name}`;
-                    fileName.classList.add('badge', 'bg-primary', 'text-white', 'me-2');
+                        messageElement.innerHTML += message.content;
 
-                    const cancelButton = document.createElement('button');
-                    cancelButton.textContent = 'Hapus';
-                    cancelButton.classList.add('btn', 'btn-sm', 'btn-danger');
-                    cancelButton.addEventListener('click', function() {
-                        document.getElementById('chat-lampiran').value = '';
-                        previewContainer.innerHTML = '';
+                        if (message.lampiran) {
+                            messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh Dokumen</a>`;
+                        }
+
+                        messageElement.innerHTML += `<div class="text-muted" style="font-size: 0.8em; margin-top: 4px;">${message.created_at}</div>`;
+                        chatMessages.appendChild(messageElement);
                     });
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                })
+                .catch(err => console.error("Error loading messages:", err));
+        }
 
-                    previewContainer.appendChild(fileName);
-                    previewContainer.appendChild(cancelButton);
-                }
-            });
+        // File input preview
+        chatLampiran.addEventListener("change", function () {
+            const file = this.files[0];
+            filePreview.innerHTML = "";
 
-            document.getElementById("chat-form").addEventListener("submit", function(e) {
+            if (file) {
+                const fileName = document.createElement("span");
+                fileName.textContent = `Lampiran: ${file.name}`;
+                fileName.classList.add("badge", "bg-primary", "text-white", "me-2");
+
+                const cancelButton = document.createElement("button");
+                cancelButton.textContent = "Hapus";
+                cancelButton.classList.add("btn", "btn-sm", "btn-danger");
+                cancelButton.addEventListener("click", function () {
+                    chatLampiran.value = "";
+                    filePreview.innerHTML = "";
+                });
+
+                filePreview.appendChild(fileName);
+                filePreview.appendChild(cancelButton);
+            }
+        });
+
+        // Form submission
+        chatForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            const chatInput = document.getElementById("chat-input");
-            const chatLampiran = document.getElementById("chat-lampiran");
+
+            if (ticketStatus !== 2) {
+                alert("Tidak dapat mengirim pesan pada tiket ini.");
+                return;
+            }
+
             const formData = new FormData();
-            formData.append("tiket_id", {{ $tiket->id }});
+            formData.append("tiket_id", "{{ $tiket->id }}");
             formData.append("content", chatInput.value);
             if (chatLampiran.files[0]) {
                 formData.append("lampiran", chatLampiran.files[0]);
             }
-            fetch("/tiket/send-message", {
+
+            fetch("{{ url('tiket/send-message') }}", {
                 method: "POST",
                 headers: {
-                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}",
                 },
-                body: formData
-            }).then(() => {
-                chatInput.value = "";
-                chatLampiran.value = "";
-                document.getElementById("file-preview").innerHTML = "";
-                loadChatMessages();
-            });
+                body: formData,
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => Promise.reject(data));
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    chatInput.value = "";
+                    chatLampiran.value = "";
+                    filePreview.innerHTML = "";
+                    loadChatMessages();
+                })
+                .catch(err => {
+                    console.error("Error:", err);
+                    alert(err.error || "Terjadi kesalahan saat mengirim pesan.");
+                });
         });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const ticketStatus = "{{ $tiket->status_id }}";
-            const chatForm = document.getElementById("chat-form");
-            
-            if (ticketStatus !== "2") {
-                chatForm.innerHTML = '<div class="alert alert-warning">Tidak dapat mengirim pesan.</div>';
-                return;
-            }
-        });
+
+        // Initialize chat only if ticket status is open
+        if (ticketStatus === 2) {
+            loadChatMessages();
+        } else {
+            chatForm.innerHTML = '<div class="alert alert-warning">Tidak dapat mengirim pesan karena status tiket ini tidak aktif.</div>';
+        }
+    });
+
     </script>
 </body>
 </html>

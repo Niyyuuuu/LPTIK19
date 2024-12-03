@@ -50,4 +50,9 @@ class Tiket extends Model
         return $this->belongsTo(User::class, 'technician_id');
     }
 
+    public function chatMessages()
+    {
+        return $this->hasMany(ChatMessage::class, 'tiket_id');
+    }
+
 }
