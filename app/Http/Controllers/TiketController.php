@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Models\User;
 use App\Models\Tiket;
 use App\Models\Satker;
 use App\Models\ChatMessage;
@@ -35,6 +36,7 @@ class TiketController extends Controller
     { 
         $tiket = Tiket::with('satkerData')->findOrFail($id);
         $tiket = Tiket::with('statusData')->findOrFail($id);
+        $tiket = Tiket::with('technician')->findOrFail($id);
         return view('detail-tiket', compact('tiket'));
     }
 
@@ -83,7 +85,7 @@ class TiketController extends Controller
     public function tutup($id)
     {
         Tiket::where('id', $id)->update(['status_id' => 3]);
-        return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil ditutup');
+        return $this->redirectBasedOnRole();
     }
 
     public function edit($id)
@@ -113,7 +115,7 @@ class TiketController extends Controller
 
         $tiket->update($data);
 
-        return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil diperbarui');
+        return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil diperbarui');
     }
 
     private function redirectBasedOnRole()
@@ -183,76 +185,103 @@ class TiketController extends Controller
     }
 
     public function dashboard(Request $request)
-    {
-        $tahun = $request->input('tahun', date('Y'));
-        $userId = Auth::id();
+{
+    $tahun = $request->input('tahun', date('Y'));
+    $startDate = $request->input('start_date');
+    $endDate = $request->input('end_date');
+    $userId = Auth::id();
 
-        $statuses = [1, 2, 3, 4];
-        $statusLabels = [
-            1 => 'Pengaduan Menunggu',
-            2 => 'Pengaduan Diproses',
-            3 => 'Pengaduan Selesai',
-            4 => 'Pengaduan Proses Selesai'
-        ];
+    $statuses = [1, 2, 3, 4];
+    $statusLabels = [
+        1 => 'Pengaduan Menunggu',
+        2 => 'Pengaduan Diproses',
+        3 => 'Pengaduan Selesai',
+        4 => 'Pengaduan Proses Selesai'
+    ];
 
-        $pengaduanData = Tiket::selectRaw('MONTH(created_at) as month, status_id, COUNT(*) as count')
-            ->whereYear('created_at', $tahun)
-            ->where('created_by', $userId)
-            ->whereIn('status_id', $statuses)
-            ->groupBy('month', 'status_id')
-            ->get()
-            ->groupBy('status_id')
-            ->mapWithKeys(function ($items, $status_id) {
-                return [$status_id => $items->pluck('count', 'month')->all()];
-            });
+    $pengaduanQuery = Tiket::selectRaw('MONTH(created_at) as month, status_id, COUNT(*) as count')
+        ->where('created_by', $userId)
+        ->whereIn('status_id', $statuses);
 
-        $totalPengaduanPerMonth = Tiket::whereYear('created_at', $tahun)
-            ->where('created_by', $userId)
-            ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
-            ->groupBy('month')
-            ->pluck('count', 'month')
-            ->all();
-
-        $months = range(1, 12);
-        $monthNames = collect($months)->map(fn($m) => \Carbon\Carbon::create()->month($m)->format('F'))->toArray();
-
-        $dataPerStatus = [];
-        foreach ($statuses as $status_id) {
-            $dataPerStatus[] = [
-                'name' => $statusLabels[$status_id],
-                'data' => array_map(fn($m) => $pengaduanData[$status_id][$m] ?? 0, $months),
-                'color' => match($status_id) {
-                    1 => '#FF6384', 
-                    2 => '#9966FF', 
-                    3 => '#4BC0C0',
-                    4 => '#FFCE56'
-                },
-            ];
-        }
-
-
-        $cardData = [
-            'Total Pengaduan' => array_sum($totalPengaduanPerMonth),
-            'Pengaduan Menunggu' => array_sum($pengaduanData['1'] ?? []),
-            'Pengaduan Diproses' => array_sum($pengaduanData['2'] ?? []),
-            'Pengaduan Proses Selesai' => array_sum($pengaduanData['4'] ?? []),
-            'Pengaduan Selesai' => array_sum($pengaduanData['3'] ?? []),
-        ];
-
-        $years = Tiket::where('created_by', $userId)
-            ->selectRaw('YEAR(created_at) as year')
-            ->distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year');
-
-        return view('dashboard-pengaduan', compact(
-            'cardData',
-            'dataPerStatus',
-            'tahun',
-            'years',
-            'monthNames'
-        ));
+    if ($startDate && $endDate) {
+        $pengaduanQuery->whereBetween('created_at', [$startDate, $endDate]);
+    } else {
+        $pengaduanQuery->whereYear('created_at', $tahun);
     }
+
+    $pengaduanData = $pengaduanQuery
+        ->groupBy('month', 'status_id')
+        ->get()
+        ->groupBy('status_id')
+        ->mapWithKeys(function ($items, $status_id) {
+            return [$status_id => $items->pluck('count', 'month')->all()];
+        });
+
+    $totalPengaduanQuery = Tiket::where('created_by', $userId);
+
+    if ($startDate && $endDate) {
+        $totalPengaduanQuery->whereBetween('created_at', [$startDate, $endDate]);
+    } else {
+        $totalPengaduanQuery->whereYear('created_at', $tahun);
+    }
+
+    $totalPengaduanPerMonth = $totalPengaduanQuery
+        ->selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+        ->groupBy('month')
+        ->pluck('count', 'month')
+        ->all();
+
+    $months = range(1, 12);
+    $monthNames = collect($months)->map(fn($m) => \Carbon\Carbon::create()->month($m)->format('F'))->toArray();
+
+    $dataPerStatus = [];
+    foreach ($statuses as $status_id) {
+        $dataPerStatus[] = [
+            'name' => $statusLabels[$status_id],
+            'data' => array_map(fn($m) => $pengaduanData[$status_id][$m] ?? 0, $months),
+            'color' => match ($status_id) {
+                1 => '#FF6384', 
+                2 => '#9966FF', 
+                3 => '#4BC0C0',
+                4 => '#FFCE56'
+            },
+        ];
+    }
+
+    $cardData = [
+        'Total Pengaduan' => array_sum($totalPengaduanPerMonth),
+        'Pengaduan Menunggu' => array_sum($pengaduanData[1] ?? []),
+        'Pengaduan Diproses' => array_sum($pengaduanData[2] ?? []),
+        'Pengaduan Proses Selesai' => array_sum($pengaduanData[4] ?? []),
+        'Pengaduan Selesai' => array_sum($pengaduanData[3] ?? []),
+    ];
+
+    $years = Tiket::where('created_by', $userId)
+        ->selectRaw('YEAR(created_at) as year')
+        ->distinct()
+        ->orderBy('year', 'desc')
+        ->pluck('year');
+
+    $query = Tiket::query()->where('created_by', $userId);
+
+    $prosesSelesaiTickets = $query->where('status_id', 4)
+        ->whereYear('created_at', $tahun)
+        ->get();
+    $prosesSelesaiCount = $query->where('status_id', 4)->count();
+
+    return view('dashboard-pengaduan', compact(
+        'cardData',
+        'dataPerStatus',
+        'tahun',
+        'years',
+        'monthNames',
+        'prosesSelesaiCount',
+        'prosesSelesaiTickets',
+        'startDate',
+        'endDate'
+    ));
+}
+
 
 
 
