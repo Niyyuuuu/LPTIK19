@@ -29,7 +29,7 @@
                         <ul>
                             @foreach ($prosesSelesaiTickets as $ticket)
                             <li>
-                                <a href="/daftar-pengaduan" class="text-decoration-none">
+                                <a onclick="window.location.href='{{ url('/daftar-pengaduan') }}'" class="text-decoration-none">
                                     Ticket: No. {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) }} | Subjek: {{ $ticket->subjek }}
                                 </a>
                             </li>
@@ -74,18 +74,20 @@
         
 
         <!-- Kartu Statistik Pengaduan -->
-    <div class="row g-4 mb-5 justify-content-center">
-        @foreach ($cardData as $title => $count)
-        <div class="col-md-6 col-sm-12">
-            <div class="card shadow-sm border-0 h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title fw-bold mt-2 mb-2">{{ $title }}</h5>
-                    <p class="fs-2 text-primary">{{ $count }}</p>
+        <a href="{{ url('/daftar-pengaduan') }}">
+            <div class="row g-4 mb-5 justify-content-center">
+                @foreach ($cardData as $title => $count)
+                <div class="col-md-6 col-sm-12">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold mt-2 mb-2">{{ $title }}</h5>
+                            <p class="fs-2 text-primary">{{ $count }}</p>
+                        </div>
+                    </div>
                 </div>
+                @endforeach
             </div>
-        </div>
-        @endforeach
-    </div>
+        </a>
 
         <!-- Chart Pengaduan Per Bulan -->
         <div class="mt-4">
