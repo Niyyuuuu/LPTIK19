@@ -123,6 +123,34 @@ class AdminController extends Controller
         $user->update($request->all());
         return redirect()->route('users-list')->with('success', 'Pengguna berhasil diperbarui');
     }
+    public function createUser()
+    {
+        return view('admin.create-user');
+    }
+    public function storeUser(Request $request)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users',
+            'email' => 'required|email|unique:users',
+            'role' => 'required|in:user,technician,admin',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Membuat user baru
+        $user = new User();
+        $user->name = $validatedData['name'];
+        $user->username = $validatedData['username'];
+        $user->email = $validatedData['email'];
+        $user->role = $validatedData['role'];
+        $user->password = Hash::make($validatedData['password']);  // Hashing password
+
+        $user->save();  // Simpan ke database
+
+        // Redirect dengan pesan sukses
+        return redirect()->route('users-list')->with('success', 'Pengguna berhasil ditambahkan.');
+    }
 
     public function usersList()
     {   
@@ -132,6 +160,7 @@ class AdminController extends Controller
     public function listTiketSemuaUser()
     {
         $tiket = Tiket::with('user')->get();
+        $tiket = Tiket::orderBy('created_at', 'desc')->get();
         return view('admin.ticket-list', compact('tiket'));
     }
     
