@@ -30,7 +30,7 @@
 <body class="bg-dark">
     <nav class="navbar bg-body-dark">
         <form class="container-fluid justify-content-left mt-4 ms-2 mb-4">
-          <button onclick="window.location.href='/home'" class="btn btn-outline-danger me-2" type="button">Back</button>
+          <button onclick="window.location.href='{{url('home')}}'" class="btn btn-outline-danger me-2" type="button">Back</button>
         </form>
       </nav>
       @if (session('success'))
@@ -47,7 +47,7 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <h3 class="text-center text-light fw-bold" style="margin-top: 4rem;">Login</h3>
+                <h3 class="text-center text-light fw-bold" style="margin-top: 2rem;">Login</h3>
                 <form method="POST" action="{{ route('login-proses') }}">
                     @csrf
                     <!-- Input Nama -->

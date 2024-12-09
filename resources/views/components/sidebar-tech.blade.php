@@ -18,6 +18,7 @@
                 </a>
             </li>
         @endforeach
+        <li class="sidebar-item"><a href="{{ asset('storage/files/JUKOP-LAYANAN-PENGADUAN.pdf') }}" class="sidebar-link" download="JUKOP-LAYANAN-PENGADUAN.pdf"><i class="bx bx-help-circle"></i><span>Jukop</span></li>
         <li>
             <form id="logout-form" action="{{ route('logout') }}" style="display: none;">
                 @csrf

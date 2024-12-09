@@ -49,6 +49,7 @@ class TiketController extends Controller
     public function daftar_pengaduan()
     {
         $tiket = Tiket::where('created_by', Auth::id())->get();
+        $tiket = Tiket::orderBy('created_at', 'desc')->get();
         return view('daftar-pengaduan', compact('tiket'));
     }
 
@@ -61,7 +62,7 @@ class TiketController extends Controller
     }
 
     public function buat_pengaduan(Request $request)
-{
+    {
     $validator = Validator::make($request->all(), $this->validationRules());
 
     if ($validator->fails()) {
@@ -69,10 +70,10 @@ class TiketController extends Controller
     }
 
     $data = $validator->validated();
-    $data['tanggal'] = today();
     $data['created_by'] = Auth::id();
     $data['status_id'] = 1;
 
+    $data['tanggal'] = now()->toDateString();
     if ($request->hasFile('lampiran')) {
         $data['lampiran'] = $request->file('lampiran')->store('lampiran', 'public');
     }
@@ -95,7 +96,7 @@ class TiketController extends Controller
     $pesan .= "🔖 *Subjek:* {$cleanSubjek}\n";
     $pesan .= "📝 *Pesan:* {$cleanPesan}\n\n";
     $pesan .= "📅 *Tanggal Pengaduan:* {$createdAt}\n";
-    $pesan .= "⏳ *Status:* Belum Diproses\n";
+    $pesan .= "⏳ *Status:* Menunggu\n";
 
     // Mengirim permintaan ke API Telegram
     $url = "https://api.telegram.org/bot{$token}/sendMessage";
@@ -108,12 +109,49 @@ class TiketController extends Controller
         return redirect('daftar-pengaduan')->with('success', 'Tiket berhasil dibuat');
     }   
 
-
     public function tutup($id)
     {
-        Tiket::where('id', $id)->update(['status_id' => 3]);
+        // Update status tiket dan updated_at secara otomatis
+        $tiket = Tiket::findOrFail($id);
+        $tiket->update([
+            'status_id' => 3,
+            'updated_at' => now(),
+        ]);
+
+        // Token bot Telegram dan chat ID tujuan
+        $token = '7633250290:AAGVwFBqmNeQiHCl3K13hsoIBJsRnt38YXo'; // Ganti dengan token bot Telegram Anda
+        $chat_id = '1164538381'; // Ganti dengan chat ID tujuan Anda
+
+        // Ambil data tiket terbaru
+        $tiket = Tiket::with('technician')->find($id); // Ambil lagi tiket setelah update bersama dengan relasi teknisi
+        $data = $tiket->toArray();
+
+
+        // Format pesan notifikasi
+        $createdAt = \Carbon\Carbon::parse($tiket->updated_at)->format('d M Y, H:i'); // Ambil updated_at terbaru
+        $ticketNumber = str_pad($tiket->id, 6, '0', STR_PAD_LEFT);
+        $cleanSubjek = strip_tags($tiket->subjek);
+        $cleanPesan = strip_tags($tiket->pesan);
+
+        $pesan = "📢 *Pengaduan Selesai*\n\n";
+        $pesan .= "*No. Tiket:* {$ticketNumber}\n";
+        $pesan .= "🔖 *Subjek:* {$cleanSubjek}\n";
+        $pesan .= "📝 *Pesan:* {$cleanPesan}\n\n";
+        $pesan .= "📅 *Tanggal Pembaruan:* {$createdAt}\n";
+        $pesan .= "⏳ *Status:* Selesai\n";
+
+        // Mengirim permintaan ke API Telegram
+        $url = "https://api.telegram.org/bot{$token}/sendMessage";
+        $url .= "?chat_id={$chat_id}&text=" . urlencode($pesan) . "&parse_mode=Markdown";
+
+        file_get_contents($url);
+
         return $this->redirectBasedOnRole();
     }
+
+    
+
+    
 
     public function edit($id)
     {
@@ -144,6 +182,51 @@ class TiketController extends Controller
 
         return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil diperbarui');
     }
+
+
+    public function destroy($id)
+    {
+        // Update status tiket
+        Tiket::where('id', $id)->update(['status_id' => 3]);
+
+        // Token bot Telegram dan chat ID tujuan
+        $token = '7633250290:AAGVwFBqmNeQiHCl3K13hsoIBJsRnt38YXo'; // Ganti dengan token bot Telegram Anda
+        $chat_id = '1164538381'; // Ganti dengan chat ID tujuan Anda
+
+        // Ambil data tiket terbaru
+        $tiket = Tiket::findOrFail($id);
+        $data = $tiket->toArray();
+
+        $technicianName = Auth::user()->name;
+
+        // Format pesan notifikasi
+        $createdAt = \Carbon\Carbon::parse($tiket->updated_at)->format('d M Y, H:i');
+        $ticketNumber = str_pad($tiket->id, 6, '0', STR_PAD_LEFT);
+        $cleanSubjek = strip_tags($tiket->subjek);
+        $cleanPesan = strip_tags($tiket->pesan);
+
+
+        $pesan = "📢 *Pengaduan Dihapus*\n\n";
+        $pesan .= "*No. Tiket:* {$ticketNumber}\n";
+        $pesan .= "🔖 *Subjek:* {$cleanSubjek}\n";
+        $pesan .= "📝 *Pesan:* {$cleanPesan}\n\n";
+        $pesan .= "👤 *Teknisi:* {$technicianName}\n";
+        $pesan .= "📅 *Tanggal Hapus:* {$createdAt}\n";
+        $pesan .= "⏳ *Status:* Selesai\n";
+
+        // Mengirim permintaan ke API Telegram
+        $url = "https://api.telegram.org/bot{$token}/sendMessage";
+        $url .= "?chat_id={$chat_id}&text=" . urlencode($pesan) . "&parse_mode=Markdown";
+
+        file_get_contents($url);
+
+        // Hapus tiket setelah notifikasi dikirim
+        $tiket->delete();
+
+        return $this->redirectBasedOnRole()->with('success', 'Tiket berhasil dihapus');
+    }
+
+    
 
     private function redirectBasedOnRole()
     {

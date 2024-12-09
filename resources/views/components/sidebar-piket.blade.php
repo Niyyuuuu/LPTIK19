@@ -1,12 +1,12 @@
 <!-- components/sidebar-tech.blade.php -->
 @php
-    // Array menu untuk mengurangi repetisi
     $menuItems = [
-        ['icon' => 'bx-home', 'label' => 'Dashboard', 'route' => '/piket'],
-        ['icon' => 'bx-list-ul', 'label' => 'Ticket List', 'route' => '/piket/tickets'],
-        ['icon' => 'bx-file', 'label' => 'Feedback Report', 'route' => '/piket/feedback'],
+        ['icon' => 'bx-home', 'label' => 'Dashboard', 'route' => url('/piket')],
+        ['icon' => 'bx-list-ul', 'label' => 'Ticket List', 'route' => url('/piket/tickets')],
+        ['icon' => 'bx-file', 'label' => 'Feedback Report', 'route' => url('/piket/feedback')],
     ];
 @endphp
+
 
 <div class="sidebar">
     <h2>Help Desk</h2>
@@ -18,6 +18,12 @@
                 </a>
             </li>
         @endforeach
+        <li>
+            <a href="{{ asset('storage/files/JUKOP-LAYANAN-PENGADUAN.pdf') }}" class="sidebar-link" download="JUKOP-LAYANAN-PENGADUAN.pdf">
+                <i class="bx bx-help-circle"></i>
+                <span>Jukop</span>
+                </a>
+        </li>
         <li>
             <form id="logout-form" action="{{ route('logout') }}" style="display: none;">
                 @csrf

@@ -33,7 +33,7 @@
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <h3 class="text-center text-light fw-bold" style="margin-top: 4rem;">Register</h3>
+                <h3 class="text-center text-light fw-bold" style="margin-top: 1rem;">Register</h3>
                 <form action="{{ route('register-proses') }}" method="POST">
                     @csrf
                     <div class="mb-3">

@@ -52,7 +52,9 @@
                         <th>No.</th>
                         <th>No. Tiket</th>
                         <th>Subjek</th>
-                        <th>Status</th> <!-- Ubah nama kolom menjadi Status -->
+                        <th>Status</th>
+                        <th>Prioritas</th>
+                        <th>Area</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +68,6 @@
                         </td>
                         <td>{{ $ticket->subjek }}</td>
                         <td>
-                            <!-- Ubah status_id menjadi teks -->
                             @switch($ticket->status_id)
                                 @case(1)
                                     Menunggu
@@ -81,6 +82,8 @@
                                     Tidak Diketahui
                             @endswitch
                         </td>
+                        <td>{{ $ticket->prioritas }}</td>
+                        <td>{{ $ticket->area }}</td>
                     </tr>
                     @endforeach
                 </tbody>

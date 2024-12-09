@@ -91,6 +91,31 @@
             });
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('#piket1-table').DataTable({
+                paging: true,
+                searching: true,
+                ordering: true,
+                info: true,
+                responsive: true,
+                language: {
+                    lengthMenu: "Tampilkan _MENU_ entri per halaman",
+                    zeroRecords: "Tidak ada data yang ditemukan",
+                    info: "Menampilkan halaman _PAGE_ dari _PAGES_",
+                    infoEmpty: "Tidak ada entri yang tersedia",
+                    infoFiltered: "(disaring dari _MAX_ total entri)",
+                    search: "Cari:",
+                    paginate: {
+                        first: "Pertama",
+                        last: "Terakhir",
+                        next: "Selanjutnya",
+                        previous: "Sebelumnya"
+                    }
+                }
+            });
+        });
+    </script>
 
     @stack('scripts')
 

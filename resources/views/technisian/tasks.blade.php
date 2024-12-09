@@ -56,16 +56,26 @@
                                 <td>{{ $ticket->status_id == 2 ? 'Diproses' : ($ticket->status_id == 4 ? 'Selesai' : '') }}</td>
                                 <td>
                                     @if($ticket->status_id == 2)
-                                        <a href="{{ route('tutup-tiket-teknisi', $ticket->id) }}" class="btn btn-primary btn-sm">Tutup</a>
-                                    @else
-                                        <span class="badge bg-secondary">Ditutup</span>
+                                        <a href="{{ route('tutup-tiket-teknisi' , $ticket->id) }}" class="btn btn-primary btn-sm" onclick="return confirmClosure(event, '{{ $ticket->id }}')">
+                                            {{-- Route::get('/tutup-tiket-teknisi/{id}', [TechnicianController::class, 'tutupTiket'])->name('tutup-tiket-teknisi'); --}}
+                                            Tutup
+                                        </a>
                                     @endif
-                                </td>
+                                </td>                                
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
+        <script>
+            function confirmClosure(event, ticketId) {
+                event.preventDefault();
+                const confirmation = confirm("Apakah Anda yakin ingin menutup tiket ini?");
+                if (confirmation) {
+                    window.location.href = "{{ url('tutup-tiket-teknisi') }}/" + ticketId;
+                }
+            }
+        </script>        
     @endif
 @endsection

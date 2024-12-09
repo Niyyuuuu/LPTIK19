@@ -52,6 +52,12 @@
                 <span>Home</span>
             </a>
         </li>
+        <li class="sidebar-item">
+            <a href="{{ asset('storage/files/JUKOP-USER.pdf') }}" class="sidebar-link" download="JUKOP-USER.pdf">
+                <i class="bx bx-help-circle"></i>
+                <span>Jukop</span>
+            </a>
+        </li>
     </ul>
     <div class="sidebar-footer">
         <a href="{{ route('profil-saya') }}" class="sidebar-link">

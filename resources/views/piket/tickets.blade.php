@@ -85,8 +85,60 @@
 
 <div class="card">
     <div class="card-header bg-primary bx bxs-file"></div>
+    <div class="card-body"> <table id="piket-table" class="table">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>No. Tiket</th>
+                <th>Tanggal</th>
+                <th>Subjek</th>
+                <th>Satker</th>
+                <th>Prioritas</th>
+                <th>Status</th>
+                <th>Pelapor</th>
+                <th class="text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody> @foreach($filteredTickets as $item)
+            <tr>
+                <td>{{ $loop->iteration }}</td>
+                <td class="text-warning">
+                    <a href="{{ route('detail-tiket', $item->id) }}"> {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}</a>
+                </td>
+                <td>{{ $item->created_at->format('d F Y') }}</td>
+                <td>{{ $item->subjek }}</td>
+                <td>{{ $item->satkerData->nama_satker }}</td>
+                <td>{{ $item->prioritas }}</td>
+                <td>{{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : ($item->status_id == 4 ? 'Proses Selesai' : 'Selesai')) }}</td>
+                <td>{{ $item->user->name }}</td>
+                <td class="table-actions justify-content-center">
+                    @if ($item->status_id == 1)
+                        <a href="{{ route('process-ticket', $item->id) }}" class="btn btn-primary" title="Process">
+                            <i class="bx bx-cog"></i> Proses
+                        </a>
+                        <a href="{{ route('edit-tickets', $item->id) }}" class="btn btn-warning" title="Edit">
+                            <i class="bx bx-edit"></i> Edit
+                        </a>
+                    @elseif ($item->status_id == 4 || $item->status_id == 2)
+                        <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')" title="Close">
+                                <i class="bx bx-x-circle"></i> Tutup
+                            </button>
+                        </form>
+                    @endif
+                </td>                
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-primary bx bxs-file"></div>
     <div class="card-body">
-        <table id="piket-table" class="table">
+        <table id="piket1-table" class="table">
             <thead>
                 <tr>
                     <th>No.</th>
@@ -97,11 +149,11 @@
                     <th>Prioritas</th>
                     <th>Status</th>
                     <th>Pelapor</th>
-                    <th>Actions</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($tiket as $item)
+                @foreach($allTickets as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td class="text-warning">
@@ -113,27 +165,21 @@
                     <td>{{ $item->subjek }}</td>
                     <td>{{ $item->satkerData->nama_satker }}</td>
                     <td>{{ $item->prioritas }}</td>
-                    <td>{{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : 'Selesai') }}</td>
+                    <td>{{ $item->status_id == 1 ? 'Menunggu' : ($item->status_id == 2 ? 'Diproses' : ($item->status_id == 4 ? 'Proses Selesai' : 'Selesai')) }}</td>
                     <td>{{ $item->user->name }}</td>
                     <td class="table-actions justify-content-center">
-                        <a href="{{ route('process-ticket', $item->id) }}" class="btn btn-primary" title="Process">
-                            <i class="bx bx-cog"></i>
-                        </a>
-                        @if ($item->status_id !== 3)
-                            <form action="{{ route('edit-tickets', $item->id) }}" method="POST" style="display:inline;">
+                        @if ($item->status_id == 3)
+                            <form action="{{ route('hapus-tiket', $item->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tiket ini?')">
                                 @csrf
-                                <button type="submit" class="btn btn-warning" title="Update">
-                                    <i class="bx bx-edit"></i>
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" title="Delete">
+                                    <i class="bx bx-trash"></i> Delete
                                 </button>
                             </form>
-                            <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display: inline;">
-                                @csrf
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')" title="Close">
-                                    <i class="bx bx-x"></i>
-                                </button>
-                            </form>
+                        @else
+                            -
                         @endif
-                    </td>
+                    </td>                    
                 </tr>
                 @endforeach
             </tbody>

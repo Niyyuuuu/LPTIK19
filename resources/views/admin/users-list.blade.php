@@ -17,6 +17,10 @@
         <h1 class="mb-4 text-white fw-bold">Users List</h1>
 
         <!-- Table Users List -->
+        <a href="{{ route('create-user') }}" class="btn btn-success mb-3">
+    Tambah Pengguna
+</a>
+
         <div class="card mb-4">
             <div class="card-header bg-primary bx bxs-user"></div>
             <div class="card-body">

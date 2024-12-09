@@ -92,11 +92,11 @@
     <!-- Pisahkan Status Tiket menjadi card tersendiri -->
     <h3 class="mb-4">Status Tiket</h3>
     <div class="row mb-4">
-        @foreach ($counts['status_id'] as $type => $count)
+        @foreach ($counts['status_id'] as $statusId => $count)
             <div class="col d-flex">
-                <a href="{{ route('card-tickets', ['category' => 'status_id', 'value' => strtolower($type)]) }}" class="text-decoration-none w-100">
+                <a href="{{ route('card-tickets', ['category' => 'status_id', 'value' => $statusId]) }}" class="text-decoration-none w-100">
                     <div class="card flex-fill">
-                        <div class="card-header">{{ ucfirst($type) }}</div>
+                        <div class="card-header">{{ $statusLabels[$statusId] }}</div>
                         <div class="card-body">
                             <h5 class="text-center mt-2 fs-1">{{ $count }}</h5>
                         </div>
@@ -105,6 +105,7 @@
             </div>
         @endforeach
     </div>
+
     
     @foreach (['prioritas' => 'Prioritas', 'area' => 'Area'] as $key => $label)
         <h3 class="mb-4">{{ $label }}</h3>
@@ -153,7 +154,7 @@
             style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
         },
         xAxis: {
-            categories: ['Diproses', 'Selesai', 'Ditutup'],
+            categories: ['Menunggu', 'Diproses', 'Proses Selesai', 'Selesai'],
             labels: {
                 style: { color: '#fff', fontFamily: 'Poppins, sans-serif' }
             }
@@ -168,13 +169,13 @@
         series: [{
             name: 'Tiket',
             data: [
-                {{ $counts['status_id']['Menunggu'] }},
-                {{ $counts['status_id']['Diproses'] }},
-                {{ $counts['status_id']['Proses Selesai'] }},
-                {{ $counts['status_id']['Selesai'] }}
+                {{ $counts['status_id'][1] }},
+                {{ $counts['status_id'][2] }},
+                {{ $counts['status_id'][3] }},
+                {{ $counts['status_id'][4] }}
             ]
         }],
-        colors: ['#536493', '#FFF1DB'],
+        colors: ['#536493', '#FFF1DB', '#EF5A6F', '#9FA2B3'],
         credits: { enabled: false }
     });
 

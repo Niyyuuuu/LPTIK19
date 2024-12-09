@@ -175,7 +175,7 @@
             categories: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
             series: [
                 {
-                    name: 'Belum Diproses',
+                    name: 'Menunggu',
                     data: [{{ implode(',', $complaintsPerMonth[1]) }}],
                     color: '#EF5A6F'
                 },
@@ -183,6 +183,11 @@
                     name: 'Diproses',
                     data: [{{ implode(',', $complaintsPerMonth[2]) }}],
                     color: '#536493'
+                },
+                {
+                    name: 'Proses Selesai',
+                    data: [{{ implode(',', $complaintsPerMonth[4]) }}],
+                    color: '#F7A6A5'
                 },
                 {
                     name: 'Selesai',

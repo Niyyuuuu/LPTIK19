@@ -58,6 +58,7 @@ Route::post('/buat-pengaduan', [ TiketController::class, 'buat_pengaduan' ])->na
 Route::get('/daftar-pengaduan', [TiketController::class, 'daftar_pengaduan'])->name('daftar-pengaduan')->middleware('auth');
 Route::get('/history-pengaduan', [TiketController::class, 'history_pengaduan'])->name('history-pengaduan')->middleware('auth');
 Route::post('/tutup/{id}', [TiketController::class, 'tutup'])->name('tutup-tiket')->middleware('auth');
+Route::delete('/hapus-tiket/{id}', [TiketController::class, 'destroy'])->name('hapus-tiket')->middleware('auth');
 
 Route::get('/profil-saya', [UserController::class, 'showProfil'])->name('showProfil')->middleware('auth');
 Route::post('/profil-saya', [UserController::class, 'updateProfile'])->name('profil-saya');
@@ -74,7 +75,10 @@ Route::get('/dashboard-pengaduan', [TiketController::class, 'dashboard'])->name(
 
 Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
-
+    
+    Route::get('/users-list', [AdminController::class, 'usersList'])->name('users-list');
+    Route::get('/admin/create-user', [AdminController::class, 'createUser'])->name('create-user');
+    Route::post('/admin/store-user', [AdminController::class, 'storeUser'])->name('store-user');
     Route::get('/admin/users/{id}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
     Route::put('/admin/users/{id}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::delete('/admin/users/{id}', [AdminController::class, 'destroy'])->name('admin.users.destroy');
@@ -111,7 +115,6 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::delete('/delete-satker/{id}', [AdminController::class, 'deleteSatker'])->name('delete-satker');
     
     Route::get('/admin/ticket-list', [AdminController::class, 'listTiketSemuaUser'])->name('admin.ticket-list');
-    Route::get('/users-list', [AdminController::class, 'usersList'])->name('users-list');
 
     Route::get('/admin/{id}/process', [AdminController::class, 'processTicket'])->name('ticket.process');
     Route::post('/admin/{id}/assign-technician', [AdminController::class, 'assignTechnician'])->name('ticket.assign-technician');
@@ -122,13 +125,14 @@ Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
     Route::get('/tasks', [TechnicianController::class, 'task'])->name('tasks');
     Route::get('/ticket-list', [TechnicianController::class, 'ticketList'])->name('technisian.ticket-list');
     Route::get('/tutup-tiket-teknisi/{id}', [TechnicianController::class, 'tutupTiket'])->name('tutup-tiket-teknisi');
+    Route::post('/tickets/{id}/update-technisian', [TechnicianController::class, 'updateTechnisian'])->name('update-technisian');
 });
 
 Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
     Route::get('/piket', [PiketController::class, 'piket'])->name('piket');
     Route::get('piket/tickets', [PiketController::class, 'tickets'])->name('tickets');
     Route::get('piket/feedback', [PiketController::class, 'feedback'])->name('piket.feedback');
-    Route::post('/piket/{id}/edit-tickets', [PiketController::class, 'edit'])->name('edit-tickets');
+    Route::get('/piket/{id}/edit-tickets', [PiketController::class, 'edit'])->name('edit-tickets');
     Route::put('/piket/{id}/update-tickets', [PiketController::class, 'update'])->name('update-tickets');
     Route::get('/piket/{id}/process', [PiketController::class, 'processTicket'])->name('process-ticket');
     Route::post('/piket/{id}/assign-technician', [PiketController::class, 'assignTechnician'])->name('piket.assign-technician');

@@ -45,8 +45,15 @@
                 <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
                 <td>{{ $ticket->status_id == 1 ? 'Menunggu' : ($ticket->status_id == 2 ? 'Diproses' : ($ticket->status_id == 4 ? 'Proses Selesai' : 'Selesai')) }}</td>
                 <td>
-                    <a href="{{ route('detail-tiket', $ticket->id) }}" class="btn btn-primary btn-sm">Detail</a>
-                </td>   
+                    @if ($ticket->status_id == 1)
+                        <form method="POST" action="{{ route('update-technisian', $ticket->id) }}">
+                            @csrf
+                            <button type="submit" class="btn btn-primary btn-sm">Proses</button>
+                        </form>
+                    @else 
+                        <a href="{{ route('detail-tiket', $ticket->id) }}" class="btn btn-primary btn-sm">Detail</a>
+                    @endif
+                </td>                
             </tr>
         @endforeach
     </tbody>
