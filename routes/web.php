@@ -8,6 +8,10 @@ use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\PiketController;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verify.email');
+Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])->name('verification.send');
+Route::get('/email/verify', [AuthController::class, 'showVerificationNotice'])->name('verification.notice');
+
 Route::get('/', function () {
     return view('home');})->name('home');
 Route::get('/home', function () {
@@ -41,37 +45,37 @@ Route::get('reset-password/{token}', [AuthController::class, 'showResetPasswordF
 Route::post('reset-password', [AuthController::class, 'resetPassword'])->name('password.update');
 
 Route::get('/daftar-pengaduan', function() {
-    return view('daftar-pengaduan');})->name('daftar-pengaduan')->middleware('auth');
+    return view('daftar-pengaduan');})->name('daftar-pengaduan')->middleware('auth', 'verified');
 Route::get('/profil-saya', function() {
-    return view('profil-saya');})->name('profil-saya');
+    return view('profil-saya');})->name('profil-saya')->middleware('auth', 'verified');
 Route::get('/edit-profil', function() {
-    return view('edit-profil');})->name('edit-profil')->middleware('auth');
-Route::get('/detail-tiket/{id}', [TiketController::class, 'show'])->name('detail-tiket')->middleware('auth');
-Route::get('/buat-pengaduan', [TiketController::class, 'create'])->name('buat-pengaduan');
+    return view('edit-profil');})->name('edit-profil')->middleware('auth', 'verified');
+Route::get('/detail-tiket/{id}', [TiketController::class, 'show'])->name('detail-tiket')->middleware('auth', 'verified');
+Route::get('/buat-pengaduan', [TiketController::class, 'create'])->name('buat-pengaduan')->middleware('auth', 'verified');
 
 
-Route::post('/tiket/send-message', [TiketController::class, 'sendMessage'])->name('send-message')->middleware('auth');
-Route::get('/tiket/chat-messages/{id}', [TiketController::class, 'getChatMessages'])->name('chat-messages')->middleware('auth');
+Route::post('/tiket/send-message', [TiketController::class, 'sendMessage'])->name('send-message')->middleware('auth', 'verified');
+Route::get('/tiket/chat-messages/{id}', [TiketController::class, 'getChatMessages'])->name('chat-messages')->middleware('auth', 'verified');
 
 
-Route::post('/buat-pengaduan', [ TiketController::class, 'buat_pengaduan' ])->name('daftar-pengaduan');
-Route::get('/daftar-pengaduan', [TiketController::class, 'daftar_pengaduan'])->name('daftar-pengaduan')->middleware('auth');
-Route::get('/history-pengaduan', [TiketController::class, 'history_pengaduan'])->name('history-pengaduan')->middleware('auth');
-Route::post('/tutup/{id}', [TiketController::class, 'tutup'])->name('tutup-tiket')->middleware('auth');
-Route::delete('/hapus-tiket/{id}', [TiketController::class, 'destroy'])->name('hapus-tiket')->middleware('auth');
+Route::post('/buat-pengaduan', [ TiketController::class, 'buat_pengaduan' ])->name('daftar-pengaduan')->middleware('auth', 'verified');
+Route::get('/daftar-pengaduan', [TiketController::class, 'daftar_pengaduan'])->name('daftar-pengaduan')->middleware('auth', 'verified');
+Route::get('/history-pengaduan', [TiketController::class, 'history_pengaduan'])->name('history-pengaduan')->middleware('auth', 'verified');
+Route::post('/tutup/{id}', [TiketController::class, 'tutup'])->name('tutup-tiket')->middleware('auth', 'verified');
+Route::delete('/hapus-tiket/{id}', [TiketController::class, 'destroy'])->name('hapus-tiket')->middleware('auth', 'verified');
 
-Route::get('/profil-saya', [UserController::class, 'showProfil'])->name('showProfil')->middleware('auth');
-Route::post('/profil-saya', [UserController::class, 'updateProfile'])->name('profil-saya');
-Route::get('/edit-profil', [UserController::class, 'edit'])->name('edit-profil')->middleware('auth');
+Route::get('/profil-saya', [UserController::class, 'showProfil'])->name('showProfil')->middleware('auth', 'verified');
+Route::post('/profil-saya', [UserController::class, 'updateProfile'])->name('profil-saya')->middleware('auth', 'verified');
+Route::get('/edit-profil', [UserController::class, 'edit'])->name('edit-profil')->middleware('auth', 'verified');
 
-Route::get('/edit-pengaduan/{id}', [TiketController::class, 'edit'])->name('edit-pengaduan')->middleware('auth');
-Route::post('/edit-pengaduan/{id}', [TiketController::class, 'update'])->name('update-pengaduan')->middleware('auth');
+Route::get('/edit-pengaduan/{id}', [TiketController::class, 'edit'])->name('edit-pengaduan')->middleware('auth', 'verified');
+Route::post('/edit-pengaduan/{id}', [TiketController::class, 'update'])->name('update-pengaduan')->middleware('auth', 'verified');
 
 
-Route::get('/rating/{id}', [TiketController::class, 'showRatingForm'])->name('rating-form')->middleware('auth');
-Route::post('/rating/{id}', [TiketController::class, 'submitRating'])->name('submit-rating')->middleware('auth');
+Route::get('/rating/{id}', [TiketController::class, 'showRatingForm'])->name('rating-form')->middleware('auth', 'verified');
+Route::post('/rating/{id}', [TiketController::class, 'submitRating'])->name('submit-rating')->middleware('auth', 'verified');
 
-Route::get('/dashboard-pengaduan', [TiketController::class, 'dashboard'])->name('dashboard-pengaduan')->middleware('auth');
+Route::get('/dashboard-pengaduan', [TiketController::class, 'dashboard'])->name('dashboard-pengaduan')->middleware('auth', 'verified');
 
 Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');

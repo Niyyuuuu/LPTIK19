@@ -10,9 +10,47 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\VerifyEmailNotification;
 
 class AuthController extends Controller
 {
+    public function verifyEmail(Request $request, $id, $hash) 
+{
+    $user = User::findOrFail($id);
+
+    // Validasi hash
+    if ($hash !== sha1($user->getEmailForVerification())) {
+        return redirect()->route('login')->with('error', 'Link verifikasi tidak valid.');
+    }
+
+    // Cek apakah email sudah diverifikasi
+    if ($user->hasVerifiedEmail()) {
+        return redirect()->route('login')->with('success', 'Email Anda sudah diverifikasi.');
+    }
+
+    // Tandai email sebagai terverifikasi
+    $user->markEmailAsVerified();
+
+    return redirect()->route('login')->with('success', 'Berhasil! Email Anda telah diverifikasi.');
+}   
+    
+    public function resendVerificationEmail(Request $request)
+    {
+        if ($request->user()->hasVerifiedEmail()) {
+            return redirect()->route('login')->with('success', 'Email Anda sudah diverifikasi.'); }
+        Notification::send($request->user(), new VerifyEmailNotification());
+        return back()->with('success', 'Email verifikasi telah dikirimkan. Silakan cek email Anda.');
+    }
+
+    public function showVerificationNotice(Request $request)
+    {
+        return $request->user()->hasVerifiedEmail()
+            ? redirect()->intended(route('login'))
+            : view('auth.verify-email');  
+    }
+
     public function login(Request $request)
     {
         // Validasi input
@@ -56,7 +94,7 @@ class AuthController extends Controller
             $ticket->status_id = 3;  // Set status menjadi 'Selesai'
             $ticket->save();
         }
-
+        
         Auth::login($user);
         // Redirect berdasarkan peran
         switch ($user->role) {
@@ -84,7 +122,6 @@ class AuthController extends Controller
             'password.confirmed' => 'Password tidak cocok.',
             'email.unique' => 'Email sudah terdaftar.',
             'username.unique' => 'Username sudah terdaftar.',
-            'name.unique' => 'Nama sudah terdaftar.'
         ]);
 
         if ($validator->fails()) {
@@ -92,17 +129,18 @@ class AuthController extends Controller
         }
 
         $validate = $validator->validated();
-        $hashPassword = Hash::make($validate['password']);
-
-        User::create([
+        $user = User::create([
             'name' => $validate['name'],
             'username' => $validate['username'],
             'email' => $validate['email'],
-            'password' => $hashPassword,
-            'role' => 'User'
+            'password' => Hash::make($validate['password']),
+            'role' => 'User',
         ]);
 
-        return redirect()->route('login')->with('success', 'Berhasil! Anda telah mendaftar dengan sukses.');
+        Notification::send($user, new VerifyEmailNotification());
+
+
+        return redirect()->route('login')->with('success', 'Berhasil! Silakan cek email Anda untuk verifikasi.');
     }
 
     public function logout(Request $request)
