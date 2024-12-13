@@ -117,6 +117,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/edit-satker/{id}', [AdminController::class, 'editSatker'])->name('edit-satker');
     Route::post('/update-satker/{id}', [AdminController::class, 'updateSatker'])->name('update-satker');
     Route::delete('/delete-satker/{id}', [AdminController::class, 'deleteSatker'])->name('delete-satker');
+
+    Route::get('/permasalahan-list', [AdminController::class, 'permasalahanList'])->name('permasalahan-list');
+    Route::get('/create-permasalahan', [AdminController::class, 'createPermasalahan'])->name('create-permasalahan');
+    Route::post('/store-permasalahan', [AdminController::class, 'storePermasalahan'])->name('store-permasalahan');
+    Route::get('/edit-permasalahan/{id}', [AdminController::class, 'editPermasalahan'])->name('edit-permasalahan');
+    Route::post('/update-permasalahan/{id}', [AdminController::class, 'updatePermasalahan'])->name('update-permasalahan');
+    Route::delete('/delete-permasalahan/{id}', [AdminController::class, 'deletePermasalahan'])->name('delete-permasalahan');
     
     Route::get('/admin/ticket-list', [AdminController::class, 'listTiketSemuaUser'])->name('admin.ticket-list');
 

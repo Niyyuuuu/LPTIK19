@@ -8,7 +8,7 @@
         @csrf
         @method('PUT')
         <div class="form-group">
-            <label class="text-white mb-2" for="prioritas">Pilih Prioritas :</label>
+            <label class="text-dark mb-2" for="prioritas">Pilih Prioritas :</label>
             <select class="form-control" name="prioritas" id="prioritas" required>
                 <option value="">-- Pilih Prioritas --</option>
                 @foreach($prioritas as $item)

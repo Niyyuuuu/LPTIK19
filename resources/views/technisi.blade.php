@@ -4,44 +4,66 @@
 @section('title', 'Technician Dashboard')
 
 @section('header', 'Dashboard Teknisi' )
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+@push('styles')
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
 
-    body {
-        background-color: #161616;
-        color: #fff;
-        font-family: 'Poppins', sans-serif;
-    }
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+            font-family: 'Poppins', sans-serif;
+        }
 
-    .card {
-        background-color: #1e1e1e;
-        color: #fff;
-        border: none;
-        min-height: 150px;
-        border-radius: 10px;
-        transition: transform 0.3s ease,
-        box-shadow 0.3s ease;
-    }
+        .card {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            min-height: 150px;
+            border-radius: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-    .card-header {
-        background-color: #2c2c2c;
-        border-bottom: none;
-    }
+        .card-header {
+            background-color: #712121;
+            color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+        }
 
-    .card-body {
-        background-color: #1e1e1e;
-        border-radius: 10px;
-    }
-    .card a { 
-        text-decoration: none; 
-        color: inherit;
-    }
-    .card:hover { 
-        transform: scale(1.01);
-        box-shadow: 0 0 .6rem rgb(0, 145, 255);
-        cursor: pointer;
-    }
-</style>
+        .card-body {
+            background-color: #ffffff;
+            border-radius: 10px;
+        }
+        .card a { 
+            text-decoration: none; 
+            color: inherit;
+        }
+        .card:hover { 
+            transform: scale(1.01);
+            box-shadow: 0 0 .6rem rgba(91, 91, 91, 0.6);
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .form-select, .form-control {
+            background-color: #ffffff;
+            color: #343a40;
+            border: 1px solid #ced4da;
+        }
+
+        .form-select:focus, .form-control:focus {
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .input-group-text {
+            background-color: #e9ecef;
+            color: #495057;
+            border: 1px solid #ced4da;
+        }
+    </style>
+@endpush
 @section('content')
 @if(session('success'))
 <div class="message-success">{{ session('success') }}</div>
@@ -51,19 +73,19 @@
             <div>
                 <form method="GET" action="{{ route('technician') }}">
                     <div class="input-group mb-2">
-                        <label class="input-group-text bg-dark text-light border-primary" for="filterYear">Tahun</label>
-                        <select class="form-select bg-dark text-light border-primary" id="filterYear" name="year">
+                        <label class="input-group-text" for="filterYear">Tahun</label>
+                        <select class="form-select" id="filterYear" name="year">
                         </select>
                     </div>
 
                     <div class="input-group mb-2">
-                        <label class="input-group-text bg-dark text-light border-primary" for="startDate">Start Date</label>
-                        <input type="date" class="form-control bg-dark text-light border-primary" name="start_date" id="startDate">
+                        <label class="input-group-text" for="startDate">Start Date</label>
+                        <input type="date" class="form-control" name="start_date" id="startDate">
                     </div>
 
                     <div class="input-group mb-2">
-                        <label class="input-group-text bg-dark text-light border-primary" for="endDate">End Date</label>
-                        <input type="date" class="form-control bg-dark text-light border-primary" name="end_date" id="endDate">
+                        <label class="input-group-text" for="endDate">End Date</label>
+                        <input type="date" class="form-control" name="end_date" id="endDate">
                     </div>
 
                     <button type="submit" class="btn btn-primary">Filter</button>

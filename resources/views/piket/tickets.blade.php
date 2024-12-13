@@ -7,44 +7,27 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
 
         body {
-            background-color: #161616;
-            color: #fff;
             font-family: 'Poppins', sans-serif;
         }
 
         .card {
-            background-color: #1e1e1e;
-            color: #fff;
-            border: none;
+            color: #000000;
             min-height: 150px;
-            border-radius: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 .6rem rgb(80, 80, 80);
         }
 
         .card-header {
-            background-color: #2c2c2c;
-            border-bottom: none;
             font-weight: 500;
             font-size: 1.2rem;
         }
-
-        .card-body {
-            background-color: #1e1e1e;
-        }
-
-        table thead {
-            background-color: #2c2c2c;
-            color: #fff;
-        }
-
+        
         table tbody tr {
-            background-color: #1e1e1e;
-            border-bottom: 1px solid #2c2c2c;
+            background-color: #fefefe;
+            color: #000000;
+            border-bottom: 1px solid #ffffff;
         }
-
-        table tbody tr:hover {
-            background-color: #333;
-        }
-
+        
         .btn-primary, .btn-warning, .btn-danger {
             padding: 0.4rem 0.75rem;
             font-size: 0.875rem;
@@ -83,8 +66,8 @@
     }
 @endphp
 
-<div class="card">
-    <div class="card-header bg-primary bx bxs-file"></div>
+<div class="card mb-4">
+    <div class="card-header bg-primary"></div>
     <div class="card-body"> <table id="piket-table" class="table">
         <thead>
             <tr>
@@ -102,7 +85,7 @@
         <tbody> @foreach($filteredTickets as $item)
             <tr>
                 <td>{{ $loop->iteration }}</td>
-                <td class="text-warning">
+                <td class="text-primary">
                     <a href="{{ route('detail-tiket', $item->id) }}"> {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}</a>
                 </td>
                 <td>{{ $item->created_at->format('d F Y') }}</td>
@@ -114,16 +97,16 @@
                 <td class="table-actions justify-content-center">
                     @if ($item->status_id == 1)
                         <a href="{{ route('process-ticket', $item->id) }}" class="btn btn-primary" title="Process">
-                            <i class="bx bx-cog"></i> Proses
+                            Proses
                         </a>
                         <a href="{{ route('edit-tickets', $item->id) }}" class="btn btn-warning" title="Edit">
-                            <i class="bx bx-edit"></i> Edit
+                            Edit
                         </a>
                     @elseif ($item->status_id == 4 || $item->status_id == 2)
                         <form action="{{ route('tutup-tiket', $item->id) }}" method="POST" style="display:inline;">
                             @csrf
                             <button type="submit" class="btn btn-danger" onclick="return confirm('Apakah Anda yakin ingin menutup tiket ini?')" title="Close">
-                                <i class="bx bx-x-circle"></i> Tutup
+                            Tutup
                             </button>
                         </form>
                     @endif
@@ -136,7 +119,7 @@
 </div>
 
 <div class="card">
-    <div class="card-header bg-primary bx bxs-file"></div>
+    <div class="card-header bg-primary"></div>
     <div class="card-body">
         <table id="piket1-table" class="table">
             <thead>
@@ -156,7 +139,7 @@
                 @foreach($allTickets as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td class="text-warning">
+                    <td class="text-primary">
                         <a href="{{ route('detail-tiket', $item->id) }}">
                             {{ str_pad($item->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                         </a>
@@ -173,7 +156,7 @@
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger" title="Delete">
-                                    <i class="bx bx-trash"></i> Delete
+                                    Delete
                                 </button>
                             </form>
                         @else

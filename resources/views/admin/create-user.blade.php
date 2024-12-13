@@ -24,9 +24,9 @@
                     <div class="form-group">
                         <label class="text-white" for="role">Role</label>
                         <select name="role" id="role" class="form-control" required>
-                            <option value="user">User</option>
-                            <option value="technician">Technician</option>
-                            <option value="admin">Admin</option>
+                            <option value="User">User</option>
+                            <option value="Technician">Technician</option>
+                            <option value="Admin">Admin</option>
                         </select>
                     </div>
                     <div class="form-group">

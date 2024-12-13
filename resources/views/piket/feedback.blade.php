@@ -3,48 +3,42 @@
 @section('header', 'Feedback Report' )
 
 @push('styles')
-<style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap');
 
-    body {
-        background-color: #161616;
-        color: #fff;
-        font-family: 'Poppins', sans-serif;
-    }
-    .card {
-            background-color: #1e1e1e;
-            color: #fff;
-            border: none;
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .card {
+            color: #000000;
             min-height: 150px;
-            border-radius: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 .6rem rgb(80, 80, 80);
         }
 
         .card-header {
-            background-color: #2c2c2c;
-            border-bottom: none;
             font-weight: 500;
             font-size: 1.2rem;
         }
-
-        .card-body {
-            background-color: #1e1e1e;
+        
+        table tbody tr {
+            background-color: #fefefe;
+            color: #000000;
+            border-bottom: 1px solid #ffffff;
         }
-    table thead {
-        background-color: #2c2c2c;
-        color: #fff;
-    }
-    table tbody tr {
-        background-color: #1e1e1e;
-        border-bottom: 1px solid #2c2c2c;
-    }
-    table tbody tr:hover {
-        background-color: #333;
-    }
-    .btn-primary, .btn-warning, .btn-danger {
-        padding: 0.4rem 0.75rem;
-        font-size: 0.875rem;
-    }
-</style>
+        
+        .btn-primary, .btn-warning, .btn-danger {
+            padding: 0.4rem 0.75rem;
+            font-size: 0.875rem;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+    </style>
+
 @endpush
 
 @section('content')
@@ -60,7 +54,7 @@
     @endphp
 
 <div class="card">
-    <div class="card-header bg-primary bx bxs-file"></div>
+    <div class="card-header bg-primary"></div>
     <div class="card-body">
         <table id="piket-table" class="table">
             <thead>
@@ -79,7 +73,7 @@
                 @foreach($ratingticket as $ticket)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td class="text-warning">
+                        <td class="text-primary">
                             <a href="{{ route('detail-tiket', $ticket->id) }}">
                                 {{ str_pad($ticket->id, 6, '0', STR_PAD_LEFT) . '/' . toRoman(date('n')) . '/' . date('Y') }}
                             </a>

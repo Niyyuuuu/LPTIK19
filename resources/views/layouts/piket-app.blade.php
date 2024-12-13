@@ -31,8 +31,8 @@
         body {
             margin: 0;
             font-family: 'Poppins', sans-serif;
-            background-color: #121212; /* Tema Gelap */
-            color: #e0e0e0;
+            background-color: #f8f8f8;
+            color: #262626;
         }
 
         a {
