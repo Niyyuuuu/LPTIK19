@@ -77,8 +77,12 @@
                         <td>{{ $tiket->subjek }}</td>
                     </tr>
                     <tr>
+                        <th>Pelapor</th>
+                        <td>{{ $tiket->user->name ?? 'Tanpa Nama' }}</td>
+                    </tr>
+                    <tr>
                         <th>Permasalahan</th>
-                        <td>{{ $tiket->permasalahan }}</td>
+                        <td>{{ $tiket->permasalahanData->deskripsi ?? 'Permasalahan tidak ditemukan' }}</td>
                     </tr>
                     <tr>
                         <th>Satker</th>

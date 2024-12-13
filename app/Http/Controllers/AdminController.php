@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Faq;
 use App\Models\Help;
 use App\Models\Satker;
+use App\Models\Permasalahan;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -22,7 +23,6 @@ class AdminController extends Controller
         $attributes = [
             'status_id' => [1, 2, 3, 4],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
-            'permasalahan' => ['jaringan', 'software', 'hardware'],
             'rating' => [1, 2, 3, 4, 5],
             'area' => ['Kemhan', 'Luar Kemhan'],
         ];
@@ -47,6 +47,12 @@ class AdminController extends Controller
             ->selectRaw('count(*) as count, satker')
             ->whereYear('created_at', $selectedYear)
             ->groupBy('satker')
+            ->get();
+        
+        $deskripsi = Tiket::with('permasalahanData')
+            ->selectRaw('count(*) as count, permasalahan_id')
+            ->whereYear('created_at', $selectedYear)
+            ->groupBy('permasalahan_id')
             ->get();
 
         // Get total tiket
@@ -85,6 +91,7 @@ class AdminController extends Controller
             'counts',
             'total_users',
             'nama_satker',
+            'deskripsi',
             'total_tiket',
             'complaintsPerMonth',
             'selectedYear',
@@ -99,7 +106,7 @@ class AdminController extends Controller
     public function edit($id)
     {
         $user = User::with('satkerData')->findOrFail($id);
-        $satkers = Satker::all(); // Pastikan model Satker diimpor dan tersedia
+        $satkers = Satker::all();
         return view('admin.edit-users', compact('user', 'satkers'));
     }
 
@@ -134,7 +141,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'username' => 'required|string|max:255|unique:users',
             'email' => 'required|email|unique:users',
-            'role' => 'required|in:user,technician,admin',
+            'role' => 'required|in:User,Technician,Admin',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -154,12 +161,13 @@ class AdminController extends Controller
 
     public function usersList()
     {   
-        $users = User::with('satkerData')->get();
+        $users = User::with('satkerData')->orderBy('created_at', 'desc')->get();
         return view('admin.users-list', compact('users'));
     }
     public function listTiketSemuaUser()
     {
         $tiket = Tiket::with('user')->get();
+        $tiket = Tiket::with('permasalahanData')->get();
         $tiket = Tiket::orderBy('created_at', 'desc')->get();
         return view('admin.ticket-list', compact('tiket'));
     }
@@ -171,10 +179,21 @@ class AdminController extends Controller
         return view('admin.satker-list', compact('satkers'));
     }
 
+    public function permasalahanList()
+    {
+        $permasalahan = Permasalahan::all(); 
+        return view('admin.permasalahan-list', compact('permasalahan'));
+    }
+
     // Menampilkan form untuk menambah Satker
     public function createSatker()
     {
         return view('admin.create-satker');
+    }
+
+    public function createPermasalahan()
+    {
+        return view('admin.create-permasalahan');
     }
 
     // Menyimpan Satker baru
@@ -191,11 +210,30 @@ class AdminController extends Controller
         return redirect()->route('satker-list')->with('success', 'Satker berhasil ditambahkan!');
     }
 
+    public function storePermasalahan(Request $request)
+    {
+        $request->validate([
+            'deskripsi' => 'required|string|max:255',
+        ]);
+
+        Permasalahan::create([
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect()->route('permasalahan-list')->with('success', 'Kategori permasalahan berhasil ditambahkan!');
+    }
+
     // Menampilkan form edit Satker
     public function editSatker($id)
     {
         $satker = Satker::findOrFail($id);
         return view('admin.edit-satker', compact('satker'));
+    }
+
+    public function editPermasalahan($id)
+    {
+        $permasalahan = Permasalahan::findOrFail($id);
+        return view('admin.edit-permasalahan', compact('permasalahan'));
     }
 
     // Mengupdate data Satker
@@ -213,6 +251,19 @@ class AdminController extends Controller
         return redirect()->route('satker-list')->with('success', 'Satker berhasil diperbarui!');
     }
 
+    public function updatePermasalahan(Request $request, $id)
+    {
+        $request->validate([
+            'deskripsi' => 'required|string|max:255',
+        ]);
+
+        $permasalahan = Permasalahan::findOrFail($id);
+        $permasalahan->update([
+            'deskripsi' => $request->deskripsi,
+        ]);
+
+        return redirect()->route('permasalahan-list')->with('success', 'Kategori permasalahan berhasil diperbarui!');
+    }
     // Menghapus Satker
     public function deleteSatker($id)
     {
@@ -222,6 +273,13 @@ class AdminController extends Controller
         return redirect()->route('satker-list')->with('success', 'Satker berhasil dihapus!');
     }
 
+    public function deletePermasalahan($id)
+    {
+        $permasalahan = Permasalahan::findOrFail($id);
+        $permasalahan->delete();
+
+        return redirect()->route('permasalahan-list')->with('success', 'Kategori permasalahan berhasil dihapus!');
+    }
 
 
 

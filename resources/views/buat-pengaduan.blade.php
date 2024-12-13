@@ -127,11 +127,11 @@
     </div>
     <div class="mb-3 form-container">
         <div class="form-group">
-            <label for="permasalahan" class="form-label">Permasalahan <span>*</span></label>
-            <select class="form-select" name="permasalahan" id="permasalahan" aria-label="permasalahan">
-                <option value="Jaringan">Jaringan</option>
-                <option value="Software">Software</option>
-                <option value="Hardware">Hardware</option>
+            <label for="permasalahan_id" class="form-label">Permasalahan <span>*</span></label>
+            <select class="form-select" name="permasalahan_id" id="permasalahan_id" aria-label="permasalahan_id">
+                @foreach($permasalahan_id as $item)
+                    <option value="{{ $item->id }}">{{ $item->deskripsi }}</option>
+                @endforeach
             </select>
         </div>
         <div class="form-group">

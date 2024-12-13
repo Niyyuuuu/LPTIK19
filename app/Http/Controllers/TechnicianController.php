@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Tiket;
 use App\Models\User;
+use App\Models\Permasalahan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -18,7 +19,7 @@ class TechnicianController extends Controller
         $attributes = [
             'status_id' => [1, 2, 3, 4],
             'prioritas' => ['tinggi', 'sedang', 'rendah'],
-            'permasalahan' => ['jaringan', 'software', 'hardware'],
+            'permasalahan_id' => Permasalahan::all()->pluck('id')->toArray(),
             'rating' => [1, 2, 3, 4, 5],
             'area' => ['Kemhan', 'Luar Kemhan'],
         ];
@@ -116,7 +117,8 @@ class TechnicianController extends Controller
     {
         $tickets = Tiket::where('technician_id', Auth::id())
             ->where('status_id', 2)
-            ->get();    
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $ticketsToClose = Tiket::where('status_id', 4)
             ->where('updated_at', '<=', Carbon::now()->subDays(2))

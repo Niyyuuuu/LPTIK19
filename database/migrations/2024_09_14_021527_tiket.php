@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->string('subjek');
-            $table->string('permasalahan');
+            $table->string('permasalahan_id');
             $table->string('satker');
             $table->string('prioritas');
             $table->string('area');

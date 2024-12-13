@@ -144,9 +144,9 @@
             },
             permasalahan: {
                 type: 'column',
-                categories: ['Jaringan', 'Software', 'Hardware'],
-                data: [{{ $counts['permasalahan']['jaringan'] }}, {{ $counts['permasalahan']['software'] }}, {{ $counts['permasalahan']['hardware'] }}],
-                showDataLabels: false // Disable data labels for column chart
+                categories: {!! json_encode($deskripsi->pluck('permasalahanData.deskripsi')->toArray()) !!},
+                data: {!! json_encode($deskripsi->pluck('count')->toArray()) !!},
+                showDataLabels: false
             },
             rating: {
             type: 'pie',

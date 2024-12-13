@@ -124,11 +124,11 @@
     </div>
     <div class="mb-3 form-container">
         <div class="form-group">
-            <label for="permasalahan" class="form-label">Permasalahan <span>*</span></label>
-            <select class="form-select" name="permasalahan" id="permasalahan">
-                <option value="Jaringan" {{ $tiket->permasalahan == 'Jaringan' ? 'selected' : '' }}>Jaringan</option>
-                <option value="Software" {{ $tiket->permasalahan == 'Software' ? 'selected' : '' }}>Software</option>
-                <option value="Hardware" {{ $tiket->permasalahan == 'Hardware' ? 'selected' : '' }}>Hardware</option>
+            <label for="permasalahan_id" class="form-label">Permasalahan <span>*</span></label>
+            <select class="form-select" name="permasalahan_id" id="permasalahan_id">
+                @foreach($permasalahan_id as $item)
+                    <option value="{{ $item->id }}" {{ $tiket->permasalahan_id == $item->id ? 'selected' : '' }}>{{ $item->deskripsi }}</option>
+                @endforeach
             </select>
         </div>
         <div class="form-group">
@@ -167,7 +167,7 @@
         @endif
     </div>
     <div class="button-container">
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary">Simpan</button>
         <button onclick="window.location.href='{{ url('daftar-pengaduan') }}'" type="button" class="btn btn-outline-danger">Batal</button>
     </div>
 </form>

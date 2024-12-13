@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Tiket;
 use App\Models\Satker;
 use App\Models\ChatMessage;
+use App\Models\Permasalahan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -23,7 +24,7 @@ class TiketController extends Controller
     {
         return [
             "subjek" => 'required|string|max:255',
-            "permasalahan" => 'required|string|max:255',
+            "permasalahan_id" => 'required|exists:permasalahan,id',
             "satker" => 'required|exists:table_satker,id',
             "prioritas" => 'required|string|max:255',
             "area" => 'required|string|max:255',
@@ -35,6 +36,7 @@ class TiketController extends Controller
     public function show($id)
     { 
         $tiket = Tiket::with('satkerData')->findOrFail($id);
+        $tiket = Tiket::with('permasalahanData')->findOrFail($id);
         $tiket = Tiket::with('statusData')->findOrFail($id);
         $tiket = Tiket::with('technician')->findOrFail($id);
         return view('detail-tiket', compact('tiket'));
@@ -43,7 +45,8 @@ class TiketController extends Controller
     public function create()
     {
         $satkers = Satker::all();
-        return view('buat-pengaduan', compact('satkers'));
+        $permasalahan_id = Permasalahan::all();
+        return view('buat-pengaduan', compact('satkers', 'permasalahan_id'));
     }
 
     public function daftar_pengaduan()
@@ -57,6 +60,7 @@ class TiketController extends Controller
     {
         $tiket = Tiket::where('created_by', Auth::id())
                       ->where('status_id', 3)
+                      ->orderBy('created_at', 'desc')
                       ->get();
         return view('history-pengaduan', compact('tiket'));
     }
@@ -102,7 +106,7 @@ class TiketController extends Controller
     $url = "https://api.telegram.org/bot{$token}/sendMessage";
     $url .= "?chat_id={$chat_id}&text=" . urlencode($pesan) . "&parse_mode=Markdown";
 
-    file_get_contents($url);
+    file_get_contents($url);    
 
 
 
@@ -157,7 +161,8 @@ class TiketController extends Controller
     {
         $tiket = Tiket::findOrFail($id);
         $satkers = Satker::all();
-        return view('edit-pengaduan', compact('tiket', 'satkers'));
+        $permasalahan_id = Permasalahan::all();
+        return view('edit-pengaduan', compact('tiket', 'satkers', 'permasalahan_id'));
     }
 
     public function update(Request $request, $id)

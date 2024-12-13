@@ -16,7 +16,7 @@ class Tiket extends Model
     protected $fillable = [
         'tanggal',
         'subjek',
-        'permasalahan',
+        'permasalahan_id',
         'satker',
         'prioritas',
         'area',
@@ -33,6 +33,11 @@ class Tiket extends Model
     public function satkerData()
     {
         return $this->belongsTo(Satker::class, 'satker', 'id');
+    }
+
+    public function permasalahanData() 
+    { 
+        return $this->belongsTo(Permasalahan::class, 'permasalahan_id', 'id');
     }
 
     public function statusData()
