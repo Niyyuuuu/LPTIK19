@@ -6,6 +6,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Tiket;
 use Illuminate\Http\Request;
+use Mews\Captcha\Captcha;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -57,7 +58,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'username' => 'required|string',
             'password' => 'required|string',
-            'captcha' => 'required|numeric',
+            'captcha' => 'required|captcha',
         ]);
 
         if ($validator->fails()) {
@@ -68,13 +69,6 @@ class AuthController extends Controller
 
         $validate = $validator->validated();
 
-        // Validasi CAPTCHA
-        $captchaResult = session('captcha_a') + session('captcha_b');
-        if ($validate['captcha'] != $captchaResult) {
-            return redirect()->route('login')
-                ->withErrors(['captcha' => 'CAPTCHA tidak valid.'])
-                ->withInput($request->except('password'));
-        }
 
         // Mencari pengguna berdasarkan username
         $user = User::where('username', $validate['username'])->first();

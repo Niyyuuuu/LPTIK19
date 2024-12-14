@@ -7,6 +7,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\TechnicianController;
 use App\Http\Controllers\PiketController;
 use Illuminate\Support\Facades\Route;
+use Mews\Captcha\Captcha;
 
 Route::get('/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->name('verify.email');
 Route::post('/email/verification-notification', [AuthController::class, 'resendVerificationEmail'])->name('verification.send');
@@ -24,10 +25,16 @@ Route::get('/help', [HomeController::class, 'indexHelp'])->name('help');
 Route::get('/help/{slug}', [HomeController::class, 'showCategoryHelp'])->name('help.showCategoryHelp');
 
 
-Route::get('auth/login', function() {
-    // Generate CAPTCHA
-    session(['captcha_a' => rand(1, 9), 'captcha_b' => rand(1, 9)]);
-    return view('login');
+Route::get('auth/login', function (Captcha $captcha) {
+    // Generate CAPTCHA image and its code
+    $captchaCode = $captcha->create('default');
+    $captchaImage = $captcha->src($captchaCode);
+
+    // Store CAPTCHA code in session
+    session(['captcha' => $captchaCode]);
+
+    // Pass the CAPTCHA image URL to the view
+    return view('login', ['captchaImage' => $captchaImage]);
 })->name('login');
 
 Route::post('auth/login', [AuthController::class, 'login'])->name('login-proses');
