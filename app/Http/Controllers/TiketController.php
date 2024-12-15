@@ -154,6 +154,17 @@ class TiketController extends Controller
     }
 
     
+    public function reprocess($id)
+    {
+        $tiket = Tiket::find($id);
+
+        if ($tiket && $tiket->status_id == 3) {
+            $tiket->status_id = 2;
+            $tiket->save();
+            return redirect()->back()->with('success', 'Tiket telah diproses kembali.');
+        }
+        return redirect()->back()->with('error', 'Tiket tidak ditemukan atau sudah diproses.');
+    }
 
     
 
@@ -245,7 +256,7 @@ class TiketController extends Controller
             case 'Piket':
                 return redirect()->route('piket');
             case 'User':
-                return redirect()->route('daftar-pengaduan');
+                return redirect()->route('dashboard-pengaduan');
         }
     }
 

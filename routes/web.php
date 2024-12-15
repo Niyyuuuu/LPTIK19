@@ -58,6 +58,7 @@ Route::get('/profil-saya', function() {
 Route::get('/edit-profil', function() {
     return view('edit-profil');})->name('edit-profil')->middleware('auth', 'verified');
 Route::get('/detail-tiket/{id}', [TiketController::class, 'show'])->name('detail-tiket')->middleware('auth', 'verified');
+Route::post('/tickets/{id}/reprocess', [TiketController::class, 'reprocess'])->name('tickets.reprocess');
 Route::get('/buat-pengaduan', [TiketController::class, 'create'])->name('buat-pengaduan')->middleware('auth', 'verified');
 
 

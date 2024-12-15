@@ -6,6 +6,7 @@
     <title>Detail Tiket</title>
     <link rel="icon" href="{{ asset('img/logo-kemhan.png') }}" type="image/png">  
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
         body {
@@ -51,6 +52,11 @@
           <button onclick="history.back()" class="btn btn-outline-danger me-2" type="button">Back</button>
         </form>
     </nav>
+    @if (session('success'))
+        <div id="success-alert" class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="container mt-5">
         <div class="card mb-5">
             <div class="card-header">
@@ -106,7 +112,7 @@
                     </tr>
                     <tr>
                         <th>Teknisi</th>
-                        <td>{{ $tiket->technician ? $tiket->technician->name : 'Belum diproses' }}</td>
+                        <td>{{ $tiket->technician ? $tiket->technician->name : 'Teknisi belum ditugaskan.' }}</td>
                     </tr>
                     <tr>
                         <th>Status</th>
@@ -114,8 +120,10 @@
                     </tr>
                     <tr>
                         <th>Rating</th>
-                        <td>
-                            {{ $tiket->rating ? $tiket->rating . '/5' : 'Rating belum tersedia.' }}
+                        <td class="text-warning">
+                                @for ($i = 0; $i < $tiket->rating; $i++)
+                                    <i class="bx bxs-star"></i>
+                                @endfor
                         </td>                        
                     </tr>
                     <tr>
@@ -135,8 +143,15 @@
                             @else
                                 <span class="text-muted">Tidak ada lampiran</span>
                             @endif
-                        </td>         
+                        </td>
                     </tr>
+                    @if ($tiket->status_id == 3)
+                    <form action="{{ route('tickets.reprocess', $tiket->id) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin memproses kembali tiket ini?')">Proses Kembali</button>
+                    </form>                    
+                        
+                    @endif
                 </table>
             </div>
         </div>
@@ -145,7 +160,7 @@
     <div class="container mt-5">
         <div class="card mb-5">
             <div class="card-header">
-                <h5 class="mb-0">Diskusi</h5>
+                <h5 class="mb-0">Diskusi Pengaduan</h5>
             </div>
             <div class="card-body">
                 <div id="chat-messages" class="chat-container">
@@ -278,6 +293,9 @@
         }
     });
 
+    </script>
+    <script>
+        
     </script>
 </body>
 </html>
