@@ -61,7 +61,11 @@
                                     Rating
                                 </button>
                             @else
-                                <span class="badge bg-success">Rated: {{ $t->rating }}/5</span>
+                            <span class="text-warning">
+                                @for ($i = 0; $i < $t->rating; $i++)
+                                    <i class="bx bxs-star"></i>
+                                @endfor
+                            </span>
                             @endif
                         </td>
                     </tr>

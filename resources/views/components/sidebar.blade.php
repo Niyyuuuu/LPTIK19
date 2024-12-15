@@ -9,55 +9,43 @@
         </div>
     </div>
     <ul class="sidebar-nav">
-        <li class="sidebar-item">
-            <a href="dashboard-pengaduan" class="sidebar-link collapsed has-dropdown"
-                data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                <i class="bx bxs-dashboard"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                data-bs-target="#user" aria-expanded="false" aria-controls="user">
-                <i class="bx bx-user"></i>
-                <span>Profil</span>
-            </a>
-            <ul id="user" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item">
-                    <a href="{{ route('profil-saya') }}" class="sidebar-link">Profil Saya</a>
-                </li>
-                <li class="sidebar-item">
-                    <a href="{{ route('edit-profil') }}" class="sidebar-link">Edit Profil</a>
-                </li>
-            </ul>
-        </li>
-        <li class="sidebar-item">
-            <a href="daftar-pengaduan" class="sidebar-link collapsed has-dropdown"
-                data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                <i class="bx bx-comment"></i>
-                <span>Daftar Pengaduan</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="history-pengaduan" class="sidebar-link collapsed has-dropdown"
-                data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                <i class="bx bx-history"></i>
-                <span>Riwayat Pengaduan</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="{{ route('home') }}" class="sidebar-link collapsed has-dropdown"
-                data-bs-target="#multi" aria-expanded="false" aria-controls="multi">
-                <i class="bx bx-home"></i>
-                <span>Home</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="{{ asset('storage/files/JUKOP-USER.pdf') }}" class="sidebar-link" download="JUKOP-USER.pdf">
-                <i class="bx bx-help-circle"></i>
-                <span>Jukop</span>
-            </a>
-        </li>
+        @php
+            $menuItems = [
+                ['href' => 'dashboard-pengaduan', 'icon' => 'bxs-dashboard', 'label' => 'Dashboard'],
+                ['href' => 'buat-pengaduan', 'icon' => 'bx-add-to-queue', 'label' => 'Buat Pengaduan'],
+                ['href' => 'daftar-pengaduan', 'icon' => 'bx-comment', 'label' => 'Daftar Pengaduan'],
+                ['href' => 'history-pengaduan', 'icon' => 'bx-history', 'label' => 'Riwayat Pengaduan'],
+                ['href' => route('home'), 'icon' => 'bx-home', 'label' => 'Home'],
+                ['href' => asset('storage/files/JUKOP-USER.pdf'), 'icon' => 'bx-help-circle', 'label' => 'Jukop', 'download' => true],
+                ['href' => '#', 'icon' => 'bx-user', 'label' => 'Profil', 'dropdown' => [
+                    ['href' => route('profil-saya'), 'label' => 'Profil Saya'],
+                    ['href' => route('edit-profil'), 'label' => 'Edit Profil'],
+                ]],
+            ];
+        @endphp
+
+        @foreach ($menuItems as $item)
+            <li class="sidebar-item">
+                <a href="{{ $item['href'] }}" class="sidebar-link collapsed @isset($item['dropdown']) has-dropdown @endisset"
+                    data-bs-toggle="{{ isset($item['dropdown']) ? 'collapse' : '' }}"
+                    data-bs-target="{{ isset($item['dropdown']) ? '#' . strtolower(str_replace(' ', '-', $item['label'])) : '' }}"
+                    aria-expanded="false"
+                    aria-controls="{{ isset($item['dropdown']) ? strtolower(str_replace(' ', '-', $item['label'])) : '' }}"
+                    @isset($item['download']) download="{{ basename($item['href']) }}" @endisset>
+                    <i class="bx {{ $item['icon'] }}"></i>
+                    <span>{{ $item['label'] }}</span>
+                </a>
+                @isset($item['dropdown'])
+                    <ul id="{{ strtolower(str_replace(' ', '-', $item['label'])) }}" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        @foreach ($item['dropdown'] as $subItem)
+                            <li class="sidebar-item">
+                                <a href="{{ $subItem['href'] }}" class="sidebar-link">{{ $subItem['label'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endisset
+            </li>
+        @endforeach
     </ul>
     <div class="sidebar-footer">
         <a href="{{ route('profil-saya') }}" class="sidebar-link">
@@ -66,14 +54,14 @@
         </a>
     </div>
     <div class="sidebar-footer mb-4">
-        <form id="logout-form" action="{{ route('logout') }}" style="display: none;">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
         </form>
         <div class="sidebar-footer">
             <a href="#" class="sidebar-link" onclick="event.preventDefault(); 
                 if (confirm('Yakin ingin Logout?')) {
                     document.getElementById('logout-form').submit();
-                    }">
+                }">
                 <i class="bx bx-log-out"></i>
                 <span>Logout</span>
             </a>

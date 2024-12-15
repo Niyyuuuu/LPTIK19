@@ -13,17 +13,6 @@
         body {
             font-family: 'Poppins', sans-serif;
         }
-        #navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 999;
-        }
-        #pengaduan {  
-            padding-top: 120px;
-            position: relative;
-            overflow: hidden;
-        }
         .mb-3 {
             width: 85%;
             margin: auto;
@@ -93,18 +82,14 @@
 </head>
 <body class="relative">
     <section id="pengaduan" class="bg-gray-400">
-    <nav class="bg-dark p-4 fixed-top z-10" id="navbar">
-        <form class="container-fluid justify-content-left mt-1 ms-2">
-          <button onclick="window.location.href='{{ url('daftar-pengaduan') }}'" class="btn btn-outline-danger mb-2" type="button">Daftar Pengaduan</button>
-        </form>
-    </nav>
+    
     @if (session('success'))
     <div id="success-alert" class="alert alert-success">
         {{ session('success') }}
     </div>
 @endif
-<div class="container mx-auto relative z-10 mb-20">
-    <h1 id="buat-tiket-h1" class="fw-bold text-center">Edit Tiket</h1>
+<div>
+    <h1 id="buat-tiket-h1" class="fw-bold text-center mt-5 mb-5">Edit Tiket</h1>
 </div>
 <form action="{{ route('update-pengaduan', $tiket->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
