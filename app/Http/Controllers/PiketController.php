@@ -102,7 +102,7 @@ class PiketController extends Controller
         // Update tiket dengan teknisi/piket yang ditugaskan
         $ticket = Tiket::findOrFail($id);
         $ticket->technician_id = $request->input('technician_id');
-        $ticket->status_id = 2; // Ubah status menjadi 'diproses'
+        $ticket->status_id = 2;
         $ticket->save();
     
         // Ambil data teknisi/piket untuk notifikasi

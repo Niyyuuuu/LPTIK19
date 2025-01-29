@@ -35,12 +35,11 @@ class TiketController extends Controller
 
     public function show($id)
     { 
-        $tiket = Tiket::with('satkerData')->findOrFail($id);
-        $tiket = Tiket::with('permasalahanData')->findOrFail($id);
-        $tiket = Tiket::with('statusData')->findOrFail($id);
-        $tiket = Tiket::with('technician')->findOrFail($id);
-        return view('detail-tiket', compact('tiket'));
+        $tiket = Tiket::with(['satkerData', 'permasalahanData', 'statusData', 'technician'])->findOrFail($id);
+        $user = Auth::user();
+        return view('detail-tiket', compact('tiket', 'user'));
     }
+    
 
     public function create()
     {
@@ -51,10 +50,10 @@ class TiketController extends Controller
 
     public function daftar_pengaduan()
     {
-        $tiket = Tiket::where('created_by', Auth::id())->get();
-        $tiket = Tiket::orderBy('created_at', 'desc')->get();
+        $tiket = Tiket::where('created_by', Auth::id())->orderBy('created_at', 'desc')->get();
         return view('daftar-pengaduan', compact('tiket'));
     }
+    
 
     public function history_pengaduan()
     {
@@ -156,8 +155,14 @@ class TiketController extends Controller
     
     public function reprocess($id)
     {
+        $user = Auth::user();
+        // Hanya role User yang diizinkan
+        if ($user->role !== 'User') {
+            return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
+        }
+    
         $tiket = Tiket::find($id);
-
+    
         if ($tiket && $tiket->status_id == 3) {
             $tiket->status_id = 2;
             $tiket->save();

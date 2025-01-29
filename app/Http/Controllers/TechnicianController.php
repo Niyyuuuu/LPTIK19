@@ -63,55 +63,6 @@ class TechnicianController extends Controller
             'statusLabels'
         ));
     }
-    
-
-    public function updateTechnisian($id)
-    {
-        $ticket = Tiket::find($id);
-    
-        if (!$ticket) {
-            return redirect()->back()->with('error', 'Tiket tidak ditemukan.');
-        }
-    
-        if ($ticket->status_id != 1) {
-            return redirect()->back()->with('error', 'Tiket tidak dapat diproses.');
-        }
-    
-        $ticket->technician_id = Auth::id();
-        $ticket->status_id = 2;
-        $ticket->save();
-        $technicianName = Auth::user()->name;
-    
-        // Token bot Telegram dan chat ID tujuan
-        $token = '7633250290:AAGVwFBqmNeQiHCl3K13hsoIBJsRnt38YXo'; // Ganti dengan token bot Telegram Anda
-        $chat_id = '1164538381'; // Ganti dengan chat ID tujuan Anda
-    
-        // Format pesan notifikasi
-        $createdAt = \Carbon\Carbon::parse($ticket->updated_at)->format('d M Y, H:i');
-        $ticketNumber = str_pad($ticket->id, 6, '0', STR_PAD_LEFT);
-        $cleanSubjek = strip_tags($ticket->subjek);
-        $cleanPesan = strip_tags($ticket->pesan);
-    
-        $pesan = "📢 *Pengaduan Diproses*\n\n";
-        $pesan .= "*No. Tiket:* {$ticketNumber}\n";
-        $pesan .= "🔖 *Subjek:* {$cleanSubjek}\n";
-        $pesan .= "📝 *Pesan:* {$cleanPesan}\n\n";
-        $pesan .= "👤 *Teknisi:* {$technicianName}\n";
-        $pesan .= "📅 *Tanggal Pembaruan:* {$createdAt}\n";
-        $pesan .= "⏳ *Status:* Sedang Diproses\n";
-    
-        // Mengirim permintaan ke API Telegram
-        $url = "https://api.telegram.org/bot{$token}/sendMessage";
-        $url .= "?chat_id={$chat_id}&text=" . urlencode($pesan) . "&parse_mode=Markdown";
-    
-        file_get_contents($url);
-    
-        return redirect()->back()->with('success', 'Tiket berhasil diperbarui.');
-    }
-    
-
-    
-
 
     public function task()
     {

@@ -18,24 +18,24 @@ use App\Notifications\VerifyEmailNotification;
 class AuthController extends Controller
 {
     public function verifyEmail(Request $request, $id, $hash) 
-{
-    $user = User::findOrFail($id);
+    {
+        $user = User::findOrFail($id);
 
-    // Validasi hash
-    if ($hash !== sha1($user->getEmailForVerification())) {
-        return redirect()->route('login')->with('error', 'Link verifikasi tidak valid.');
+        // Validasi hash
+        if ($hash !== sha1($user->getEmailForVerification())) {
+            return redirect()->route('login')->with('error', 'Link verifikasi tidak valid.');
+        }
+
+        // Cek apakah email sudah diverifikasi
+        if ($user->hasVerifiedEmail()) {
+            return redirect()->route('login')->with('success', 'Email Anda sudah diverifikasi.');
+        }
+
+        // Tandai email sebagai terverifikasi
+        $user->markEmailAsVerified();
+
+        return redirect()->route('login')->with('success', 'Berhasil! Email Anda telah diverifikasi.');
     }
-
-    // Cek apakah email sudah diverifikasi
-    if ($user->hasVerifiedEmail()) {
-        return redirect()->route('login')->with('success', 'Email Anda sudah diverifikasi.');
-    }
-
-    // Tandai email sebagai terverifikasi
-    $user->markEmailAsVerified();
-
-    return redirect()->route('login')->with('success', 'Berhasil! Email Anda telah diverifikasi.');
-}   
     
     public function resendVerificationEmail(Request $request)
     {
@@ -59,6 +59,10 @@ class AuthController extends Controller
             'username' => 'required|string',
             'password' => 'required|string',
             'captcha' => 'required|captcha',
+        ],
+        [
+            'captcha.required' => 'Please enter the captcha.',
+            'captcha.captcha' => 'The CAPTCHA code is incorrect.',
         ]);
 
         if ($validator->fails()) {

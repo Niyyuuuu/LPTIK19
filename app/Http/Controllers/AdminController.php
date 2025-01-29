@@ -490,10 +490,9 @@ class AdminController extends Controller
         public function processTicket($id)
         {
             $ticket = Tiket::findOrFail($id);
-            $technicians = User::where('role', 'Technician')->get();
+            $technicians = User::whereIn('role', ['Technician', 'Piket'])->get();
 
             return view('admin.process-ticket', compact('ticket', 'technicians'));
-
         }
 
         public function assignTechnician(Request $request, $id)
