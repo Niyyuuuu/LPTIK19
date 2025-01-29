@@ -22,5 +22,4 @@ public function down()
         $table->dropColumn('role');
     });
 }
-
 };
