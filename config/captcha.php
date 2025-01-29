@@ -15,8 +15,9 @@ return [
         'contrast' => 0,
         'lines' => 0,
         'bgColor' => '#f3f3f3',
-        'driver' => 'gd', // Harus GD
+        'driver' => 'gd',
     ],
+    
     'math' => [
         'length' => 9,
         'width' => 120,
