@@ -144,7 +144,6 @@ Route::middleware(['auth', 'role:Technician,Admin'])->group(function () {
     Route::get('/tasks', [TechnicianController::class, 'task'])->name('tasks');
     Route::get('/ticket-list', [TechnicianController::class, 'ticketList'])->name('technisian.ticket-list');
     Route::get('/tutup-tiket-teknisi/{id}', [TechnicianController::class, 'tutupTiket'])->name('tutup-tiket-teknisi');
-    Route::post('/tickets/{id}/update-technisian', [TechnicianController::class, 'updateTechnisian'])->name('update-technisian');
 });
 
 Route::middleware(['auth', 'role:Piket,Admin'])->group(function () {
