@@ -16,7 +16,7 @@
                 ['href' => 'daftar-pengaduan', 'icon' => 'bx-comment', 'label' => 'Daftar Pengaduan'],
                 ['href' => 'history-pengaduan', 'icon' => 'bx-history', 'label' => 'Riwayat Pengaduan'],
                 ['href' => route('home'), 'icon' => 'bx-home', 'label' => 'Home'],
-                ['href' => asset('storage/files/JUKOP-USER.pdf'), 'icon' => 'bx-help-circle', 'label' => 'Jukop', 'download' => true],
+                ['href' => '#', 'icon' => 'bx-help-circle', 'label' => 'Petunjuk Operasi', 'download' => true, 'onclick' => 'downloadJukop()'],
                 ['href' => '#', 'icon' => 'bx-user', 'label' => 'Profil', 'dropdown' => [
                     ['href' => route('profil-saya'), 'label' => 'Profil Saya'],
                     ['href' => route('edit-profil'), 'label' => 'Edit Profil'],
@@ -31,7 +31,8 @@
                     data-bs-target="{{ isset($item['dropdown']) ? '#' . strtolower(str_replace(' ', '-', $item['label'])) : '' }}"
                     aria-expanded="false"
                     aria-controls="{{ isset($item['dropdown']) ? strtolower(str_replace(' ', '-', $item['label'])) : '' }}"
-                    @isset($item['download']) download="{{ basename($item['href']) }}" @endisset>
+                    @isset($item['download']) download="{{ basename($item['href']) }}" @endisset
+                    @isset($item['onclick']) onclick="event.preventDefault(); {{ $item['onclick'] }}" @endisset>
                     <i class="bx {{ $item['icon'] }}"></i>
                     <span>{{ $item['label'] }}</span>
                 </a>
@@ -54,7 +55,7 @@
         </a>
     </div>
     <div class="sidebar-footer mb-4">
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        <form id="logout-form" action="{{ route('logout') }}" style="display: none;">
             @csrf
         </form>
         <div class="sidebar-footer">
@@ -68,3 +69,11 @@
         </div>
     </div>
 </aside>
+
+<script>
+    function downloadJukop() {
+        if (confirm('Apakah Anda yakin ingin mendownload File Petunjuk Operasi?')) {
+            window.location.href = "{{ asset('storage/files/JUKOP-USER.pdf') }}";
+        }
+    }
+</script>

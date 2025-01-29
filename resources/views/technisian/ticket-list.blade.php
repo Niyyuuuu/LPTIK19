@@ -36,7 +36,6 @@
             <th>Prioritas</th>
             <th>Status</th>
             <th>Pelapor</th>
-            <th class="text-center">Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -53,17 +52,7 @@
                 <td>{{ $ticket->satkerData->nama_satker ?? 'Tanpa Satker' }}</td>
                 <td>{{ $ticket->prioritas ?? 'Tanpa Prioritas' }}</td>
                 <td>{{ $ticket->status_id == 1 ? 'Menunggu' : ($ticket->status_id == 2 ? 'Diproses' : ($ticket->status_id == 4 ? 'Proses Selesai' : 'Selesai')) }}</td>
-                <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>
-                <td>
-                    @if ($ticket->status_id == 1)
-                        <form method="POST" action="{{ route('update-technisian', $ticket->id) }}">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-sm">Proses</button>
-                        </form>
-                    @else 
-                        <a href="{{ route('detail-tiket', $ticket->id) }}" class="btn btn-primary btn-sm">Detail</a>
-                    @endif
-                </td>                
+                <td>{{ $ticket->user->name ?? 'Tanpa Nama' }}</td>               
             </tr>
         @endforeach
     </tbody>

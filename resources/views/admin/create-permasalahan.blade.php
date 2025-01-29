@@ -6,11 +6,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="fw-bold text-white">Tambah Kategori Permasalahan</h1>
+                <h1 class="fw-bold text-white">Add New Permasalahan</h1>
                         <form action="{{ route('store-permasalahan') }}" method="POST">
                             @csrf
                             <div class="form-group">
-                                <label class="text-white" for="deskripsi">Nama Kategori Permasalahan</label>
+                                <label class="text-white" for="deskripsi">Name</label>
                                 <input type="text" name="deskripsi" id="deskripsi" class="form-control" required>
                             </div>
                             <button type="submit" class="btn btn-primary mt-3">Add</button>

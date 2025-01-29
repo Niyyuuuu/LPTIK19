@@ -15,7 +15,7 @@
             {{ session('success') }}
         </div>
     @endif
-    <h1 class="mb-4">List Ticket</h1>
+    <h1 class="mb-4">Tickets List</h1>
 
     <div>
         <a href="{{ route('buat-pengaduan') }}" class="btn btn-success mb-4">Add New Ticket</a>

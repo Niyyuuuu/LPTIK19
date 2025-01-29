@@ -3,7 +3,7 @@
 
 <section id="help">
     <div class="container mx-auto relative z-10 mb-20">
-        <h1 id="help-h1" class="fw-bold text-gray-100" data-aos="fade-right">Help</h1>
+        <h1 id="help-h1" class="fw-bold text-gray-100" data-aos="fade-right">Helps</h1>
     </div>
     <div class="row" id="card">
       @foreach($helpTopics as $category)
@@ -43,7 +43,7 @@
 <footer class="bg-dark text-gray-100 py-4 mt-20">
     <div class="container mx-auto text-center">
         <p class="text-sm">© 2024 Layanan Pengaduan TIK Kemhan. All rights reserved.</p>
-        <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-gray-300">kemhan.go.id</a></p>
+        <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-info">kemhan.go.id</a></p>
     </div>
 </footer>
 

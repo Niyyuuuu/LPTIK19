@@ -6,7 +6,7 @@
     <section id="faq" class="flex-grow-1">
         <div class="container mx-auto relative z-10 mb-20">
             <h1 id="faq-h1" class="font-bold text-gray-400">
-                <a href="{{ route('faq') }}" class="text-gray-400 fw-bold">FAQs</a>
+                <a href="{{ route('faq') }}" class="text-info fw-bold">FAQs</a>
                 <span class="text-gray-100 fw-bold">/ {{ $category->name }}</span>
             </h1>
         </div>
@@ -32,7 +32,7 @@
     <footer class="bg-dark text-gray-100 py-4">
         <div class="container mx-auto text-center">
             <p class="text-sm">© 2024 Layanan Pengaduan TIK Kemhan. All rights reserved.</p>
-            <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-gray-300">kemhan.go.id</a></p>
+            <p class="text-sm">Hubungi kami di <a href="https://kemhan.go.id" class="text-info">kemhan.go.id</a></p>
         </div>
     </footer>
 </body>

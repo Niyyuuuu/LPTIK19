@@ -60,6 +60,9 @@
             width: 35%;
             margin: auto;
         }
+        .cke_notification {
+            display: none !important;
+        }
         span {
             color: red;
         }

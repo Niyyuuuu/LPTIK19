@@ -8,10 +8,10 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="mb-4">Kategori Permasalahan List</h1>
+    <h1 class="mb-4">Category Permasalahan List</h1>
 
     <div>
-        <a href="{{ route('create-permasalahan') }}" class="btn btn-success mb-4">Add New Kategori Permasalahan</a>
+        <a href="{{ route('create-permasalahan') }}" class="btn btn-success mb-4">Add New Permasalahan</a>
     </div>
 
     <div class="card">

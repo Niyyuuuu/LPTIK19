@@ -1,7 +1,7 @@
 <!-- resources/views/partials/sidebar.blade.php -->
 <nav class="sidebar">
     <div class="sidebar-header">
-        <h3 >Help Desk</h3>
+        <h3 >Help Desk Admin</h3>
         <h6 >Layanan Pengaduan TIK Kemhan</h6>
     </div>
     <ul class="components" style="font-size: 14px">
@@ -9,7 +9,7 @@
             $menuItems = [
                 ['route' => 'profil-saya', 'icon' => 'bx-user', 'label' => Auth::user()->name . ' | ' . Auth::user()->email],
                 ['route' => 'admin', 'icon' => 'bx-grid', 'label' => 'Dashboard'],
-                ['route' => 'admin.ticket-list', 'icon' => 'bx-list-ul', 'label' => 'Ticket List'],
+                ['route' => 'admin.ticket-list', 'icon' => 'bx-list-ul', 'label' => 'Tickets List'],
                 ['route' => 'users-list', 'icon' => 'bx-user', 'label' => 'Users List'],
                 ['route' => 'satker-list', 'icon' => 'bx-spreadsheet', 'label' => 'Satker Settings'],
                 ['route' => 'permasalahan-list', 'icon' => 'bx-cog', 'label' => 'Permasalahan Settings'],

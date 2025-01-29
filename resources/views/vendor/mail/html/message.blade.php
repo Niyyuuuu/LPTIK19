@@ -21,7 +21,9 @@
 {{-- Footer --}}
 <x-slot:footer>
 <x-mail::footer>
-© {{ date('Y') }} Layanan Pengaduan TIK Kemhan. {{ __('All rights reserved.') }}
+© {{ date('Y') }} Layanan Pengaduan TIK Kemhan. {{ __('All rights reserved.') }} 
 </x-mail::footer>
 </x-slot:footer>
 </x-mail::layout>
+
+

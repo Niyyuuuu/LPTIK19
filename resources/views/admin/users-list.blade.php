@@ -18,7 +18,7 @@
 
         <!-- Table Users List -->
         <a href="{{ route('create-user') }}" class="btn btn-success mb-3">
-    Tambah Pengguna
+    Add New User
 </a>
 
         <div class="card mb-4">

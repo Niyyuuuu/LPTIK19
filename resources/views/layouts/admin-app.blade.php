@@ -67,6 +67,9 @@
             padding: 20px;
             overflow-y: auto;
         }
+        .cke_notification {
+            display: none !important;
+        }
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .sidebar {

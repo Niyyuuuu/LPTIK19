@@ -108,7 +108,16 @@
                     </tr>
                     <tr>
                         <th>Tanggal Dibuat</th>
-                        <td>{{ $tiket->created_at->format('d F Y') }}</td>
+                        <td>{{ $tiket->created_at->format('d F Y H:i') }}</td>
+                    </tr>
+                    <tr>
+                        @if ($tiket->status_id == 2)
+                            <th>Tanggal Diproses</th>
+                            <td>{{ $tiket->updated_at?->format('d F Y H:i') }}</td>
+                        @elseif ($tiket->status_id == 3)
+                            <th>Tanggal Selesai</th>
+                            <td>{{ $tiket->updated_at?->format('d F Y H:i') }}</td>
+                        @endif
                     </tr>
                     <tr>
                         <th>Teknisi</th>
@@ -120,38 +129,48 @@
                     </tr>
                     <tr>
                         <th>Rating</th>
-                        <td class="text-warning">
+                        <td>
+                            @if ($tiket->rating)
                                 @for ($i = 0; $i < $tiket->rating; $i++)
-                                    <i class="bx bxs-star"></i>
+                                    <i class="bx bxs-star text-warning"></i>
                                 @endfor
+                            @else
+                                Rating belum tersedia.
+                            @endif
                         </td>                        
                     </tr>
                     <tr>
                         <th>Komentar Rating</th>
-                        <td>{{ $tiket->rating_comment ?? 'Komentar belum tersedia.' }}</td>
+                        <td>{{ $tiket->rating_comment ?? 'Komentar belum tersedia' }}</td>
                     </tr>
                     <tr>
                         <th>Lampiran</th>
                         <td>
                             @if ($tiket->lampiran)
-                                @php
-                                    $filePath = str_replace('public/', '', $tiket->lampiran);
-                                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-                                    $filename = 'Lampiran.' . $extension;
-                                @endphp
-                                <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Unduh {{ $filename }}</a>
+                            @php
+                                $filePath = str_replace('public/', '', $tiket->lampiran);
+                                $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                                $filename = 'Lampiran.' . $extension;
+                                $imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+                            @endphp
+                            @if(in_array($extension, $imageExtensions))
+                                <img src="{{ asset('storage/' . $filePath) }}" alt="Lampiran" style="max-width: 10%; height: auto;"/>
+                            @endif
+                            <br>
+                            <a href="{{ asset('storage/' . $filePath) }}" target="_blank" download="{{ $filename }}">Unduh {{ $filename }}</a>
+
                             @else
                                 <span class="text-muted">Tidak ada lampiran</span>
                             @endif
                         </td>
                     </tr>
-                    @if ($tiket->status_id == 3)
-                    <form action="{{ route('tickets.reprocess', $tiket->id) }}" method="POST">
-                        @csrf
-                        <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin memproses kembali tiket ini?')">Proses Kembali</button>
-                    </form>                    
-                        
+                    @if ($tiket->status_id == 3 && Auth::user()->role == 'User' && $tiket->technician_id)
+                        <form action="{{ route('tickets.reprocess', $tiket->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-primary" onclick="return confirm('Apakah Anda yakin ingin memproses kembali tiket ini?')">Proses Kembali</button>
+                        </form>
                     @endif
+
                 </table>
             </div>
         </div>
@@ -210,7 +229,7 @@
                         messageElement.innerHTML += message.content;
 
                         if (message.lampiran) {
-                            messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh Dokumen</a>`;
+                            messageElement.innerHTML += `<br><a href="${message.lampiran}" target="_blank" download>Unduh Lampiran</a>`;
                         }
 
                         messageElement.innerHTML += `<div class="text-muted" style="font-size: 0.8em; margin-top: 4px;">${message.created_at}</div>`;
@@ -289,7 +308,7 @@
         if (ticketStatus === 2) {
             loadChatMessages();
         } else {
-            chatForm.innerHTML = '<div class="alert alert-warning">Tidak dapat mengirim pesan karena status tiket ini tidak aktif.</div>';
+            chatForm.innerHTML = '<div class="alert alert-warning">Tidak dapat mengirim pesan karena status tiket ini belum diproses</div>';
         }
     });
 

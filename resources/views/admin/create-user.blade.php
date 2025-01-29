@@ -6,11 +6,11 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8">
-                <h1 class="fw-bold text-white">Tambah Pengguna</h1>
+                <h1 class="fw-bold text-white">Add New User</h1>
                 <form action="{{ route('store-user') }}" method="POST">
                     @csrf
                     <div class="form-group">
-                        <label class="text-white" for="name">Nama</label>
+                        <label class="text-white" for="name">Name</label>
                         <input type="text" name="name" id="name" class="form-control" required>
                     </div>
                     <div class="form-group">
@@ -34,10 +34,10 @@
                         <input type="password" name="password" id="password" class="form-control" required>
                     </div>
                     <div class="form-group">
-                        <label class="text-white" for="password_confirmation">Konfirmasi Password</label>
+                        <label class="text-white" for="password_confirmation">Confirm Password</label>
                         <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100 mt-3">Tambah Pengguna</button>
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Add User</button>
                 </form>
             </div>
         </div>

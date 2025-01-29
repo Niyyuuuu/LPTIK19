@@ -83,8 +83,8 @@
                     <!-- Tombol Login -->
                     <button type="submit" class="btn btn-primary w-100">Login</button>
                     <div class="d-flex justify-content-between mt-3">
-                        <a href="{{ route('password.request') }}" class="text-decoration-none text-light">Forgot Password?</a>
-                        <a href="{{ route('register') }}" class="text-decoration-none text-light">Don't have an account? <span class="text-primary">Register</span></a>
+                        <a href="{{ route('password.request') }}" class="text-decoration-none text-light fw-bold">Forget Password?</a>
+                        <a href="{{ route('register') }}" class="text-decoration-none text-light">Don't have an account? <span class="text-info fw-bold">Register</span></a>
                     </div>
                 </form>
                 
